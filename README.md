@@ -97,3 +97,9 @@ The site is configured for automated builds and static hosting deployments:
 * **Netlify**: Auto-deployed on git commits.
 * **GitHub Pages**: Automated deployment workflow is setup under `.github/workflows/static.yml`.
 * **Vercel**: Deployable as a static project.
+
+### Google Apps Script Integration Note
+
+- **Local File (`doPost.gs`):** The `doPost.gs` file in the root directory is a local copy of the code currently running in the Google Apps Script editor.
+- **Hosting & Execution:** This `.gs` file is ignored by static hosts like Vercel and Netlify. Actual requests from `script.js` execute remotely on Google's infrastructure via the `SCRIPT_URL`.
+- **Workflow:** Updates to backend logic should be maintained in `doPost.gs` and manually pasted/deployed into the Google Apps Script project console when deploying changes.

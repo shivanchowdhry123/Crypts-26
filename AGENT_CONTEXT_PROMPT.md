@@ -96,3 +96,9 @@ Use these guidelines when expanding the codebase:
 * [ ] **Terminal CTF / Mini-Games:** Expand `script.js` command parser to allow mini terminal Easter eggs, hidden decoding challenges, or interactive cipher games directly in the CLI box.
 * [ ] **Live Event Search & Filter:** Add real-time search/category filtering for the `#modules` section.
 * [ ] **Form Enhancements:** Add multi-step verification or dynamic class-based event filtering to the `#enrollment` portal.
+
+## 8. BACKEND ARCHITECTURE & APPS SCRIPT SYNCHRONIZATION
+
+* **Local `doPost.gs` File:** The `doPost.gs` file in this repository root is a static code replica of the backend logic hosted on Google Apps Script.
+* **Execution Environment:** This file is NOT executed by Vercel or any static web host. The live application communicates with the Google Apps Script Web App Endpoint defined via `SCRIPT_URL` in `script.js`.
+* **Development Directive:** When modifying `doPost.gs`, treat it as the single source of truth for the Google Apps Script backend. Assume any changes made to `doPost.gs` in this workspace will be manually deployed to the live Google Apps Script project by the developer.
