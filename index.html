@@ -59,30 +59,27 @@
 <!-- ============================
      NAVIGATION
      ============================ -->
-<nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-white/5 backdrop-blur-sm">
-    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+<nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-white/10 backdrop-blur-md">
+    <div class="container mx-auto px-8 py-5 flex justify-between items-center">
         <div class="flex items-center">
-            <div class="logo-image-frame logo-nav-size mr-3">
-                <img src="logo/logo.png" alt="CRYPTS 5.0 Logo">
-            </div>
-            <span class="glitch glitch-header text-white" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></span>
+            <span class="glitch glitch-header text-white text-lg tracking-wider" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></span>
         </div>
 
-        <div class="hidden lg:flex items-center space-x-6">
-            <a href="#briefing"    class="nav-link text-white/60" id="nav-briefing">01_BRIEF</a>
-            <a href="#modules"     class="nav-link text-white/60" id="nav-modules">02_MODULES</a>
+        <div class="hidden lg:flex items-center space-x-8">
+            <a href="#briefing"    class="nav-link text-white/70" id="nav-briefing">01_BRIEF</a>
+            <a href="#modules"     class="nav-link text-white/70" id="nav-modules">02_MODULES</a>
             <a href="register.html" class="nav-link text-[#ff00c1] flex items-center font-bold" id="nav-enrollment">
-                03_PORTAL <span class="ml-1 bg-[#ff00c1]/20 border border-[#ff00c1] text-[#ff00c1] px-1.5 py-0.5 rounded text-[8px]">SIGN UP</span>
+                03_PORTAL <span class="ml-1.5 bg-[#ff00c1]/20 border border-[#ff00c1] text-[#ff00c1] px-2 py-0.5 rounded text-[9px]">SIGN UP</span>
             </a>
-            <a href="#matrix"      class="nav-link text-white/60" id="nav-matrix">04_MATRIX</a>
-            <a href="#chronos"     class="nav-link text-white/60" id="nav-chronos">05_CHRONOS</a>
-            <a href="#resolution"  class="nav-link text-white/60" id="nav-resolution">06_QUERY</a>
-            <a href="#operators"   class="nav-link text-white/60" id="nav-operators">07_OPS</a>
+            <a href="#matrix"      class="nav-link text-white/70" id="nav-matrix">04_MATRIX</a>
+            <a href="#chronos"     class="nav-link text-white/70" id="nav-chronos">05_CHRONOS</a>
+            <a href="#resolution"  class="nav-link text-white/70" id="nav-resolution">06_QUERY</a>
+            <a href="#operators"   class="nav-link text-white/70" id="nav-operators">07_OPS</a>
             <button class="cmd-badge" id="cmd-badge-trigger" title="Open Command Palette (Ctrl+K)">⌘ CTRL+K</button>
         </div>
 
         <button id="menu-toggle" class="lg:hidden text-[#00f3ff]" aria-label="Open menu">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
     </div>
 </nav>
@@ -90,22 +87,22 @@
 <!-- Mobile Menu Overlay -->
 <div id="mobile-menu" class="fixed inset-0 z-[60] bg-black hidden flex-col items-center justify-center space-y-6 lg:hidden text-center">
     <button id="menu-close" class="absolute top-6 right-6 text-[#ff00c1]" aria-label="Close menu">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
-    <a href="#briefing"   class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">01_BRIEFING</a>
-    <a href="#modules"    class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">02_MODULES</a>
-    <a href="register.html" class="text-base font-bold tracking-widest text-[#ff00c1] hover:text-[#00f3ff]">03_PORTAL (SIGN UP)</a>
-    <a href="#matrix"     class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">04_MATRIX</a>
-    <a href="#chronos"    class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">05_CHRONOS</a>
-    <a href="#resolution" class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">06_QUERY</a>
-    <a href="#operators"  class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">07_OPS</a>
+    <a href="#briefing"   class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">01_BRIEFING</a>
+    <a href="#modules"    class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">02_MODULES</a>
+    <a href="register.html" class="text-lg font-bold tracking-widest text-[#ff00c1] hover:text-[#00f3ff]">03_PORTAL (SIGN UP)</a>
+    <a href="#matrix"     class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">04_MATRIX</a>
+    <a href="#chronos"    class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">05_CHRONOS</a>
+    <a href="#resolution" class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">06_QUERY</a>
+    <a href="#operators"  class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">07_OPS</a>
 </div>
 
 
 <!-- ============================
      01 — BRIEFING (HERO)
      ============================ -->
-<section id="briefing" class="pt-28 pb-20 min-h-screen flex flex-col items-center px-6 relative overflow-hidden">
+<section id="briefing" class="pt-36 pb-20 min-h-screen flex flex-col items-center px-6 relative overflow-hidden">
 
     <!-- Particle Canvas -->
     <canvas id="particle-canvas"></canvas>
@@ -122,11 +119,11 @@
         </div>
     </div>
 
-    <!-- Hero Title -->
+    <!-- Hero Title & Subtitle -->
     <div class="mb-10 text-center relative z-10">
         <h1 class="glitch glitch-hero" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></h1>
-        <p class="text-[9px] tracking-[0.6em] text-[#00f3ff] mt-4 opacity-60 uppercase font-bold">OPG World School • Technical Symposium</p>
-        <p class="text-[8px] tracking-[0.4em] text-white/25 mt-2 uppercase">THE SINGULARITY OVERLOAD</p>
+        <p class="text-sm md:text-base tracking-[0.5em] text-[#00f3ff] mt-5 uppercase font-bold text-shadow-glow">OPG World School • Technical Symposium</p>
+        <p class="text-xs md:text-sm tracking-[0.35em] text-white/50 mt-2 uppercase font-medium">THE SINGULARITY OVERLOAD</p>
     </div>
 
     <!-- Terminal Window -->
