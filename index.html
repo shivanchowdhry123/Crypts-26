@@ -3,230 +3,638 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRYPTS 5.0 | OPG World School</title>
+    <title>CRYPTS 5.0 | The Singularity Overload — OPG World School Technical Symposium</title>
+    <meta name="description" content="CRYPTS 5.0: The Singularity Overload. OPG World School's premier annual Technical Symposium. Featuring competitive coding, cryptography, web design, and more — for Classes 4–12.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="antialiased">
-    <div class="scanline"></div>
-    <nav class="fixed top-0 w-full z-50 bg-black/95 border-b border-white/5 backdrop-blur-sm">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="logo-image-frame logo-nav-size mr-4">
-                    <img src="logo/logo.png" alt="CRYPT 5.0 Logo">
-                </div>
-                <span class="glitch glitch-header text-white" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></span>
-            </div>
-            
-            <div class="hidden lg:flex items-center space-x-8">
-                <a href="#briefing" class="nav-link text-white/60">01_BRIEF</a>
-                <a href="#modules" class="nav-link text-white/60">02_MODULES</a>
-                <a href="#enrollment" class="nav-link text-[#ff00c1]">03_PORTAL</a>
-                <a href="#matrix" class="nav-link text-white/60">04_MATRIX</a>
-                <a href="#chronos" class="nav-link text-white/60">05_CHRONOS</a>
-                <a href="#resolution" class="nav-link text-white/60">06_QUERY</a>
-                <a href="#operators" class="nav-link text-white/60">07_OPS</a>
-            </div>
-            <button id="menu-toggle" class="lg:hidden text-[#00f3ff]">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            </button>
-        </div>
-    </nav>
 
-    <!-- Calibrated Mobile Overlay (Hidden by Default) -->
-    <div id="mobile-menu" class="fixed inset-0 z-[60] bg-black hidden flex-col items-center justify-center space-y-6 lg:hidden text-center">
-        <button id="menu-close" class="absolute top-6 right-6 text-[#ff00c1]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+<!-- Custom Neon Blue Pointer -->
+<div id="custom-cursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+</div>
+
+<!-- Cyberpunk Loading Screen -->
+<div id="loader-screen">
+    <div class="loader-content">
+        <div class="loader-logo">
+            <img src="logo/logo.png" alt="CRYPTS 5.0 Logo">
+        </div>
+        <div class="loader-title glitch" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></div>
+        <div class="loader-sub">OPG WORLD SCHOOL • SYSTEM BOOT</div>
+
+        <div class="loader-bar-wrap">
+            <div id="loader-bar" class="loader-bar"></div>
+        </div>
+
+        <div class="loader-status">
+            <span id="loader-log">> INITIALIZING SYSTEM CORE...</span>
+            <span id="loader-percent" class="loader-num">0%</span>
+        </div>
+    </div>
+</div>
+
+<!-- Scanline Overlay -->
+<div class="scanline"></div>
+
+<!-- Command Palette Overlay -->
+<div id="cmd-palette" role="dialog" aria-modal="true" aria-label="Command Palette">
+    <div class="palette-box">
+        <div class="palette-input-wrap">
+            <span class="palette-prompt">⌘</span>
+            <input id="palette-input" type="text" placeholder="Search sections, commands..." autocomplete="off" spellcheck="false">
+        </div>
+        <div class="palette-results" id="palette-results"></div>
+        <div class="palette-footer">
+            <span>↑↓ navigate</span>
+            <span>↵ select</span>
+            <span>esc close</span>
+        </div>
+    </div>
+</div>
+
+<!-- ============================
+     NAVIGATION
+     ============================ -->
+<nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-white/5 backdrop-blur-sm">
+    <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+        <div class="flex items-center">
+            <span class="glitch glitch-header text-white" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></span>
+        </div>
+
+        <div class="hidden lg:flex items-center space-x-6">
+            <a href="#briefing"    class="nav-link text-white/60" id="nav-briefing">01_BRIEF</a>
+            <a href="#modules"     class="nav-link text-white/60" id="nav-modules">02_MODULES</a>
+            <a href="register.html" class="nav-link text-[#ff00c1] flex items-center font-bold" id="nav-enrollment">
+                03_PORTAL <span class="ml-1 bg-[#ff00c1]/20 border border-[#ff00c1] text-[#ff00c1] px-1.5 py-0.5 rounded text-[8px]">SIGN UP</span>
+            </a>
+            <a href="#matrix"      class="nav-link text-white/60" id="nav-matrix">04_MATRIX</a>
+            <a href="#chronos"     class="nav-link text-white/60" id="nav-chronos">05_CHRONOS</a>
+            <a href="#resolution"  class="nav-link text-white/60" id="nav-resolution">06_QUERY</a>
+            <a href="#operators"   class="nav-link text-white/60" id="nav-operators">07_OPS</a>
+            <button class="cmd-badge" id="cmd-badge-trigger" title="Open Command Palette (Ctrl+K)">⌘ CTRL+K</button>
+        </div>
+
+        <button id="menu-toggle" class="lg:hidden text-[#00f3ff]" aria-label="Open menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
-        <a href="#briefing" class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">01_BRIEFING</a>
-        <a href="#modules" class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">02_MODULES</a>
-        <a href="#enrollment" class="text-lg font-bold tracking-widest text-[#ff00c1] hover:text-[#00f3ff]">03_PORTAL</a>
-        <a href="#matrix" class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">04_MATRIX</a>
-        <a href="#chronos" class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">05_CHRONOS</a>
-        <a href="#resolution" class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">06_QUERY</a>
-        <a href="#operators" class="text-lg font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">07_OPS</a>
+    </div>
+</nav>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobile-menu" class="fixed inset-0 z-[60] bg-black hidden flex-col items-center justify-center space-y-6 lg:hidden text-center">
+    <button id="menu-close" class="absolute top-6 right-6 text-[#ff00c1]" aria-label="Close menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <a href="#briefing"   class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">01_BRIEFING</a>
+    <a href="#modules"    class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">02_MODULES</a>
+    <a href="register.html" class="text-base font-bold tracking-widest text-[#ff00c1] hover:text-[#00f3ff]">03_PORTAL (SIGN UP)</a>
+    <a href="#matrix"     class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">04_MATRIX</a>
+    <a href="#chronos"    class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">05_CHRONOS</a>
+    <a href="#resolution" class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">06_QUERY</a>
+    <a href="#operators"  class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">07_OPS</a>
+</div>
+
+
+<!-- ============================
+     01 — BRIEFING (HERO)
+     ============================ -->
+<section id="briefing" class="pt-28 pb-20 min-h-screen flex flex-col items-center px-6 relative overflow-hidden">
+
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Ambient Blobs -->
+    <div class="ambient-blob blob-1"></div>
+    <div class="ambient-blob blob-2"></div>
+    <div class="ambient-blob blob-3"></div>
+
+    <!-- Logo -->
+    <div class="logo-wrapper relative z-10">
+        <div class="logo-image-frame" style="width: 240px;">
+            <img src="logo/logo.png" alt="CRYPTS 5.0 Hero Logo">
+        </div>
     </div>
 
-    <!-- 01_Briefing -->
-    <section id="briefing" class="pt-32 pb-20 min-h-screen flex flex-col items-center px-6 relative">
-        <div class="logo-wrapper">
-            <div class="logo-image-frame" style="width: 280px;">
-                <img src="logo/logo.png" alt="CRYPT 5.0 Hero Logo">
-            </div>
+    <!-- Hero Title -->
+    <div class="mb-10 text-center relative z-10">
+        <h1 class="glitch glitch-hero" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></h1>
+        <p class="tracking-[0.6em] text-[#00f3ff] mt-4 opacity-60 uppercase font-bold">OPG World School • Technical Symposium</p>
+        <p class="text-[8px] tracking-[0.4em] text-white/25 mt-2 uppercase">THE SINGULARITY OVERLOAD</p>
+    </div>
+
+    <!-- Terminal Window -->
+    <div class="w-full max-w-3xl terminal-window mb-16 relative z-10" id="terminal-body">
+        <!-- Chrome -->
+        <div class="terminal-chrome">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-chrome-title">CRYPTS_5.0 — COMMAND_SESSION</span>
+            <span id="timestamp" class="text-white/20 font-mono text-[9px] ml-auto"></span>
         </div>
-        <div class="mb-12 text-center">
-            <h1 class="glitch glitch-hero" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></h1>
-            <p class="text-[9px] tracking-[0.6em] text-[#00f3ff] mt-4 opacity-60 uppercase font-bold">OPG World School • Technical Symposium</p>
-        </div>
-        <div class="w-full max-w-3xl terminal-window p-6 text-[11px] font-mono mb-16" id="terminal-body">
-            <div class="flex justify-between items-center mb-4">
-                <span class="text-[#00f3ff] font-bold">SESSION_TYPE: COMMAND_LINE</span>
-                <span id="timestamp" class="text-white/30 font-mono"></span>
+        <!-- Inner body -->
+        <div class="terminal-body-inner text-[11px] font-mono">
+            <div class="status-grid mb-4">
+                <div class="status-item"><span class="status-label">SYSTEM_STATE </span><span class="status-value">OPERATIONAL</span></div>
+                <div class="status-item"><span class="status-label">GATEWAY_IP   </span><span class="status-value">192.168.1.1</span></div>
+                <div class="status-item"><span class="status-label">SSL_CERT     </span><span class="status-value">VERIFIED</span></div>
+                <div class="status-item"><span class="status-label">NODES_ACTIVE </span><span class="status-value">7 / 7</span></div>
+                <div class="status-item"><span class="status-label">SECURITY_SYNC</span><span class="status-value">STABLE</span></div>
+                <div class="status-item"><span class="status-label">PACKET_LOSS  </span><span class="status-value" style="color:var(--magenta)">0.00%</span></div>
             </div>
-            <div class="status-grid mb-6">
-                <div class="status-item"><span class="status-label">SYSTEM_STATE</span> <span class="status-value">OPERATIONAL</span></div>
-                <div class="status-item"><span class="status-label">GATEWAY_IP</span> <span class="status-value">192.168.1.1</span></div>
-                <div class="status-item"><span class="status-label">SSL_CERT</span> <span class="status-value">VERIFIED</span></div>
-                <div class="status-item"><span class="status-label">NODES_ACTIVE</span> <span class="status-value">7 / 7</span></div>
-                <div class="status-item"><span class="status-label">SECURITY_SYNC</span> <span class="status-value">STABLE</span></div>
-                <div class="status-item"><span class="status-label">PACKET_LOSS</span> <span class="status-value" style="color:var(--magenta)">0.00%</span></div>
-            </div>
-            <div id="terminal-output" class="space-y-2 mb-4 text-white/80"></div>
+            <div id="terminal-output" class="space-y-1.5 mb-3 text-white/80"></div>
             <div id="input-line" class="flex items-center hidden">
-                <span class="mr-2 text-white/40">root@crypts:~#</span>
-                <input type="text" id="terminal-input" autofocus autocomplete="off" spellcheck="false" class="bg-transparent outline-none text-white border-none p-0 m-0 w-full">
+                <span class="mr-2 text-white/30 text-[10px]">root@crypts:~#</span>
+                <input type="text" id="terminal-input" autofocus autocomplete="off" spellcheck="false"
+                    class="bg-transparent outline-none text-white border-none p-0 m-0 w-full text-[11px]">
             </div>
         </div>
-        <div class="w-full max-w-4xl grid md:grid-cols-2 gap-12 items-center">
+    </div>
+
+    <!-- Briefing Stats — full width, text left, stats right -->
+    <div class="w-full max-w-5xl grid md:grid-cols-3 gap-10 items-start relative z-10 pt-4">
+        <!-- Text block takes 2 cols -->
+        <div class="md:col-span-2">
+            <h2 class="glitch text-[#00f3ff] text-2xl mb-6 tracking-tighter" data-text="01_BRIEFING">01_BRIEFING</h2>
+            <p class="text-white/70 text-base leading-relaxed">
+                CRYPTS (Cryptic Realms of Yielding Problem Solving) is more than a fest — it's a high-stakes simulation. In 5.0, we prioritize <strong class="text-white">Efficiency, Logic, and Resilience</strong> across every module.
+            </p>
+        </div>
+        <!-- Stats block takes 1 col -->
+        <div class="flex flex-col gap-6 border-l border-white/10 pl-8">
             <div>
-                <h2 class="glitch text-[#00f3ff] text-lg mb-4 tracking-tighter" data-text="01_BRIEFING">01_BRIEFING</h2>
-                <p class="text-white/70 text-sm leading-relaxed mb-6">
-                    CRYPTS (Cryptic Realms of Yielding Problem Solving) is more than a fest. It's a high-stakes simulation. In 5.0, we prioritize <strong class="text-white">Efficiency, Logic, and Resilience</strong>.
-                </p>
-                <div class="grid grid-cols-3 gap-4 border-t border-white/10 pt-8">
-                    <div class="text-center">
-                        <div class="text-[#ff00c1] font-bold text-xl">600+</div>
-                        <div class="text-[9px] text-white/40 uppercase tracking-widest">Participants</div>
+                <div class="text-[#ff00c1] font-bold text-4xl">600+</div>
+                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Participants</div>
+            </div>
+            <div>
+                <div class="text-[#ff00c1] font-bold text-4xl">12+</div>
+                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Missions</div>
+            </div>
+            <div>
+                <div class="text-[#ff00c1] font-bold text-4xl">5.0</div>
+                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Release</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+     02 — EVENT MODULES
+     ============================ -->
+<section id="modules" class="py-24 px-6 border-t border-white/5">
+    <div class="container mx-auto max-w-6xl">
+        <div class="section-heading reveal">
+            <span class="section-tag">// MISSION_REGISTRY</span>
+            <h2 class="glitch text-[#00f3ff] text-2xl" data-text="02_EVENT_MODULES">02_EVENT_MODULES</h2>
+        </div>
+
+        <!-- Event Cards Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-grid">
+
+            <!-- MISSION_DECRYPT -->
+            <div class="event-card reveal reveal-delay-1" data-category="security">
+                <div class="card-icon">🔐</div>
+                <div class="card-code">EVT-001 // SECURITY</div>
+                <h3 class="card-title">MISSION_DECRYPT</h3>
+                <p class="card-desc">Cryptographic challenges requiring multi-layered security analysis, cipher cracking, and protocol enumeration under restricted environments.</p>
+                <span class="card-badge">L9 — L12</span>
+                <span class="card-cta">INITIALIZE MISSION →</span>
+            </div>
+
+            <!-- CODEQUEST -->
+            <div class="event-card reveal reveal-delay-2" data-category="coding">
+                <div class="card-icon">⚡</div>
+                <div class="card-code">EVT-002 // CODING</div>
+                <h3 class="card-title">CODEQUEST</h3>
+                <p class="card-desc">Algorithmic complexity and rapid competitive programming under clock pressure. Optimize. Execute. Dominate.</p>
+                <span class="card-badge">L9 — L12</span>
+                <span class="card-cta">INITIALIZE MISSION →</span>
+            </div>
+
+            <!-- WEB_WERKZ -->
+            <div class="event-card reveal reveal-delay-3" data-category="design">
+                <div class="card-icon">🌐</div>
+                <div class="card-code">EVT-003 // DESIGN</div>
+                <h3 class="card-title">WEB_WERKZ</h3>
+                <p class="card-desc">Frontend and backend engineering focused on responsive design, modern tech stacks, and production-grade UI/UX delivery.</p>
+                <span class="card-badge">L9 — L12</span>
+                <span class="card-cta">INITIALIZE MISSION →</span>
+            </div>
+
+            <!-- PIXEL_FORGE -->
+            <div class="event-card reveal reveal-delay-1" data-category="design">
+                <div class="card-icon">🎨</div>
+                <div class="card-code">EVT-004 // DESIGN</div>
+                <h3 class="card-title">PIXEL_FORGE</h3>
+                <p class="card-desc">Digital design and graphic creation using professional tools — logos, UI mockups, and visual identities judged on originality and technique.</p>
+                <span class="card-badge">L6 — L12</span>
+                <span class="card-cta">INITIALIZE MISSION →</span>
+            </div>
+
+            <!-- CIRCUIT_BREAKER -->
+            <div class="event-card reveal reveal-delay-2" data-category="gaming">
+                <div class="card-icon">🎮</div>
+                <div class="card-code">EVT-005 // GAMING</div>
+                <h3 class="card-title">CIRCUIT_BREAKER</h3>
+                <p class="card-desc">High-intensity gaming tournament across selected titles. Strategy, reflexes, and teamwork tested across multiple rounds of elimination.</p>
+                <span class="card-badge">L4 — L12</span>
+                <span class="card-cta">INITIALIZE MISSION →</span>
+            </div>
+
+            <!-- SIGNAL_CRAFT -->
+            <div class="event-card reveal reveal-delay-3" data-category="av">
+                <div class="card-icon">🎬</div>
+                <div class="card-code">EVT-006 // AUDIO/VISUAL</div>
+                <h3 class="card-title">SIGNAL_CRAFT</h3>
+                <p class="card-desc">Short-form video creation, editing, and production — evaluated on narrative structure, pacing, color grade, and sonic composition.</p>
+                <span class="card-badge">L6 — L12</span>
+                <span class="card-cta">INITIALIZE MISSION →</span>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+     03 — ENROLLMENT PORTAL
+     ============================ -->
+<section id="enrollment" class="py-24 px-6 border-t border-white/5">
+    <div class="container mx-auto max-w-4xl">
+        <div class="section-heading reveal">
+            <span class="section-tag">// REGISTRATION_PROTOCOL</span>
+            <h2 class="glitch text-[#00f3ff] text-2xl" data-text="03_ENROLLMENT_PORTAL">03_ENROLLMENT_PORTAL</h2>
+        </div>
+
+        <div class="registration-container mt-4 p-10 md:p-14 text-center reveal relative overflow-hidden">
+            <div class="inline-block text-[9px] tracking-[0.3em] text-[#00f3ff] border border-[#00f3ff]/30 bg-[#00f3ff]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
+                STANDALONE TRANSMISSION NODE
+            </div>
+            
+            <h3 class="text-3xl font-bold tracking-tight text-white uppercase mb-4">
+                Ready to Enter the Singularity?
+            </h3>
+            
+            <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-8">
+                Official registration for all 12+ competitive missions is hosted on a dedicated, encrypted portal. Select your modules and claim your operator status.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="register.html" class="transmit-btn sm:w-auto px-10 py-4 inline-flex items-center justify-center shadow-[0_0_30px_rgba(217,0,188,0.4)]">
+                    INITIALIZE REGISTRATION →
+                </a>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap justify-center items-center gap-6 text-[10px] text-white/40 uppercase tracking-widest font-mono">
+                <span>⚡ 256-BIT ENCRYPTION</span>
+                <span>•</span>
+                <span>🔒 SECURE FORM</span>
+                <span>•</span>
+                <span>📧 INSTANT EMAIL RECEIPT</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+     04 — RESOURCE MATRIX
+     ============================ -->
+<section id="matrix" class="py-24 px-6 border-t border-white/5">
+    <div class="container mx-auto max-w-5xl">
+        <div class="section-heading reveal">
+            <span class="section-tag">// KNOWLEDGE_DATABASE</span>
+            <h2 class="glitch text-[#00f3ff] text-2xl" data-text="04_RESOURCE_MATRIX">04_RESOURCE_MATRIX</h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="resource-card reveal reveal-delay-1">
+                <div class="resource-icon">📋</div>
+                <div class="resource-title">Event Rulebooks</div>
+                <p class="resource-desc">Complete rules, judging criteria, and format specifications for all registered events.</p>
+                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
+            </div>
+            <div class="resource-card reveal reveal-delay-2">
+                <div class="resource-icon">🗓️</div>
+                <div class="resource-title">Schedule Packet</div>
+                <p class="resource-desc">Finalized event schedule, venue assignments, and reporting times for all participants.</p>
+                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
+            </div>
+            <div class="resource-card reveal reveal-delay-3">
+                <div class="resource-icon">🎯</div>
+                <div class="resource-title">Participant Guide</div>
+                <p class="resource-desc">Entry requirements, allowed resources, code-of-conduct, and venue access protocols.</p>
+                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
+            </div>
+            <div class="resource-card reveal reveal-delay-1">
+                <div class="resource-icon">📡</div>
+                <div class="resource-title">Registration FAQ</div>
+                <p class="resource-desc">Common questions about enrollment, event selection, team registration, and confirmations.</p>
+                <a href="#resolution" class="resource-btn">→ VIEW FAQ</a>
+            </div>
+            <div class="resource-card reveal reveal-delay-2">
+                <div class="resource-icon">⚙️</div>
+                <div class="resource-title">Tech Specs</div>
+                <p class="resource-desc">Hardware, software, and environment requirements for all competitive programming events.</p>
+                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
+            </div>
+            <div class="resource-card reveal reveal-delay-3">
+                <div class="resource-icon">🏆</div>
+                <div class="resource-title">Prize Structure</div>
+                <p class="resource-desc">Points allocation, trophies, certificates, and merit recognition for each event tier.</p>
+                <a href="#" class="resource-btn">↓ VIEW PRIZES</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+     05 — CHRONOS SCHEDULE
+     ============================ -->
+<section id="chronos" class="py-24 px-6 border-t border-white/5">
+    <div class="container mx-auto max-w-4xl">
+        <div class="section-heading reveal">
+            <span class="section-tag">// TEMPORAL_SEQUENCE</span>
+            <h2 class="glitch text-[#00f3ff] text-2xl" data-text="05_CHRONOS_SCHEDULE">05_CHRONOS_SCHEDULE</h2>
+        </div>
+
+        <!-- Timeline Tabs -->
+        <div class="timeline-tabs reveal">
+            <button class="timeline-tab active" data-tab="morning">MORNING</button>
+            <button class="timeline-tab" data-tab="afternoon">AFTERNOON</button>
+            <button class="timeline-tab" data-tab="closing">CLOSING</button>
+        </div>
+
+        <!-- Morning Panel -->
+        <div class="timeline-panel active" id="tab-morning">
+            <div class="timeline-list">
+                <div class="timeline-item reveal">
+                    <div class="timeline-time">08:00 AM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">REGISTRATION & CHECK-IN</div>
+                        <div class="timeline-meta">Main Gate • All Participants</div>
+                        <span class="timeline-status done">COMPLETED</span>
                     </div>
-                    <div class="text-center border-x border-white/10">
-                        <div class="text-[#ff00c1] font-bold text-xl">12+</div>
-                        <div class="text-[9px] text-white/40 uppercase tracking-widest">Missions</div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-1">
+                    <div class="timeline-time">09:00 AM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">INAUGURATION CEREMONY</div>
+                        <div class="timeline-meta">Auditorium • All Teams</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
                     </div>
-                    <div class="text-center">
-                        <div class="text-[#ff00c1] font-bold text-xl">5.0</div>
-                        <div class="text-[9px] text-white/40 uppercase tracking-widest">Release</div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-2">
+                    <div class="timeline-time">09:45 AM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">ROUND 1 — CODEQUEST & MISSION_DECRYPT</div>
+                        <div class="timeline-meta">Computer Lab A & B</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-3">
+                    <div class="timeline-time">11:30 AM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">WEB_WERKZ BRIEF & ROUND 1</div>
+                        <div class="timeline-meta">Computer Lab C</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
                     </div>
                 </div>
             </div>
-            <div class="hidden md:block opacity-20 pointer-events-none">
-                <div class="grid grid-cols-6 gap-2">
-                    <div class="h-24 bg-white/10"></div><div class="h-24 bg-white/5"></div><div class="h-24 bg-white/10"></div>
-                    <div class="h-24 bg-white/5"></div><div class="h-24 bg-white/10"></div><div class="h-24 bg-white/5"></div>
+        </div>
+
+        <!-- Afternoon Panel -->
+        <div class="timeline-panel" id="tab-afternoon">
+            <div class="timeline-list">
+                <div class="timeline-item reveal">
+                    <div class="timeline-time">01:00 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">LUNCH BREAK</div>
+                        <div class="timeline-meta">Cafeteria • All Teams</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-1">
+                    <div class="timeline-time">02:00 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">SEMI-FINALS — CODEQUEST</div>
+                        <div class="timeline-meta">Computer Lab A • Top 8 Teams</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-2">
+                    <div class="timeline-time">02:30 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">PIXEL_FORGE & SIGNAL_CRAFT</div>
+                        <div class="timeline-meta">Art Room & Media Lab</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
+                </div>
+                <div class="timeline-item reveal reveal-delay-3">
+                    <div class="timeline-time">03:30 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">CIRCUIT_BREAKER FINALS</div>
+                        <div class="timeline-meta">Gaming Arena • Main Hall</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- 02_Event_Modules -->
-    <section id="modules" class="py-24 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-6xl">
-            <div class="section-heading mb-12">
-                <h2 class="glitch text-[#00f3ff] text-2xl" data-text="02_EVENT_MODULES">02_EVENT_MODULES</h2>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-[#080808] p-8 border border-[#111] hover:border-[#00f3ff] transition-all text-left">
-                    <h3 class="text-[#00f3ff] font-bold mb-4">MISSION_DECRYPT</h3>
-                    <p class="text-white/60 text-xs leading-relaxed mb-6">Cryptographic challenges requiring multi-layered security analysis and cipher cracking protocols.</p>
-                    <span class="text-[#ff00c1] text-[10px] font-bold">COMPATIBILITY: L9-L12</span>
+        <!-- Closing Panel -->
+        <div class="timeline-panel" id="tab-closing">
+            <div class="timeline-list">
+                <div class="timeline-item reveal">
+                    <div class="timeline-time">04:30 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">JUDGING & DELIBERATION</div>
+                        <div class="timeline-meta">Restricted — Judges Only</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
                 </div>
-                <div class="bg-[#080808] p-8 border border-[#111] hover:border-[#00f3ff] transition-all text-left">
-                    <h3 class="text-[#00f3ff] font-bold mb-4">CODEQUEST</h3>
-                    <p class="text-white/60 text-xs leading-relaxed mb-6">Algorithmic complexity and rapid competitive programming under restricted environments.</p>
-                    <span class="text-[#ff00c1] text-[10px] font-bold">COMPATIBILITY: L9-L12</span>
+                <div class="timeline-item reveal reveal-delay-1">
+                    <div class="timeline-time">05:00 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">AWARDS & PRIZE DISTRIBUTION</div>
+                        <div class="timeline-meta">Auditorium • All Teams</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
                 </div>
-                <div class="bg-[#080808] p-8 border border-[#111] hover:border-[#00f3ff] transition-all text-left">
-                    <h3 class="text-[#00f3ff] font-bold mb-4">WEB_WERKZ</h3>
-                    <p class="text-white/60 text-xs leading-relaxed mb-6">Frontend and backend engineering focusing on responsive design and modern tech stacks.</p>
-                    <span class="text-[#ff00c1] text-[10px] font-bold">COMPATIBILITY: L9-L12</span>
+                <div class="timeline-item reveal reveal-delay-2">
+                    <div class="timeline-time">05:30 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-name">CLOSING CEREMONY</div>
+                        <div class="timeline-meta">Auditorium • All Participants</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- 03_Enrollment_Portal -->
-    <section id="enrollment" class="py-24 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-4xl">
-            <div class="section-heading">
-                <h2 class="glitch text-[#00f3ff] text-2xl" data-text="03_ENROLLMENT_PORTAL">03_ENROLLMENT_PORTAL</h2>
-            </div>
-            <div class="registration-container mt-12 bg-[#050505] p-10 border border-[#111]">
-                <div class="text-center mb-8">
-                    <h3 class="text-[24px] font-bold tracking-tight text-[#00f3ff] uppercase">Crypts 5.0 Registration</h3>
+
+<!-- ============================
+     06 — QUERY RESOLUTION / FAQ
+     ============================ -->
+<section id="resolution" class="py-24 px-6 border-t border-white/5">
+    <div class="container mx-auto max-w-3xl">
+        <div class="section-heading reveal">
+            <span class="section-tag">// QUERY_RESOLUTION</span>
+            <h2 class="glitch text-[#00f3ff] text-2xl" data-text="06_QUERY_RESOLUTION">06_QUERY_RESOLUTION</h2>
+        </div>
+
+        <div class="space-y-0 reveal" id="faq-container">
+
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>Who can participate in CRYPTS 5.0?</span>
+                    <span class="faq-chevron">▾</span>
                 </div>
-                <form class="space-y-4">
-                    <div>
-                        <label class="reg-field-label block text-[10px] text-white/40 uppercase mb-2">Email</label>
-                        <input type="email" class="reg-field-input w-full bg-transparent border border-[#1a1a1a] p-3 text-white focus:border-[#00f3ff] outline-none" placeholder="user@node.edu" required>
-                    </div>
-                    <div>
-                        <label class="reg-field-label block text-[10px] text-white/40 uppercase mb-2">Name</label>
-                        <input type="text" class="reg-field-input w-full bg-transparent border border-[#1a1a1a] p-3 text-white focus:border-[#00f3ff] outline-none" placeholder="Operator Name" required>
-                    </div>
-                    <div>
-                        <label class="reg-field-label block text-[10px] text-white/40 uppercase mb-2">Class</label>
-                        <select class="reg-field-input w-full bg-black border border-[#1a1a1a] p-3 text-white focus:border-[#00f3ff] outline-none" required>
-                            <option value="" disabled selected>Select your class</option>
-                            <option value="4">Class 4</option>
-                            <option value="5">Class 5</option>
-                            <option value="6">Class 6</option>
-                            <option value="7">Class 7</option>
-                            <option value="8">Class 8</option>
-                            <option value="9">Class 9</option>
-                            <option value="10">Class 10</option>
-                            <option value="11">Class 11</option>
-                            <option value="12">Class 12</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="reg-field-label block text-[10px] text-white/40 uppercase mb-2">Section</label>
-                        <input type="text" class="reg-field-input w-full bg-transparent border border-[#1a1a1a] p-3 text-white focus:border-[#00f3ff] outline-none" placeholder="Ex: A, B, C, Agni, Jal, Prithvi, Vayu, Aakash" required>
-                    </div>
-                    <div>
-                        <label class="reg-field-label block text-[10px] text-white/40 uppercase mb-2">Event</label>
-                        <select multiple class="reg-field-input w-full bg-black border border-[#1a1a1a] p-3 text-white focus:border-[#00f3ff] outline-none h-32" required>
-                            <option value="mission_decrypt">MISSION_DECRYPT</option>
-                            <option value="codequest">CODEQUEST</option>
-                            <option value="web_werkz">WEB_WERKZ</option>
-                        </select>
-                        <span class="reg-hint text-[9px] text-white/30 block mt-2">Hold Ctrl (Windows) or Cmd (Mac) to select multiple events.</span>
-                    </div>
-                    <button type="submit" class="transmit-btn w-full bg-[#00f3ff] text-black font-bold py-4 rounded-full mt-6 hover:shadow-[0_0_20px_rgba(0,243,255,0.4)] transition-all">Submit</button>
-                </form>
+                <div class="faq-answer"><div class="faq-answer-inner">CRYPTS 5.0 is open to all students of OPG World School from Classes 4 through 12. Different events have specific class compatibility ranges — check each event card for eligibility details.</div></div>
             </div>
-        </div>
-    </section>
 
-    <!-- 04_Resource_Matrix -->
-    <section id="matrix" class="py-24 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-4xl text-center">
-            <h2 class="glitch text-[#00f3ff] text-2xl mb-12" data-text="04_RESOURCE_MATRIX">04_RESOURCE_MATRIX</h2>
-            <div class="p-12 border border-dashed border-white/10 text-white/40 italic text-xs">
-                Accessing centralized knowledge database... Data packets encrypted.
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>Can I register for multiple events?</span>
+                    <span class="faq-chevron">▾</span>
+                </div>
+                <div class="faq-answer"><div class="faq-answer-inner">Yes — you can select multiple events during registration using the tag chip selector. However, ensure that selected events do not have conflicting time slots in the schedule before enrolling.</div></div>
             </div>
-        </div>
-    </section>
 
-    <!-- 05_Chronos_Schedule -->
-    <section id="chronos" class="py-24 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-4xl text-center">
-            <h2 class="glitch text-[#00f3ff] text-2xl mb-12" data-text="05_CHRONOS_SCHEDULE">05_CHRONOS_SCHEDULE</h2>
-            <div class="p-12 border border-dashed border-white/10 text-white/40 italic text-xs">
-                Synchronizing temporal sequence... Timeline pending finalization.
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>Is registration free?</span>
+                    <span class="faq-chevron">▾</span>
+                </div>
+                <div class="faq-answer"><div class="faq-answer-inner">Registration for CRYPTS 5.0 is completely free for all OPG World School students. Simply fill out the enrollment form on this site and await your confirmation email.</div></div>
             </div>
-        </div>
-    </section>
 
-    <!-- 06_Query_Resolution -->
-    <section id="resolution" class="py-24 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-4xl text-center">
-            <h2 class="glitch text-[#00f3ff] text-2xl mb-12" data-text="06_QUERY_RESOLUTION">06_QUERY_RESOLUTION</h2>
-            <div class="p-12 border border-dashed border-white/10 text-white/40 italic text-xs">
-                Listening for incoming transmissions...
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>How will I know if my registration was successful?</span>
+                    <span class="faq-chevron">▾</span>
+                </div>
+                <div class="faq-answer"><div class="faq-answer-inner">Upon successful submission, you will receive a confirmation email at the address provided during registration. You can also check the terminal output on this site immediately after submitting for confirmation.</div></div>
             </div>
-        </div>
-    </section>
 
-    <!-- 07_Core_Operators -->
-    <section id="operators" class="py-24 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-4xl text-center">
-            <h2 class="glitch text-[#00f3ff] text-2xl mb-12" data-text="07_CORE_OPERATORS">07_CORE_OPERATORS</h2>
-            <div class="p-12 border border-dashed border-white/10 text-white/40 italic text-xs">
-                Loading operator profiles... Identification required.
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>Are the events individual or team-based?</span>
+                    <span class="faq-chevron">▾</span>
+                </div>
+                <div class="faq-answer"><div class="faq-answer-inner">Most events in CRYPTS 5.0 are individually registered — however, certain events like CIRCUIT_BREAKER may allow team participation. Refer to the Event Rulebook in the Resource Matrix for specific team size allowances per event.</div></div>
             </div>
-        </div>
-    </section>
 
-    <script src="script.js"></script>
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>What should I bring on the day of the fest?</span>
+                    <span class="faq-chevron">▾</span>
+                </div>
+                <div class="faq-answer"><div class="faq-answer-inner">Bring your school ID card and a printed or digital copy of your registration confirmation. Additional materials vary by event — consult the Participant Guide in the Resource Matrix section for event-specific requirements.</div></div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>Will there be prizes?</span>
+                    <span class="faq-chevron">▾</span>
+                </div>
+                <div class="faq-answer"><div class="faq-answer-inner">No Cash prizes or trophies as of now. Only certificates, no special award either</div></div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                    <span>Who do I contact for queries?</span>
+                    <span class="faq-chevron">▾</span>
+                </div>
+                <div class="faq-answer"><div class="faq-answer-inner">Reach out to the organizing team directly through your class teacher or the CRYPTS organizing committee. You can also use the `help` command in the terminal above — type `about` for contact information.</div></div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+     07 — CORE OPERATORS (TEAM)
+     ============================ -->
+<section id="operators" class="py-24 px-6 border-t border-white/5">
+    <div class="container mx-auto max-w-5xl">
+        <div class="section-heading reveal">
+            <span class="section-tag">// OPERATOR_PROFILES</span>
+            <h2 class="glitch text-[#00f3ff] text-2xl" data-text="07_CORE_OPERATORS">07_CORE_OPERATORS</h2>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+            <div class="operator-card reveal reveal-delay-1">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">Shivan S Chowdhry</div>
+                <span class="operator-section-tag">CLASS 11</span>
+            </div>
+
+            <div class="operator-card reveal reveal-delay-2">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">Arush</div>
+                <span class="operator-section-tag">CLASS 11</span>
+            </div>
+
+            <div class="operator-card reveal reveal-delay-3">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">—</div>
+                <span class="operator-section-tag">COMING SOON</span>
+            </div>
+
+            <div class="operator-card reveal reveal-delay-4">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">—</div>
+                <span class="operator-section-tag">COMING SOON</span>
+            </div>
+
+            <div class="operator-card reveal reveal-delay-1">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">—</div>
+                <span class="operator-section-tag">COMING SOON</span>
+            </div>
+
+            <div class="operator-card reveal reveal-delay-2">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">—</div>
+                <span class="operator-section-tag">COMING SOON</span>
+            </div>
+
+            <div class="operator-card reveal reveal-delay-3">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">—</div>
+                <span class="operator-section-tag">COMING SOON</span>
+            </div>
+
+            <div class="operator-card reveal reveal-delay-4">
+                <div class="operator-avatar">👤</div>
+                <div class="operator-name">—</div>
+                <span class="operator-section-tag">COMING SOON</span>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- ============================
+     FOOTER
+     ============================ -->
+<footer class="site-footer">
+    <p>CRYPTS 5.0 &nbsp;•&nbsp; OPG World School &nbsp;•&nbsp; Technical Symposium &nbsp;•&nbsp; <span id="footer-year"></span></p>
+    <p class="mt-2">Built with precision. Encrypted by design.</p>
+</footer>
+
+
+<script src="script.js"></script>
 </body>
 </html>
