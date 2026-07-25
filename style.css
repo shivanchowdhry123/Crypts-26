@@ -364,8 +364,8 @@ body {
    NAVIGATION
    ============================================================ */
 .nav-link {
-    font-size: 10px;
-    letter-spacing: 0.18em;
+    font-size: 13px;
+    letter-spacing: 0.16em;
     font-weight: bold;
     text-transform: uppercase;
     transition: all 0.25s ease;
@@ -893,23 +893,23 @@ body {
 }
 
 .timeline-time {
-    font-size: 9px;
-    color: rgba(255,255,255,0.25);
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
     letter-spacing: 0.1em;
     padding-top: 2px;
 }
 .timeline-content {}
 .timeline-name {
-    font-size: 11px;
+    font-size: 15px;
     font-weight: bold;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255,255,255,0.9);
     letter-spacing: 0.05em;
     margin-bottom: 4px;
 }
 .timeline-meta {
-    font-size: 9px;
-    color: rgba(255,255,255,0.3);
-    letter-spacing: 0.1em;
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.08em;
 }
 .timeline-status {
     display: inline-block;
@@ -1179,6 +1179,6 @@ body {
    GLITCH-HEADER (NAV TITLE)
    ============================================================ */
 .glitch-header {
-    font-size: 14px;
+    font-size: 20px;
     letter-spacing: 0.08em;
 }
