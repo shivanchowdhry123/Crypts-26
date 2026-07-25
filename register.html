@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Portal | CRYPTS 5.0 — OPG World School</title>
+    <meta name="description" content="Official Registration Portal for CRYPTS 5.0 Technical Symposium. Enroll for competitive coding, cryptography, web design, gaming, and AV events.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between relative overflow-x-hidden">
+
+<!-- Custom Neon Blue Pointer -->
+<div id="custom-cursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+</div>
+
+<!-- Scanline Overlay -->
+<div class="scanline"></div>
+
+<!-- Background Canvas & Blobs -->
+<canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+<div class="ambient-blob blob-1"></div>
+<div class="ambient-blob blob-2"></div>
+
+<!-- NAVIGATION HEADER -->
+<nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-white/5 backdrop-blur-sm">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="index.html" class="flex items-center group">
+            <div class="logo-image-frame logo-nav-size mr-3">
+                <img src="logo/logo.png" alt="CRYPTS 5.0 Logo">
+            </div>
+            <span class="glitch glitch-header text-white" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></span>
+        </a>
+
+        <div class="flex items-center space-x-6">
+            <span class="hidden md:inline-block text-[9px] tracking-[0.2em] text-[#00f3ff] opacity-70">NODE_STATUS: ONLINE</span>
+            <a href="index.html" class="nav-link text-white/70 hover:text-[#00f3ff] flex items-center">
+                <span class="mr-1">←</span> MAIN_TERMINAL
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN REGISTRATION CONTAINER -->
+<main class="pt-28 pb-20 px-6 flex-1 flex items-center justify-center relative z-10">
+    <div class="w-full max-w-2xl">
+
+        <!-- Back Link & Header -->
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <span class="section-tag">// REGISTRATION_PROTOCOL</span>
+                <h1 class="glitch text-[#00f3ff] text-2xl md:text-3xl mt-1" data-text="03_ENROLLMENT_PORTAL">03_ENROLLMENT_PORTAL</h1>
+            </div>
+            <a href="index.html" class="text-[9px] tracking-widest text-white/40 hover:text-[#00f3ff] uppercase transition-colors">
+                [EXIT PORTAL]
+            </a>
+        </div>
+
+        <!-- Registration Container -->
+        <div class="registration-container p-8 md:p-12 relative overflow-hidden">
+
+            <div class="text-center mb-8 border-b border-white/10 pb-6">
+                <h2 class="text-2xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">Crypts 5.0 Registration</h2>
+                <p class="text-white/40 text-xs tracking-widest uppercase">OPG World School • Technical Symposium</p>
+                <div class="mt-3 inline-block text-[8px] tracking-[0.2em] color-[#ff00c1] border border-[#ff00c1]/30 bg-[#ff00c1]/10 px-3 py-1 rounded">
+                    ENCRYPTION: 256-BIT SSL ACTIVE
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="registration-form" class="space-y-4" novalidate>
+                
+                <!-- Email -->
+                <div>
+                    <label class="reg-field-label" for="reg-email">Email Address <span class="text-[#ff00c1]">*</span></label>
+                    <input type="email" id="reg-email" class="reg-field-input" placeholder="operator@domain.edu" required>
+                    <p class="field-error-msg" id="err-email">⚠ Enter a valid email address.</p>
+                </div>
+
+                <!-- Name -->
+                <div>
+                    <label class="reg-field-label" for="reg-name">Operator Name <span class="text-[#ff00c1]">*</span></label>
+                    <input type="text" id="reg-name" class="reg-field-input" placeholder="Full Name" required>
+                    <p class="field-error-msg" id="err-name">⚠ Name must be at least 2 characters.</p>
+                </div>
+
+                <!-- Class & Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="reg-field-label" for="reg-class">Class <span class="text-[#ff00c1]">*</span></label>
+                        <select id="reg-class" class="reg-field-input" required>
+                            <option value="" disabled selected>Select Class</option>
+                            <option value="4">Class 4</option>
+                            <option value="5">Class 5</option>
+                            <option value="6">Class 6</option>
+                            <option value="7">Class 7</option>
+                            <option value="8">Class 8</option>
+                            <option value="9">Class 9</option>
+                            <option value="10">Class 10</option>
+                            <option value="11">Class 11</option>
+                            <option value="12">Class 12</option>
+                        </select>
+                        <p class="field-error-msg" id="err-class">⚠ Select your class.</p>
+                    </div>
+                    <div>
+                        <label class="reg-field-label" for="reg-section">Section <span class="text-[#ff00c1]">*</span></label>
+                        <input type="text" id="reg-section" class="reg-field-input" placeholder="A / Agni / Jal…" required>
+                        <p class="field-error-msg" id="err-section">⚠ Enter your section.</p>
+                    </div>
+                </div>
+
+                <!-- Event Selection Tag Chips -->
+                <div>
+                    <label class="reg-field-label">Select Event Modules <span class="text-white/30">(tap to select multiple)</span> <span class="text-[#ff00c1]">*</span></label>
+                    <div class="event-tag-grid" id="event-tag-grid">
+                        <button type="button" class="event-tag-chip" data-event="mission_decrypt">MISSION_DECRYPT</button>
+                        <button type="button" class="event-tag-chip" data-event="codequest">CODEQUEST</button>
+                        <button type="button" class="event-tag-chip" data-event="web_werkz">WEB_WERKZ</button>
+                        <button type="button" class="event-tag-chip" data-event="pixel_forge">PIXEL_FORGE</button>
+                        <button type="button" class="event-tag-chip" data-event="circuit_breaker">CIRCUIT_BREAKER</button>
+                        <button type="button" class="event-tag-chip" data-event="signal_craft">SIGNAL_CRAFT</button>
+                    </div>
+                    <input type="hidden" id="reg-events" name="events">
+                    <p class="field-error-msg" id="err-events">⚠ Select at least one event module.</p>
+                </div>
+
+                <!-- Status Console readout -->
+                <div id="reg-console-output" class="hidden p-4 bg-black/60 border border-[#00f3ff]/30 text-[10px] font-mono space-y-1 text-white/80 rounded"></div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="transmit-btn" class="transmit-btn mt-6">TRANSMIT ENROLLMENT</button>
+            </form>
+
+            <!-- Success Confirmation State (Hidden initially) -->
+            <div id="success-screen" class="hidden text-center py-8 space-y-6">
+                <div class="w-16 h-16 bg-[#00f3ff]/10 border-2 border-[#00f3ff] rounded-full flex items-center justify-center mx-auto text-2xl shadow-[0_0_25px_rgba(0,243,255,0.4)]">
+                    ✓
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-[#00f3ff] uppercase tracking-wide">TRANSMISSION CONFIRMED</h3>
+                    <p class="text-white/60 text-xs mt-2 max-w-md mx-auto">Your enrollment payload has been successfully verified and appended to the central matrix database.</p>
+                </div>
+                <div class="p-4 bg-black/50 border border-white/10 text-[10px] font-mono text-left max-w-sm mx-auto space-y-1">
+                    <div class="text-[#ff00c1] font-bold">// TICKET_SUMMARY</div>
+                    <div>STATUS: CONFIRMED</div>
+                    <div>EMAIL: <span id="summary-email" class="text-white"></span></div>
+                    <div>OPERATOR: <span id="summary-name" class="text-white"></span></div>
+                    <div>CLASS/SEC: <span id="summary-class" class="text-white"></span></div>
+                    <div>EVENTS: <span id="summary-events" class="text-[#00f3ff]"></span></div>
+                </div>
+                <a href="index.html" class="inline-block bg-[#00f3ff] text-black font-bold px-8 py-3 rounded uppercase tracking-widest text-xs hover:shadow-[0_0_20px_rgba(0,243,255,0.5)] transition-all">
+                    RETURN TO MAIN SITE →
+                </a>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer relative z-10">
+    <p>CRYPTS 5.0 &nbsp;•&nbsp; OPG World School &nbsp;•&nbsp; Technical Symposium &nbsp;•&nbsp; <span id="footer-year">2026</span></p>
+    <p class="mt-2">Built with precision. Encrypted by design.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

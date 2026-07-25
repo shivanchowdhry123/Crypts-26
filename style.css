@@ -35,6 +35,11 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Hide native mouse pointer across entire site */
+body, a, button, input, select, textarea, [role="button"], label {
+    cursor: none !important;
+}
+
 body {
     background-color: var(--dark-void);
     color: #d0d8e8;
@@ -45,6 +50,157 @@ body {
         radial-gradient(ellipse at 90% 50%, rgba(0, 243, 255, 0.04) 0%, transparent 50%),
         linear-gradient(180deg, var(--dark-void) 0%, #010307 100%);
     background-attachment: fixed;
+}
+
+/* ============================================================
+   CUSTOM BLUE / CYAN POINTER
+   ============================================================ */
+#custom-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 999999;
+    will-change: transform;
+    transform: translate3d(-100px, -100px, 0);
+}
+
+.cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--cyan-accent);
+    border-radius: 50%;
+    position: absolute;
+    top: -4px; left: -4px;
+    box-shadow: 0 0 10px var(--cyan-accent), 0 0 20px var(--cyan-accent);
+    transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.cursor-ring {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid rgba(0, 243, 255, 0.5);
+    border-radius: 50%;
+    position: absolute;
+    top: -16px; left: -16px;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(0, 243, 255, 0.1);
+    transition: transform 0.2s ease, border-color 0.2s ease, width 0.2s ease, height 0.2s ease;
+}
+
+/* Hovering state over links/buttons */
+#custom-cursor.hovering .cursor-dot {
+    transform: scale(1.6);
+    background-color: var(--magenta-bright);
+    box-shadow: 0 0 12px var(--magenta-bright), 0 0 25px var(--magenta-bright);
+}
+
+#custom-cursor.hovering .cursor-ring {
+    transform: scale(1.4);
+    border-color: var(--magenta-core);
+    box-shadow: 0 0 20px var(--magenta-glow);
+}
+
+/* ============================================================
+   CYBERPUNK LOADING SCREEN
+   ============================================================ */
+#loader-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999999;
+    background: #020712;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s ease;
+}
+
+#loader-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.loader-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 0 20px var(--magenta-glow));
+    animation: loaderPulse 2s infinite ease-in-out;
+}
+.loader-logo img {
+    width: 100%;
+    height: auto;
+    mix-blend-mode: screen;
+}
+
+@keyframes loaderPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px var(--magenta-glow)); }
+    50% { transform: scale(1.05); filter: drop-shadow(0 0 35px var(--cyan-glow-strong)); }
+}
+
+.loader-title {
+    font-size: 2.2rem;
+    letter-spacing: -0.05em;
+    margin-bottom: 4px;
+}
+
+.loader-sub {
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: var(--cyan-accent);
+    opacity: 0.7;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.loader-bar-wrap {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+    margin-bottom: 14px;
+}
+
+.loader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--magenta-core), var(--cyan-accent));
+    box-shadow: 0 0 15px var(--cyan-accent);
+    transition: width 0.1s linear;
+}
+
+.loader-status {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+#loader-log {
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.1em;
+}
+
+.loader-num {
+    color: var(--cyan-accent);
+    font-weight: bold;
+    letter-spacing: 0.1em;
 }
 
 /* Custom Scrollbar */
@@ -803,10 +959,13 @@ body {
 }
 .faq-answer {
     max-height: 0;
+    opacity: 0;
     overflow: hidden;
-    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
 }
-.faq-answer.open { max-height: 300px; }
+.faq-answer.open {
+    opacity: 1;
+}
 .faq-answer-inner {
     font-size: 11px;
     color: rgba(255,255,255,0.45);
@@ -973,12 +1132,20 @@ body {
 /* ============================================================
    SCROLL REVEAL
    ============================================================ */
+/* Content is ALWAYS visible — the observer adds .visible for
+   a bonus fade-in-up animation but hiding is never required. */
 .reveal {
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1;
+    transform: translateY(0);
     transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.reveal.visible {
+/* Elements that haven't entered the viewport yet get this class
+   via JS only when a scroll animation is desired */
+.reveal.pre-animate {
+    opacity: 0;
+    transform: translateY(20px);
+}
+.reveal.pre-animate.visible {
     opacity: 1;
     transform: translateY(0);
 }

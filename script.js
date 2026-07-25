@@ -60,8 +60,8 @@ function handleCommand(cmd) {
         clear: () => { if (terminalOutput) terminalOutput.innerHTML = ''; },
         help: () => addLog("COMMANDS: help · clear · enroll · modules · status · about · matrix · schedule · team", "text-[#00f3ff]"),
         enroll: () => {
-            addLog("> REDIRECTING TO ENROLLMENT PORTAL...", "text-[#ff00c1]");
-            setTimeout(() => { window.location.hash = "enrollment"; }, 400);
+            addLog("> REDIRECTING TO REGISTRATION PORTAL...", "text-[#ff00c1]");
+            setTimeout(() => { window.location.href = "register.html"; }, 400);
         },
         modules: () => {
             addLog("> NAVIGATING TO EVENT MODULES...", "text-[#00f3ff]");
@@ -208,32 +208,81 @@ function initParticleCanvas() {
 
 
 // ============================================================
-// CURSOR TRAIL
+// CUSTOM NEON BLUE POINTER & HOVER EFFECTS
 // ============================================================
-function initCursorTrail() {
-    const trail = document.getElementById('cursor-trail');
-    if (!trail) return;
+function initCustomCursor() {
+    const cursor = document.getElementById('custom-cursor');
+    if (!cursor) return;
 
-    let targetX = 0, targetY = 0;
-    let currentX = 0, currentY = 0;
-    let visible = false;
+    let mouseX = -100, mouseY = -100;
 
     document.addEventListener('mousemove', (e) => {
-        targetX = e.clientX;
-        targetY = e.clientY;
-        if (!visible) { trail.style.opacity = '1'; visible = true; }
-    });
-    document.addEventListener('mouseleave', () => {
-        trail.style.opacity = '0'; visible = false;
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
     });
 
-    function animate() {
-        currentX += (targetX - currentX) * 0.12;
-        currentY += (targetY - currentY) * 0.12;
-        trail.style.transform = `translate3d(${currentX - 6}px, ${currentY - 6}px, 0)`;
-        requestAnimationFrame(animate);
-    }
-    animate();
+    // Add pointer hover effect for all clickable elements
+    const interactiveSelectors = 'a, button, input, select, textarea, .event-card, .faq-question, .filter-chip, .event-tag-chip, .timeline-tab, .resource-btn, .operator-card, .cmd-badge';
+
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+            cursor.classList.add('hovering');
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(interactiveSelectors)) {
+            cursor.classList.remove('hovering');
+        }
+    });
+}
+
+
+// ============================================================
+// CYBERPUNK BOOT / LOADING SCREEN
+// ============================================================
+function initLoaderScreen() {
+    const loaderScreen = document.getElementById('loader-screen');
+    const loaderBar    = document.getElementById('loader-bar');
+    const loaderLog    = document.getElementById('loader-log');
+    const loaderNum    = document.getElementById('loader-percent');
+
+    if (!loaderScreen || !loaderBar) return;
+
+    const stages = [
+        { pct: 15,  msg: "> INITIALIZING SYSTEM CORE..." },
+        { pct: 40,  msg: "> ESTABLISHING SECURE GATEWAY..." },
+        { pct: 70,  msg: "> INDEXING EVENT MODULE MATRIX..." },
+        { pct: 90,  msg: "> VERIFYING SECURITY SIGNATURES..." },
+        { pct: 100, msg: "> SYSTEM READY. WELCOME TO CRYPTS 5.0" }
+    ];
+
+    let currentStage = 0;
+    let progress = 0;
+
+    const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 8) + 4;
+        if (progress > 100) progress = 100;
+
+        loaderBar.style.width = `${progress}%`;
+        if (loaderNum) loaderNum.innerText = `${progress}%`;
+
+        if (currentStage < stages.length && progress >= stages[currentStage].pct) {
+            if (loaderLog) loaderLog.innerText = stages[currentStage].msg;
+            currentStage++;
+        }
+
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                loaderScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    loaderScreen.style.display = 'none';
+                }, 600);
+            }, 300);
+        }
+    }, 45);
 }
 
 
@@ -245,7 +294,8 @@ function initEventFilter() {
     const cards = document.querySelectorAll('#event-grid .event-card');
 
     chips.forEach(chip => {
-        chip.addEventListener('click', () => {
+        chip.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
             chips.forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
 
@@ -270,7 +320,8 @@ function initEventTagChips() {
     const selected = new Set();
 
     chips.forEach(chip => {
-        chip.addEventListener('click', () => {
+        chip.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
             const ev = chip.dataset.event;
             if (selected.has(ev)) {
                 selected.delete(ev);
@@ -287,17 +338,18 @@ function initEventTagChips() {
     return selected;
 }
 
-
 // ============================================================
 // LIVE FORM VALIDATION + SUBMISSION
 // ============================================================
 function initRegistrationForm(selectedEvents) {
-    const form     = document.getElementById('registration-form');
-    const emailEl  = document.getElementById('reg-email');
-    const nameEl   = document.getElementById('reg-name');
-    const classEl  = document.getElementById('reg-class');
-    const sectionEl= document.getElementById('reg-section');
-    const submitBtn= document.getElementById('transmit-btn');
+    const form          = document.getElementById('registration-form');
+    const emailEl       = document.getElementById('reg-email');
+    const nameEl        = document.getElementById('reg-name');
+    const classEl       = document.getElementById('reg-class');
+    const sectionEl     = document.getElementById('reg-section');
+    const submitBtn     = document.getElementById('transmit-btn');
+    const consoleOutput = document.getElementById('reg-console-output');
+    const successScreen = document.getElementById('success-screen');
 
     if (!form) return;
 
@@ -337,7 +389,7 @@ function initRegistrationForm(selectedEvents) {
         if (sectionEl && !validators.section(sectionEl.value)){ setError(sectionEl, 'err-section', false); valid = false; }
 
         const errEventsEl = document.getElementById('err-events');
-        if (selectedEvents.size === 0) {
+        if (selectedEvents && selectedEvents.size === 0) {
             if (errEventsEl) errEventsEl.classList.add('visible');
             valid = false;
         }
@@ -348,12 +400,17 @@ function initRegistrationForm(selectedEvents) {
         submitBtn.disabled = true;
         submitBtn.innerText = "TRANSMITTING...";
 
+        if (consoleOutput) {
+            consoleOutput.classList.remove('hidden');
+            consoleOutput.innerHTML = `<div>> ENCRYPTING PAYLOAD PACKET...</div><div>> CONNECTING TO GOOGLE SHEET NODE...</div>`;
+        }
+
         const data = {
             email:     emailEl ? emailEl.value.trim() : '',
             name:      nameEl  ? nameEl.value.trim()  : '',
             class:     classEl ? classEl.value        : '',
             section:   sectionEl ? sectionEl.value.trim() : '',
-            events:    Array.from(selectedEvents).join(', '),
+            events:    selectedEvents ? Array.from(selectedEvents).join(', ') : '',
             timestamp: new Date().toLocaleString(),
         };
 
@@ -371,16 +428,32 @@ function initRegistrationForm(selectedEvents) {
             addLog("> SUCCESS: PACKET_RECEIVED_BY_CENTRAL_NODE.", "text-[#00f3ff] font-bold");
             addLog("> CONFIRMATION_EMAIL_QUEUED.", "text-white/40");
 
-            form.reset();
-            selectedEvents.clear();
-            document.querySelectorAll('#event-tag-grid .event-tag-chip').forEach(c => c.classList.remove('selected'));
-            submitBtn.disabled = false;
-            submitBtn.innerText = "TRANSMIT ENROLLMENT";
+            if (consoleOutput) {
+                consoleOutput.innerHTML += `<div class="text-[#00f3ff]">> SUCCESS: ENROLLMENT CONFIRMED.</div>`;
+            }
 
-            setTimeout(() => { window.location.hash = "briefing"; }, 2800);
+            // On standalone register.html, render the ticket confirmation card!
+            if (successScreen) {
+                form.classList.add('hidden');
+                document.getElementById('summary-email').innerText  = data.email;
+                document.getElementById('summary-name').innerText   = data.name;
+                document.getElementById('summary-class').innerText  = `${data.class} (${data.section})`;
+                document.getElementById('summary-events').innerText = data.events;
+                successScreen.classList.remove('hidden');
+            } else {
+                form.reset();
+                if (selectedEvents) selectedEvents.clear();
+                document.querySelectorAll('#event-tag-grid .event-tag-chip').forEach(c => c.classList.remove('selected'));
+                submitBtn.disabled = false;
+                submitBtn.innerText = "TRANSMIT ENROLLMENT";
+                setTimeout(() => { window.location.hash = "briefing"; }, 2800);
+            }
 
         } catch (err) {
             addLog("> CRITICAL_FAILURE: UNABLE TO SYNC WITH MATRIX.", "text-red-400");
+            if (consoleOutput) {
+                consoleOutput.innerHTML += `<div class="text-red-400">> ERROR: NETWORK TRANSMISSION FAILURE.</div>`;
+            }
             submitBtn.disabled = false;
             submitBtn.innerText = "RETRY TRANSMISSION";
         }
@@ -411,14 +484,14 @@ function initCommandPalette() {
 
     let highlighted = 0;
 
-    function open() {
+    function openPalette() {
         palette.classList.add('open');
         input.value = '';
         renderResults('');
         input.focus();
     }
 
-    function close() {
+    function closePalette() {
         palette.classList.remove('open');
         highlighted = 0;
     }
@@ -439,7 +512,7 @@ function initCommandPalette() {
         results.querySelectorAll('.palette-item').forEach(el => {
             el.addEventListener('click', () => {
                 window.location.href = el.dataset.href;
-                close();
+                closePalette();
             });
         });
     }
@@ -457,9 +530,9 @@ function initCommandPalette() {
             highlighted = Math.max(highlighted - 1, 0);
         } else if (e.key === 'Enter' && items[highlighted]) {
             window.location.href = items[highlighted].dataset.href;
-            close();
+            closePalette();
         } else if (e.key === 'Escape') {
-            close();
+            closePalette();
         }
         renderResults(input.value);
     });
@@ -467,17 +540,75 @@ function initCommandPalette() {
     document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
             e.preventDefault();
-            palette.classList.contains('open') ? close() : open();
+            palette.classList.contains('open') ? closePalette() : openPalette();
         }
-        if (e.key === 'Escape' && palette.classList.contains('open')) close();
+        if (e.key === 'Escape' && palette.classList.contains('open')) closePalette();
     });
 
     palette.addEventListener('click', (e) => {
-        if (e.target === palette) close();
+        if (e.target === palette) closePalette();
     });
 
     if (badgeTrigger) badgeTrigger.addEventListener('click', () => {
-        palette.classList.contains('open') ? close() : open();
+        palette.classList.contains('open') ? closePalette() : openPalette();
+    });
+}
+
+// ============================================================
+// EVENT FILTER TAGS (Modules Section)
+// ============================================================
+function initEventFilter() {
+    const chips = document.querySelectorAll('.filter-chip');
+    const cards = document.querySelectorAll('#event-grid .event-card');
+
+    chips.forEach(chip => {
+        chip.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+
+            const filter = chip.dataset.filter;
+            cards.forEach(card => {
+                const cat = card.dataset.category;
+                const show = (filter === 'all' || cat === filter);
+                if (show) {
+                    card.style.display = 'block';
+                    card.classList.add('visible');
+                    card.style.opacity = '1';
+                    card.style.transform = 'none';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+}
+
+// ============================================================
+// TIMELINE TABS (Chronos Schedule)
+// ============================================================
+function initTimelineTabs() {
+    const tabs   = document.querySelectorAll('.timeline-tab');
+    const panels = document.querySelectorAll('.timeline-panel');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
+            tabs.forEach(t => t.classList.remove('active'));
+            panels.forEach(p => p.classList.remove('active'));
+
+            tab.classList.add('active');
+            const target = document.getElementById(`tab-${tab.dataset.tab}`);
+            if (target) {
+                target.classList.add('active');
+                // Force visibility on all children inside newly activated panel
+                target.querySelectorAll('.timeline-item, .reveal').forEach(item => {
+                    item.classList.add('visible');
+                    item.style.opacity = '1';
+                    item.style.transform = 'none';
+                });
+            }
+        });
     });
 }
 
@@ -488,46 +619,46 @@ function initCommandPalette() {
 function initFAQ() {
     const questions = document.querySelectorAll('.faq-question');
     questions.forEach(q => {
-        const answer = q.nextElementSibling;
+        const item = q.closest('.faq-item');
+        const answer = item ? item.querySelector('.faq-answer') : q.nextElementSibling;
 
-        const toggle = () => {
+        const toggle = (e) => {
+            if (e) e.preventDefault();
             const isOpen = q.classList.contains('open');
-            // Close all
-            questions.forEach(other => {
-                other.classList.remove('open');
-                other.setAttribute('aria-expanded', 'false');
-                if (other.nextElementSibling) other.nextElementSibling.classList.remove('open');
+
+            // Close all FAQ items
+            questions.forEach(otherQ => {
+                otherQ.classList.remove('open');
+                otherQ.setAttribute('aria-expanded', 'false');
+                const otherItem = otherQ.closest('.faq-item');
+                const otherAnswer = otherItem ? otherItem.querySelector('.faq-answer') : otherQ.nextElementSibling;
+                if (otherAnswer) {
+                    otherAnswer.classList.remove('open');
+                    otherAnswer.style.maxHeight = '0px';
+                    otherAnswer.style.opacity = '0';
+                }
             });
-            // Open clicked if it was closed
+
+            // Open clicked FAQ if it was closed
             if (!isOpen) {
                 q.classList.add('open');
                 q.setAttribute('aria-expanded', 'true');
-                if (answer) answer.classList.add('open');
+                if (answer) {
+                    answer.classList.add('open');
+                    const inner = answer.querySelector('.faq-answer-inner');
+                    const targetHeight = inner ? inner.scrollHeight + 30 : 300;
+                    answer.style.maxHeight = targetHeight + 'px';
+                    answer.style.opacity = '1';
+                }
             }
         };
 
         q.addEventListener('click', toggle);
         q.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-        });
-    });
-}
-
-
-// ============================================================
-// TIMELINE TABS
-// ============================================================
-function initTimelineTabs() {
-    const tabs   = document.querySelectorAll('.timeline-tab');
-    const panels = document.querySelectorAll('.timeline-panel');
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            panels.forEach(p => p.classList.remove('active'));
-            tab.classList.add('active');
-            const target = document.getElementById(`tab-${tab.dataset.tab}`);
-            if (target) target.classList.add('active');
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggle(e);
+            }
         });
     });
 }
@@ -568,6 +699,13 @@ function initActiveNav() {
 // ============================================================
 function initScrollReveal() {
     const revealEls = document.querySelectorAll('.reveal');
+
+    // Show any element already in viewport immediately
+    function checkVisible(el) {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+    }
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -575,8 +713,22 @@ function initScrollReveal() {
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.12 });
-    revealEls.forEach(el => observer.observe(el));
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => {
+        if (checkVisible(el)) {
+            el.classList.add('visible'); // immediate show if already in viewport
+        } else {
+            observer.observe(el);
+        }
+    });
+
+    // Hard fallback: force all remaining invisible reveals after 800ms
+    setTimeout(() => {
+        document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+            el.classList.add('visible');
+        });
+    }, 800);
 }
 
 
@@ -621,36 +773,35 @@ function initFooterYear() {
 // ============================================================
 // BOOT SEQUENCE
 // ============================================================
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavigation);
-} else {
-    initNavigation();
+function bootApp() {
+    const safe = (name, fn) => {
+        try { fn(); }
+        catch (e) { console.error(`[CRYPTS] ${name} failed:`, e); }
+    };
+
+    safe('loaderScreen',   () => initLoaderScreen());
+    safe('customCursor',   () => initCustomCursor());
+    safe('navigation',     () => initNavigation());
+    safe('timestamp',      () => {
+        setInterval(updateTimestamp, 1000);
+        updateTimestamp();
+    });
+    safe('terminal',       () => runInitialLogs());
+    safe('particleCanvas', () => initParticleCanvas());
+    safe('eventFilter',    () => initEventFilter());
+    let selectedEvents = new Set();
+    safe('eventTagChips',  () => { selectedEvents = initEventTagChips(); });
+    safe('regForm',        () => initRegistrationForm(selectedEvents));
+    safe('cmdPalette',     () => initCommandPalette());
+    safe('faq',            () => initFAQ());
+    safe('timelineTabs',   () => initTimelineTabs());
+    safe('activeNav',      () => initActiveNav());
+    safe('scrollReveal',   () => initScrollReveal());
+    safe('footerYear',     () => initFooterYear());
 }
 
-window.onload = () => {
-    // Timestamp ticker
-    setInterval(updateTimestamp, 1000);
-    updateTimestamp();
-
-    // Terminal boot
-    runInitialLogs();
-
-    // Visual systems
-    initParticleCanvas();
-    initCursorTrail();
-
-    // Interactivity
-    initEventFilter();
-    const selectedEvents = initEventTagChips();
-    initRegistrationForm(selectedEvents);
-    initCommandPalette();
-    initFAQ();
-    initTimelineTabs();
-
-    // Navigation & reveal
-    initActiveNav();
-    initScrollReveal();
-
-    // Footer
-    initFooterYear();
-};
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootApp);
+} else {
+    bootApp();
+}

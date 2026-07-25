@@ -11,8 +11,31 @@
 </head>
 <body class="antialiased">
 
-<!-- Cursor Trail -->
-<div id="cursor-trail"></div>
+<!-- Custom Neon Blue Pointer -->
+<div id="custom-cursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+</div>
+
+<!-- Cyberpunk Loading Screen -->
+<div id="loader-screen">
+    <div class="loader-content">
+        <div class="loader-logo">
+            <img src="logo/logo.png" alt="CRYPTS 5.0 Logo">
+        </div>
+        <div class="loader-title glitch" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></div>
+        <div class="loader-sub">OPG WORLD SCHOOL • SYSTEM BOOT</div>
+
+        <div class="loader-bar-wrap">
+            <div id="loader-bar" class="loader-bar"></div>
+        </div>
+
+        <div class="loader-status">
+            <span id="loader-log">> INITIALIZING SYSTEM CORE...</span>
+            <span id="loader-percent" class="loader-num">0%</span>
+        </div>
+    </div>
+</div>
 
 <!-- Scanline Overlay -->
 <div class="scanline"></div>
@@ -48,7 +71,9 @@
         <div class="hidden lg:flex items-center space-x-6">
             <a href="#briefing"    class="nav-link text-white/60" id="nav-briefing">01_BRIEF</a>
             <a href="#modules"     class="nav-link text-white/60" id="nav-modules">02_MODULES</a>
-            <a href="#enrollment"  class="nav-link text-[#ff00c1]" id="nav-enrollment">03_PORTAL</a>
+            <a href="register.html" class="nav-link text-[#ff00c1] flex items-center font-bold" id="nav-enrollment">
+                03_PORTAL <span class="ml-1 bg-[#ff00c1]/20 border border-[#ff00c1] text-[#ff00c1] px-1.5 py-0.5 rounded text-[8px]">SIGN UP</span>
+            </a>
             <a href="#matrix"      class="nav-link text-white/60" id="nav-matrix">04_MATRIX</a>
             <a href="#chronos"     class="nav-link text-white/60" id="nav-chronos">05_CHRONOS</a>
             <a href="#resolution"  class="nav-link text-white/60" id="nav-resolution">06_QUERY</a>
@@ -69,7 +94,7 @@
     </button>
     <a href="#briefing"   class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">01_BRIEFING</a>
     <a href="#modules"    class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">02_MODULES</a>
-    <a href="#enrollment" class="text-base font-bold tracking-widest text-[#ff00c1] hover:text-[#00f3ff]">03_PORTAL</a>
+    <a href="register.html" class="text-base font-bold tracking-widest text-[#ff00c1] hover:text-[#00f3ff]">03_PORTAL (SIGN UP)</a>
     <a href="#matrix"     class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">04_MATRIX</a>
     <a href="#chronos"    class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">05_CHRONOS</a>
     <a href="#resolution" class="text-base font-bold tracking-widest text-white/80 hover:text-[#00f3ff]">06_QUERY</a>
@@ -135,7 +160,7 @@
 
     <!-- Briefing Stats -->
     <div class="w-full max-w-4xl grid md:grid-cols-2 gap-12 items-center relative z-10">
-        <div class="reveal">
+        <div>
             <h2 class="glitch text-[#00f3ff] text-lg mb-4 tracking-tighter" data-text="01_BRIEFING">01_BRIEFING</h2>
             <p class="text-white/60 text-sm leading-relaxed mb-6">
                 CRYPTS (Cryptic Realms of Yielding Problem Solving) is more than a fest — it's a high-stakes simulation. In 5.0, we prioritize <strong class="text-white">Efficiency, Logic, and Resilience</strong> across every module.
@@ -262,68 +287,32 @@
             <h2 class="glitch text-[#00f3ff] text-2xl" data-text="03_ENROLLMENT_PORTAL">03_ENROLLMENT_PORTAL</h2>
         </div>
 
-        <div class="registration-container mt-4 p-8 md:p-12 reveal">
-            <div class="text-center mb-10">
-                <h3 class="text-xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">CRYPTS 5.0 Registration</h3>
-                <p class="text-white/30 text-xs tracking-widest uppercase">Secure · Encrypted · Confirmed</p>
+        <div class="registration-container mt-4 p-10 md:p-14 text-center reveal relative overflow-hidden">
+            <div class="inline-block text-[9px] tracking-[0.3em] text-[#00f3ff] border border-[#00f3ff]/30 bg-[#00f3ff]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
+                STANDALONE TRANSMISSION NODE
+            </div>
+            
+            <h3 class="text-3xl font-bold tracking-tight text-white uppercase mb-4">
+                Ready to Enter the Singularity?
+            </h3>
+            
+            <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-8">
+                Official registration for all 12+ competitive missions is hosted on a dedicated, encrypted portal. Select your modules and claim your operator status.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="register.html" class="transmit-btn sm:w-auto px-10 py-4 inline-flex items-center justify-center shadow-[0_0_30px_rgba(217,0,188,0.4)]">
+                    INITIALIZE REGISTRATION →
+                </a>
             </div>
 
-            <form id="registration-form" class="space-y-2" novalidate>
-                <!-- Email -->
-                <div>
-                    <label class="reg-field-label" for="reg-email">Email Address</label>
-                    <input type="email" id="reg-email" class="reg-field-input" placeholder="operator@domain.edu" required>
-                    <p class="field-error-msg" id="err-email">⚠ Enter a valid email address.</p>
-                </div>
-                <!-- Name -->
-                <div>
-                    <label class="reg-field-label" for="reg-name">Operator Name</label>
-                    <input type="text" id="reg-name" class="reg-field-input" placeholder="Full Name" required>
-                    <p class="field-error-msg" id="err-name">⚠ Name must be at least 2 characters.</p>
-                </div>
-                <!-- Class & Section in two columns -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="reg-field-label" for="reg-class">Class</label>
-                        <select id="reg-class" class="reg-field-input" required>
-                            <option value="" disabled selected>Select Class</option>
-                            <option value="4">Class 4</option>
-                            <option value="5">Class 5</option>
-                            <option value="6">Class 6</option>
-                            <option value="7">Class 7</option>
-                            <option value="8">Class 8</option>
-                            <option value="9">Class 9</option>
-                            <option value="10">Class 10</option>
-                            <option value="11">Class 11</option>
-                            <option value="12">Class 12</option>
-                        </select>
-                        <p class="field-error-msg" id="err-class">⚠ Select your class.</p>
-                    </div>
-                    <div>
-                        <label class="reg-field-label" for="reg-section">Section</label>
-                        <input type="text" id="reg-section" class="reg-field-input" placeholder="A / Agni / Jal…" required>
-                        <p class="field-error-msg" id="err-section">⚠ Enter your section.</p>
-                    </div>
-                </div>
-
-                <!-- Event Selection — Tag Chips -->
-                <div>
-                    <label class="reg-field-label">Select Events <span class="text-white/20">(tap to select)</span></label>
-                    <div class="event-tag-grid" id="event-tag-grid">
-                        <button type="button" class="event-tag-chip" data-event="mission_decrypt">MISSION_DECRYPT</button>
-                        <button type="button" class="event-tag-chip" data-event="codequest">CODEQUEST</button>
-                        <button type="button" class="event-tag-chip" data-event="web_werkz">WEB_WERKZ</button>
-                        <button type="button" class="event-tag-chip" data-event="pixel_forge">PIXEL_FORGE</button>
-                        <button type="button" class="event-tag-chip" data-event="circuit_breaker">CIRCUIT_BREAKER</button>
-                        <button type="button" class="event-tag-chip" data-event="signal_craft">SIGNAL_CRAFT</button>
-                    </div>
-                    <!-- Hidden input carries the selected values for form submission -->
-                    <input type="hidden" id="reg-events" name="events">
-                    <p class="field-error-msg" id="err-events">⚠ Select at least one event.</p>
-                </div>
-
-                <button type="submit" id="transmit-btn" class="transmit-btn mt-6">TRANSMIT ENROLLMENT</button>
-            </form>
+            <div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap justify-center items-center gap-6 text-[10px] text-white/40 uppercase tracking-widest font-mono">
+                <span>⚡ 256-BIT ENCRYPTION</span>
+                <span>•</span>
+                <span>🔒 SECURE FORM</span>
+                <span>•</span>
+                <span>📧 INSTANT EMAIL RECEIPT</span>
+            </div>
         </div>
     </div>
 </section>
