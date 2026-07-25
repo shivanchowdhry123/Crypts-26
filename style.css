@@ -342,26 +342,31 @@ body {
     height: auto;
     filter: drop-shadow(0 0 20px var(--magenta-glow));
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+}
 .logo-image-frame img {
     width: 100%;
     height: auto;
     display: block;
     mix-blend-mode: screen;
-    image-rendering: -webkit-optimize-contrast;
 }
-
 .logo-image-frame:hover {
     transform: scale(1.06) rotate(1deg);
     filter: drop-shadow(0 0 30px var(--magenta-bright));
+}
+
+.logo-nav-size {
+    width: 36px !important;
+    margin: 0 12px;
+    filter: drop-shadow(0 0 8px var(--magenta-glow));
 }
 
 /* ============================================================
    NAVIGATION
    ============================================================ */
 .nav-link {
-    font-size: 11px;
-    letter-spacing: 0.22em;
-    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    font-weight: bold;
     text-transform: uppercase;
     transition: all 0.25s ease;
     position: relative;
@@ -369,26 +374,26 @@ body {
 .nav-link::after {
     content: '';
     position: absolute;
-    bottom: -4px; left: 0;
-    width: 0; height: 2px;
+    bottom: -3px; left: 0;
+    width: 0; height: 1px;
     background: var(--cyan-accent);
     transition: width 0.3s ease;
-    box-shadow: 0 0 8px var(--cyan-glow);
+    box-shadow: 0 0 6px var(--cyan-glow);
 }
 .nav-link:hover, .nav-link.active {
     color: var(--cyan-accent) !important;
-    text-shadow: 0 0 10px var(--cyan-glow);
+    text-shadow: 0 0 8px var(--cyan-glow);
 }
 .nav-link:hover::after, .nav-link.active::after {
     width: 100%;
 }
 
 .cmd-badge {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.4);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 4px 10px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 2px 8px;
     border-radius: 3px;
     cursor: pointer;
     transition: all 0.2s ease;
