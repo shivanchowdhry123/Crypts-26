@@ -15,9 +15,9 @@
 function doPost(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // 1. DATABASE SETUP
+  // 1. DATABASE SETUP (Fixed tab renaming instead of file renaming)
   var databaseSheet = ss.getSheetByName("CRYPTS_5.0_FORMS_DATABASE") || ss.getSheets()[0];
-  if (ss.getName() !== "CRYPTS_5.0_FORMS_DATABASE") ss.rename("CRYPTS_5.0_FORMS_DATABASE");
+  databaseSheet.setName("CRYPTS_5.0_FORMS_DATABASE");
   
   if (databaseSheet.getLastRow() === 0) {
     databaseSheet.appendRow(["Timestamp", "Operator Name", "Email", "Class", "Section", "Events Selected"]);
@@ -28,24 +28,23 @@ function doPost(e) {
   var data = JSON.parse(e.postData.contents);
   databaseSheet.appendRow([data.timestamp, data.name, data.email, data.class, data.section, data.events]);
 
-  // 3. FETCH ADMIN LIST (The "Simpler" Way)
+  // 3. FETCH ADMIN LIST
   var adminSheet = ss.getSheetByName("ORGANISERS");
   var adminEmails = [];
   
   if (adminSheet) {
     var adminData = adminSheet.getDataRange().getValues();
-    // Assuming Column A is Name, Column B is Email. Skip header row 1.
     for (var i = 1; i < adminData.length; i++) {
       if (adminData[i][1]) adminEmails.push(adminData[i][1]);
     }
   } else {
-    // Fallback if you forget to create the sheet
     adminEmails = ["chowdhryshivan@gmail.com"];
   }
 
-  // 4. USER CONFIRMATION
+  // 4. USER CONFIRMATION (Fixed variable names)
   var userSubject = "CRYPTS 5.0 | Registration Synchronized";
   var userBody = "Greetings Operator " + data.name + ",\n\n" +
+                 "Shivan Chowdhry this side \n"
                  "Your request to enter the CRYPTS 5.0 simulation has been processed.\n\n" +
                  "--- REGISTRATION DETAILS ---\n" +
                  "EVENTS: " + data.events + "\n" +
@@ -53,9 +52,12 @@ function doPost(e) {
                  "---------------------------\n\n" +
                  "Regards,\nCRYPTS 5.0 Admin Console";
   
-  GmailApp.sendEmail(data.email, userSubject, userBody);
+  GmailApp.sendEmail(data.email, userSubject, userBody, {
+    from: "shivan.cryptsopg@gmail.com", // Must match your verified alias
+    name: "CRYPTS 5.0 Team"
+  });
 
-  // 5. ADMIN NOTIFICATION (Sent to everyone in the ORGANISERS sheet)
+  // 5. ADMIN NOTIFICATION
   if (adminEmails.length > 0) {
     var adminSubject = "ALERT: NEW OPERATOR REGISTERED - " + data.name;
     var adminBody = "A new data packet has been received.\n\n" +
@@ -63,7 +65,10 @@ function doPost(e) {
                     "Modules: " + data.events + "\n\n" +
                     "Full audit log updated in CRYPTS_5.0_FORMS_DATABASE.";
     
-    GmailApp.sendEmail(adminEmails.join(","), adminSubject, adminBody);
+    GmailApp.sendEmail(adminEmails.join(","), adminSubject, adminBody, {
+      from: "shivan.cryptsopg@gmail.com",
+      name: "CRYPTS 5.0 System"
+    });
   }
 
   return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
