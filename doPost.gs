@@ -15,7 +15,7 @@
 function doPost(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
-  // 1. DATABASE SETUP (Fixed tab renaming instead of file renaming)
+  // 1. DATABASE SETUP
   var databaseSheet = ss.getSheetByName("CRYPTS_5.0_FORMS_DATABASE") || ss.getSheets()[0];
   databaseSheet.setName("CRYPTS_5.0_FORMS_DATABASE");
   
@@ -27,6 +27,9 @@ function doPost(e) {
   // 2. PARSE INCOMING PACKET
   var data = JSON.parse(e.postData.contents);
   databaseSheet.appendRow([data.timestamp, data.name, data.email, data.class, data.section, data.events]);
+
+  // Extract first name for a friendlier greeting
+  var firstName = data.name ? data.name.split(' ')[0] : "Operator";
 
   // 3. FETCH ADMIN LIST
   var adminSheet = ss.getSheetByName("ORGANISERS");
@@ -41,16 +44,20 @@ function doPost(e) {
     adminEmails = ["chowdhryshivan@gmail.com"];
   }
 
-  // 4. USER CONFIRMATION (Fixed variable names)
-  var userSubject = "CRYPTS 5.0 | Registration Synchronized";
-  var userBody = "Greetings Operator " + data.name + ",\n\n" +
-                 "Shivan Chowdhry this side \n\n"
-                 "Your request to enter the CRYPTS 5.0 simulation has been processed.\n\n" +
-                 "--- REGISTRATION DETAILS ---\n" +
+  // 4. USER CONFIRMATION (WITH GREETING)
+  var userSubject = "Welcome to CRYPTS 5.0! | Registration Synchronized";
+  var userBody = "Hey " + firstName + ",\n\n" +
+                 "Shivan this side from Team CRYPTS! Welcome aboard.\n\n" +
+                 "Your registration for the CRYPTS 5.0 simulation has been successfully processed. " +
+                 "We're excited to have you join us for this edition!\n\n" +
+                 "--- REGISTRATION SUMMARY ---\n" +
+                 "NAME: " + data.name + "\n" +
                  "EVENTS: " + data.events + "\n" +
                  "SECTOR: Class " + data.class + "-" + data.section + "\n" +
                  "---------------------------\n\n" +
-                 "Regards,\nCRYPTS 5.0 Admin Console";
+                 "Keep an eye on your inbox for further updates regarding event schedules and guidelines.\n\n" +
+                 "Best regards,\n" +
+                 "Shivan Chowdhry & The CRYPTS 5.0 Team (via Admin Console)";
   
   GmailApp.sendEmail(data.email, userSubject, userBody, {
     from: "shivan.cryptsopg@gmail.com", // Must match your verified alias
@@ -62,6 +69,8 @@ function doPost(e) {
     var adminSubject = "ALERT: NEW OPERATOR REGISTERED - " + data.name;
     var adminBody = "A new data packet has been received.\n\n" +
                     "Name: " + data.name + "\n" +
+                    "Email: " + data.email + "\n" +
+                    "Class: " + data.class + "-" + data.section + "\n" +
                     "Modules: " + data.events + "\n\n" +
                     "Full audit log updated in CRYPTS_5.0_FORMS_DATABASE.";
     
