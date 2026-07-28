@@ -44,7 +44,7 @@ function doPost(e) {
   // 4. USER CONFIRMATION (Fixed variable names)
   var userSubject = "CRYPTS 5.0 | Registration Synchronized";
   var userBody = "Greetings Operator " + data.name + ",\n\n" +
-                 "Shivan Chowdhry this side \n"
+                 "Shivan Chowdhry this side \n\n"
                  "Your request to enter the CRYPTS 5.0 simulation has been processed.\n\n" +
                  "--- REGISTRATION DETAILS ---\n" +
                  "EVENTS: " + data.events + "\n" +
