@@ -44,99 +44,168 @@ function doPost(e) {
     adminEmails = ["chowdhryshivan@gmail.com"];
   }
 
-  // 4. RICH HTML EMAIL TEMPLATE
-  var htmlTemplate = `
+  // COMMON STYLES & GLITCH HEADER BUILDER
+  var commonStyles = `
+    body { font-family: 'Courier New', Consolas, monospace; background-color: #08090c; color: #a0aab0; margin: 0; padding: 20px; }
+    .card { max-width: 580px; margin: 0 auto; background-color: #0d1117; border: 1px solid #1f2937; border-radius: 8px; overflow: hidden; box-shadow: 0 0 25px rgba(0, 243, 255, 0.1); }
+    .header { background: #05070a; padding: 35px 20px; text-align: center; border-bottom: 2px solid #00f3ff; position: relative; }
+    .glitch-title { font-size: 28px; font-weight: 900; color: #00f3ff; text-transform: uppercase; letter-spacing: 4px; margin: 0; text-shadow: -2px 0 #ff0055, 2px 0 #00f3ff; }
+    .header-sub { color: #ff0055; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-top: 6px; font-weight: bold; }
+    .body-content { padding: 30px 25px; }
+    .greeting { font-size: 16px; color: #ffffff; font-weight: bold; margin-bottom: 15px; }
+    .text { font-size: 13px; line-height: 1.6; color: #8b949e; margin-bottom: 25px; }
+    .details-box { background-color: #05070a; border: 1px solid #1f2937; border-left: 4px solid #00f3ff; padding: 18px; border-radius: 4px; margin-bottom: 25px; }
+    .detail-item { font-size: 13px; margin-bottom: 12px; }
+    .detail-item:last-child { margin-bottom: 0; }
+    .detail-label { color: #484f58; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 3px; }
+    .detail-value { font-weight: bold; color: #58a6ff; font-size: 14px; }
+    .cta-button { display: inline-block; width: 80%; max-width: 250px; padding: 12px 20px; text-align: center; background-color: #00f3ff; color: #000000; font-weight: bold; text-decoration: none; border-radius: 4px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 0 0 10px rgba(0,243,255,0.3); }
+    .footer { text-align: center; padding: 18px; background-color: #05070a; border-top: 1px solid #1f2937; font-size: 11px; color: #484f58; }
+  `;
+
+  // 4. REGISTRANT HTML TEMPLATE
+  var userHtmlTemplate = `
     <!DOCTYPE html>
     <html>
     <head>
       <meta charset="utf-8">
-      <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #0d0f12; color: #e0e0e0; margin: 0; padding: 20px; }
-        .card { max-width: 600px; margin: 0 auto; background-color: #161920; border: 1px solid #00f3ff; border-radius: 12px; overflow: hidden; box-shadow: 0 0 20px rgba(0,243,255,0.15); }
-        .header { background: linear-gradient(135deg, #00f3ff 0%, #7000ff 100%); padding: 30px 20px; text-align: center; color: #ffffff; }
-        .header h1 { margin: 0; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; }
-        .header p { margin: 5px 0 0; font-size: 14px; opacity: 0.9; }
-        .body-content { padding: 30px 25px; }
-        .greeting { font-size: 18px; color: #00f3ff; font-weight: bold; margin-bottom: 15px; }
-        .text { font-size: 15px; line-height: 1.6; color: #cccccc; margin-bottom: 25px; }
-        .details-box { background-color: #0d0f12; border-left: 4px solid #00f3ff; padding: 20px; border-radius: 6px; margin-bottom: 25px; }
-        .detail-item { font-size: 14px; margin-bottom: 10px; color: #e0e0e0; }
-        .detail-item:last-child { margin-bottom: 0; }
-        .detail-label { color: #888888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; }
-        .detail-value { font-weight: bold; color: #ffffff; font-size: 15px; }
-        .cta-button { display: block; width: 200px; margin: 0 auto 25px; padding: 12px 24px; text-align: center; background-color: #00f3ff; color: #000000; font-weight: bold; text-decoration: none; border-radius: 6px; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
-        .footer { text-align: center; padding: 20px; background-color: #0d0f12; border-top: 1px solid #222; font-size: 12px; color: #666666; }
-      </style>
+      <style>${commonStyles}</style>
     </head>
     <body>
       <div class="card">
         <div class="header">
-          <h1>CRYPTS 5.0</h1>
-          <p>Registration Synchronized</p>
+          <h1 class="glitch-title">CRYPTS 5.0</h1>
+          <div class="header-sub">[ REGISTRATION SYNCHRONIZED ]</div>
         </div>
         <div class="body-content">
-          <div class="greeting">Hey ${firstName},</div>
+          <div class="greeting">Greetings, ${firstName}</div>
           <div class="text">
-            Shivan this side from Team CRYPTS! Welcome aboard. Your request to enter the <strong>CRYPTS 5.0</strong> simulation has been successfully logged into our servers.
+            Shivan this side from Team CRYPTS! Welcome aboard.<br><br>
+            Your entry packet for the <strong>CRYPTS 5.0</strong> cyber simulation has been received and committed to our primary servers.
           </div>
           
           <div class="details-box">
             <div class="detail-item">
-              <span class="detail-label">Operator Name</span>
-              <span class="detail-value">${data.name}</span>
+              <span class="detail-label">OPERATOR NAME</span>
+              <span class="detail-value" style="color:#ffffff;">${data.name}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">SECTOR / CLASS</span>
+              <span class="detail-value" style="color:#ffffff;">Class ${data.class}-${data.section}</span>
             </div>
             <div class="detail-item" style="margin-top: 12px;">
-              <span class="detail-label">Sector / Class</span>
-              <span class="detail-value">Class ${data.class}-${data.section}</span>
-            </div>
-            <div class="detail-item" style="margin-top: 12px;">
-              <span class="detail-label">Selected Modules</span>
+              <span class="detail-label">SELECTED MODULES</span>
               <span class="detail-value" style="color: #00f3ff;">${data.events}</span>
             </div>
           </div>
 
-          <a href="https://yourwebsite.com" class="cta-button">Access Portal</a>
+          <div style="text-align: center; margin-bottom: 25px;">
+            <a href="https://crypts5.vercel.app/" class="cta-button">Access Cyber Portal</a>
+          </div>
 
-          <div class="text" style="font-size: 13px; color: #888888; text-align: center;">
-            Keep an eye on the website for further official updates.
+          <div class="text" style="font-size: 11px; color: #484f58; text-align: center;">
+            Maintain comms readiness. Updates will follow shortly on the site.
           </div>
         </div>
         <div class="footer">
-          &copy; CRYPTS 5.0 Team | All Systems Operational
+          &copy; CRYPTS 5.0 TEAM &bull; ALL SYSTEMS OPERATIONAL
         </div>
       </div>
     </body>
     </html>
   `;
 
-  // Fallback plain-text for legacy email clients
-  var userBodyPlain = "Hey " + firstName + ",\n\nShivan this side from Team CRYPTS! Welcome aboard.\n\n" +
+  var userBodyPlain = "Greetings " + firstName + ",\n\nShivan this side from Team CRYPTS!\n\n" +
                       "Your registration for CRYPTS 5.0 has been received:\n" +
-                      "- Name: " + data.name + "\n" +
+                      "- Operator: " + data.name + "\n" +
                       "- Sector: Class " + data.class + "-" + data.section + "\n" +
                       "- Modules: " + data.events + "\n\n" +
+                      "- Portal: https://crypts5.vercel.app/\n\n" +
                       "Best regards,\nShivan Chowdhry & Team CRYPTS 5.0";
 
-  // 5. SEND HTML EMAIL TO USER
-  GmailApp.sendEmail(data.email, "Welcome to CRYPTS 5.0! | Registration Synchronized", userBodyPlain, {
-    from: "shivan.cryptsopg@gmail.com", // Must match your verified alias
+  // SEND REGISTRANT EMAIL
+  GmailApp.sendEmail(data.email, "Welcome to CRYPTS 5.0 | Registration Synchronized", userBodyPlain, {
+    from: "shivan.cryptsopg@gmail.com",
     name: "Shivan Chowdhry & The CRYPTS 5.0 Team (via Admin Console)",
-    htmlBody: htmlTemplate
+    htmlBody: userHtmlTemplate
   });
 
-  // 6. ADMIN NOTIFICATION
+  // 5. ADMIN HTML TEMPLATE (NEW: Styled alert for organizers)
+  var adminHtmlTemplate = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        ${commonStyles}
+        .admin-card { border-color: #ff0055; box-shadow: 0 0 25px rgba(255, 0, 85, 0.15); }
+        .admin-header { border-bottom-color: #ff0055; }
+        .admin-badge { display: inline-block; background-color: rgba(255,0,85,0.1); border: 1px solid #ff0055; color: #ff0055; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 3px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 15px; }
+        .admin-box { border-left-color: #ff0055; }
+        .admin-btn { background-color: transparent; color: #ff0055; border: 1px solid #ff0055; box-shadow: 0 0 10px rgba(255,0,85,0.2); }
+      </style>
+    </head>
+    <body>
+      <div class="card admin-card">
+        <div class="header admin-header">
+          <h1 class="glitch-title">CRYPTS 5.0</h1>
+          <div class="header-sub">[ ADMIN ALERT &bull; INCOMING REGISTRATION ]</div>
+        </div>
+        <div class="body-content">
+          <div class="admin-badge">SYSTEM ALERT</div>
+          <div class="text">
+            A new data packet has been uploaded to the registry by an incoming operator.
+          </div>
+          
+          <div class="details-box admin-box">
+            <div class="detail-item">
+              <span class="detail-label">OPERATOR NAME</span>
+              <span class="detail-value" style="color:#ffffff;">${data.name}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">EMAIL ADDRESS</span>
+              <span class="detail-value" style="color:#00f3ff;">${data.email}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">SECTOR / CLASS</span>
+              <span class="detail-value" style="color:#ffffff;">Class ${data.class}-${data.section}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">MODULES REGISTERED</span>
+              <span class="detail-value" style="color:#ff0055;">${data.events}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">TIMESTAMP</span>
+              <span class="detail-value" style="color:#8b949e;">${data.timestamp}</span>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-bottom: 20px;">
+            <a href="${ss.getUrl()}" class="cta-button admin-btn">Open Live Database</a>
+          </div>
+        </div>
+        <div class="footer">
+          CRYPTS 5.0 INTERNAL CONSOLE &bull; AUTOMATED SYSTEM NOTIFICATION
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  var adminBodyPlain = "ALERT: NEW OPERATOR REGISTERED\n\n" +
+                       "Operator: " + data.name + "\n" +
+                       "Email: " + data.email + "\n" +
+                       "Sector: Class " + data.class + "-" + data.section + "\n" +
+                       "Modules: " + data.events + "\n" +
+                       "Timestamp: " + data.timestamp + "\n\n" +
+                       "Live DB: " + ss.getUrl();
+
+  // SEND ADMIN EMAIL
   if (adminEmails.length > 0) {
-    var adminSubject = "ALERT: NEW OPERATOR REGISTERED - " + data.name;
-    var adminBody = "A new data packet has been received.\n\n" +
-                    "Name: " + data.name + "\n" +
-                    "Email: " + data.email + "\n" +
-                    "Class: " + data.class + "-" + data.section + "\n" +
-                    "Modules: " + data.events + "\n\n" +
-                    "Full audit log updated in CRYPTS_5.0_FORMS_DATABASE.";
-    
-    GmailApp.sendEmail(adminEmails.join(","), adminSubject, adminBody, {
+    GmailApp.sendEmail(adminEmails.join(","), "ALERT: NEW OPERATOR REGISTERED - " + data.name, adminBodyPlain, {
       from: "shivan.cryptsopg@gmail.com",
-      name: "Shivan Chowdhry & The CRYPTS 5.0 Team (via Admin Console)"
+      name: "Shivan Chowdhry & The CRYPTS 5.0 Team (via Admin Console)",
+      htmlBody: adminHtmlTemplate
     });
   }
 
