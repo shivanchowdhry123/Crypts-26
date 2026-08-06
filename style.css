@@ -1040,6 +1040,20 @@ body {
     border-radius: 2px;
     text-transform: uppercase;
 }
+.operator-email {
+    display: block;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: rgba(0, 243, 255, 0.35);
+    margin-top: 8px;
+    font-style: italic;
+    text-transform: lowercase;
+    transition: color 0.2s ease;
+}
+.operator-card:hover .operator-email {
+    color: var(--cyan-accent);
+    text-shadow: 0 0 8px var(--cyan-glow);
+}
 
 /* ============================================================
    COMMAND PALETTE
