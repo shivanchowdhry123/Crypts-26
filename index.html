@@ -124,6 +124,8 @@
         <h1 class="glitch glitch-hero" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></h1>
         <p class="tracking-[0.6em] text-[#00f3ff] mt-4 opacity-60 uppercase font-bold">OPG World School • Technical Symposium</p>
         <p class="text-[8px] tracking-[0.4em] text-white/25 mt-2 uppercase">THE SINGULARITY OVERLOAD</p>
+        <p class="tagline-typed" id="hero-tagline"></p>
+        <p class="tagline-chaos" id="hero-tagline-sub">In Chaos We Create. Through Innovation We Evolve.</p>
     </div>
 
     <!-- Terminal Window -->
@@ -190,70 +192,206 @@
     <div class="container mx-auto max-w-8xl">
         <div class="section-heading reveal">
             <span class="section-tag">// MISSION_REGISTRY</span>
+            <span class="code-prefix"><span class="cm">#loading events</span></span>
             <h2 class="glitch text-[#00f3ff] text-2xl" data-text="02_EVENT_MODULES">02_EVENT_MODULES</h2>
         </div>
 
         <!-- Event Cards Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-grid">
 
-            <!-- MISSION_DECRYPT -->
-            <div class="event-card reveal reveal-delay-1" data-category="security">
-                <div class="card-icon">🔐</div>
-                <div class="card-code">EVT-001 // SECURITY</div>
-                <h3 class="card-title">MISSION_DECRYPT</h3>
-                <p class="card-desc">Cryptographic challenges requiring multi-layered security analysis, cipher cracking, and protocol enumeration under restricted environments.</p>
-                <span class="card-badge">L9 — L12</span>
-                <span class="card-cta">INITIALIZE MISSION →</span>
+            <!-- 1. GLITCHVERSE -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="security" data-event="glitchverse">
+                <span class="hud-tag hud-tag-tr">EVT-001</span>
+                <div class="event-icon-badge" data-cat="security">GV</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_1</span><span class="op">():</span></div>
+                <h3 class="card-title">GLITCHVERSE</h3>
+                <p class="card-desc">Decode ciphers, crack enigmatic puzzles, and navigate multi-layered cryptographic challenges in this offline decryption arena.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 6–10</span>
+                    <span class="badge-date">SEPT 17</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
             </div>
 
-            <!-- CODEQUEST -->
-            <div class="event-card reveal reveal-delay-2" data-category="coding">
-                <div class="card-icon">⚡</div>
-                <div class="card-code">EVT-002 // CODING</div>
-                <h3 class="card-title">CODEQUEST</h3>
-                <p class="card-desc">Algorithmic complexity and rapid competitive programming under clock pressure. Optimize. Execute. Dominate.</p>
-                <span class="card-badge">L9 — L12</span>
-                <span class="card-cta">INITIALIZE MISSION →</span>
+            <!-- 2. PIXELPULSE -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="design" data-event="pixelpulse">
+                <span class="hud-tag hud-tag-tr">EVT-002</span>
+                <div class="event-icon-badge" data-cat="design">PP</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_2</span><span class="op">():</span></div>
+                <h3 class="card-title">PIXELPULSE</h3>
+                <p class="card-desc">Digital poster design competition judged on creativity, visual communication, and technical mastery of design tools.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-online">ONLINE</span>
+                    <span class="badge-eligibility">CLASS 8–12</span>
+                    <span class="badge-date">SEPT 25</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
             </div>
 
-            <!-- WEB_WERKZ -->
-            <div class="event-card reveal reveal-delay-3" data-category="design">
-                <div class="card-icon">🌐</div>
-                <div class="card-code">EVT-003 // DESIGN</div>
-                <h3 class="card-title">WEB_WERKZ</h3>
-                <p class="card-desc">Frontend and backend engineering focused on responsive design, modern tech stacks, and production-grade UI/UX delivery.</p>
-                <span class="card-badge">L9 — L12</span>
-                <span class="card-cta">INITIALIZE MISSION →</span>
+            <!-- 3. BYTE THE SITE -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-event="byte_the_site">
+                <span class="hud-tag hud-tag-tr">EVT-003</span>
+                <div class="event-icon-badge" data-cat="coding">BTS</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_3</span><span class="op">():</span></div>
+                <h3 class="card-title">BYTE THE SITE</h3>
+                <p class="card-desc">Frontend web development challenge — build responsive, visually stunning websites under time constraints using HTML, CSS & JS.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-online">ONLINE</span>
+                    <span class="badge-eligibility">CLASS 6–12</span>
+                    <span class="badge-date">SEPT 25</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
             </div>
 
-            <!-- PIXEL_FORGE -->
-            <div class="event-card reveal reveal-delay-1" data-category="design">
-                <div class="card-icon">🎨</div>
-                <div class="card-code">EVT-004 // DESIGN</div>
-                <h3 class="card-title">PIXEL_FORGE</h3>
-                <p class="card-desc">Digital design and graphic creation using professional tools — logos, UI mockups, and visual identities judged on originality and technique.</p>
-                <span class="card-badge">L6 — L12</span>
-                <span class="card-cta">INITIALIZE MISSION →</span>
+            <!-- 4. SCRATCH XPLORERS -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="scratch_xplorers">
+                <span class="hud-tag hud-tag-tr">EVT-004</span>
+                <div class="event-icon-badge" data-cat="coding">SX</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_4</span><span class="op">():</span></div>
+                <h3 class="card-title">SCRATCH XPLORERS</h3>
+                <p class="card-desc">Block-based programming challenge for junior coders — build interactive projects, games, and animations using Scratch.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 4–6</span>
+                    <span class="badge-date">SEPT 18</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
             </div>
 
-            <!-- CIRCUIT_BREAKER -->
-            <div class="event-card reveal reveal-delay-2" data-category="gaming">
-                <div class="card-icon">🎮</div>
-                <div class="card-code">EVT-005 // GAMING</div>
-                <h3 class="card-title">CIRCUIT_BREAKER</h3>
-                <p class="card-desc">High-intensity gaming tournament across selected titles. Strategy, reflexes, and teamwork tested across multiple rounds of elimination.</p>
-                <span class="card-badge">L4 — L12</span>
-                <span class="card-cta">INITIALIZE MISSION →</span>
+            <!-- 5. IHE CINEPRISM -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="av" data-event="ihe_cineprism">
+                <span class="hud-tag hud-tag-tr">EVT-005</span>
+                <div class="event-icon-badge" data-cat="av">CP</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_5</span><span class="op">():</span></div>
+                <h3 class="card-title">IHE CINEPRISM</h3>
+                <p class="card-desc">Short film and video production competition — narrative structure, cinematography, pacing, and post-production judged.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-online">ONLINE</span>
+                    <span class="badge-eligibility">CLASS 6–12</span>
+                    <span class="badge-date">SEPT 25</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
             </div>
 
-            <!-- SIGNAL_CRAFT -->
-            <div class="event-card reveal reveal-delay-3" data-category="av">
-                <div class="card-icon">🎬</div>
-                <div class="card-code">EVT-006 // AUDIO/VISUAL</div>
-                <h3 class="card-title">SIGNAL_CRAFT</h3>
-                <p class="card-desc">Short-form video creation, editing, and production — evaluated on narrative structure, pacing, color grade, and sonic composition.</p>
-                <span class="card-badge">L6 — L12</span>
-                <span class="card-cta">INITIALIZE MISSION →</span>
+            <!-- 6. PROMPT PARADOX -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="ai" data-event="prompt_paradox">
+                <span class="hud-tag hud-tag-tr">EVT-006</span>
+                <div class="event-icon-badge" data-cat="ai">PX</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_6</span><span class="op">():</span></div>
+                <h3 class="card-title">PROMPT PARADOX</h3>
+                <p class="card-desc">AI prompt engineering challenge — craft precise, creative prompts to generate outputs matching specific goals and constraints.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 8–12</span>
+                    <span class="badge-date">SEPT 21</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
+            </div>
+
+            <!-- 7. QWERTY 4.0 -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="qwerty_4">
+                <span class="hud-tag hud-tag-tr">EVT-007</span>
+                <div class="event-icon-badge" data-cat="coding">QW</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_7</span><span class="op">():</span></div>
+                <h3 class="card-title">QWERTY 4.0</h3>
+                <p class="card-desc">Speed typing tournament — accuracy, WPM, and consistency under pressure. Keyboard warriors, assemble.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 6–12</span>
+                    <span class="badge-date">SEPT 22</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
+            </div>
+
+            <!-- 8. JAILBREAK -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="security" data-event="jailbreak">
+                <span class="hud-tag hud-tag-tr">EVT-008</span>
+                <div class="event-icon-badge" data-cat="security">JB</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_8</span><span class="op">():</span></div>
+                <h3 class="card-title">JAILBREAK</h3>
+                <p class="card-desc">Escape room meets tech — solve interconnected logic puzzles, decode sequences, and break free before the timer runs out.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 6–12</span>
+                    <span class="badge-date">SEPT 23</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
+            </div>
+
+            <!-- 9. IHE CODEQUEST -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-event="ihe_codequest">
+                <span class="hud-tag hud-tag-tr">EVT-009</span>
+                <div class="event-icon-badge" data-cat="coding">CQ</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_9</span><span class="op">():</span></div>
+                <h3 class="card-title">IHE CODEQUEST</h3>
+                <p class="card-desc">Competitive programming — algorithmic complexity and optimization under clock pressure. Solve. Optimize. Execute.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 11–12</span>
+                    <span class="badge-date">SEPT 28</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
+            </div>
+
+            <!-- 10. IHE KERNEL -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="ihe_kernel">
+                <span class="hud-tag hud-tag-tr">EVT-010</span>
+                <div class="event-icon-badge" data-cat="coding">KR</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_10</span><span class="op">():</span></div>
+                <h3 class="card-title">IHE KERNEL</h3>
+                <p class="card-desc">Inter-house hardware and systems challenge — circuit design, component identification, and technical diagnostics.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 9–12</span>
+                    <span class="badge-date">SEPT 24</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
+            </div>
+
+            <!-- 11. GAME MAKERS -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="gaming" data-event="game_makers">
+                <span class="hud-tag hud-tag-tr">EVT-011</span>
+                <div class="event-icon-badge" data-cat="gaming">GM</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_11</span><span class="op">():</span></div>
+                <h3 class="card-title">GAME MAKERS</h3>
+                <p class="card-desc">Game development from scratch — design, build, and present playable games judged on mechanics, creativity, and polish.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 10–12</span>
+                    <span class="badge-date">SEPT 25</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
+            </div>
+
+            <!-- 12. L'ARÈNE ESPORTS -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="gaming" data-event="larene_esports">
+                <span class="hud-tag hud-tag-tr">EVT-012</span>
+                <div class="event-icon-badge" data-cat="gaming">ES</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_12</span><span class="op">():</span></div>
+                <h3 class="card-title">L'ARÈNE ESPORTS</h3>
+                <p class="card-desc">Multi-title esports tournament — FC 26, Valorant, and Minecraft. Strategy, reflexes, and teamwork across elimination rounds.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-online">ONLINE</span>
+                    <span class="badge-eligibility">CLASS 10–12</span>
+                    <span class="badge-date">SEPT 19–26</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
+            </div>
+
+            <!-- 13. BIZTECH NEXUS -->
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="biz" data-event="biztech_nexus">
+                <span class="hud-tag hud-tag-tr">EVT-013</span>
+                <div class="event-icon-badge" data-cat="biz">BN</div>
+                <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_13</span><span class="op">():</span></div>
+                <h3 class="card-title">BIZTECH NEXUS</h3>
+                <p class="card-desc">Business-tech fusion — ideation, pitch decks, market analysis, and startup prototyping for the next-gen entrepreneur.</p>
+                <div class="card-meta-row">
+                    <span class="badge-mode badge-mode-offline">OFFLINE</span>
+                    <span class="badge-eligibility">CLASS 10–12</span>
+                    <span class="badge-date">SEPT 30</span>
+                </div>
+                <span class="card-cta">VIEW DETAILS →</span>
             </div>
 
         </div>
@@ -366,27 +504,27 @@
 
         <!-- Timeline Tabs -->
         <div class="timeline-tabs reveal">
-            <button class="timeline-tab active" data-tab="morning">MORNING</button>
-            <button class="timeline-tab" data-tab="afternoon">AFTERNOON</button>
-            <button class="timeline-tab" data-tab="closing">CLOSING</button>
+            <button class="timeline-tab active" data-tab="morning">WEEK - 1</button>
+            <button class="timeline-tab" data-tab="afternoon">WEEK - 2</button>
+            <button class="timeline-tab" data-tab="closing">WEEK - 3</button>
         </div>
 
         <!-- Morning Panel -->
         <div class="timeline-panel active" id="tab-morning">
             <div class="timeline-list">
                 <div class="timeline-item reveal">
-                    <div class="timeline-time">08:00 AM</div>
+                    <div class="timeline-time">17th September</div>
                     <div class="timeline-content">
-                        <div class="timeline-name">REGISTRATION & CHECK-IN</div>
-                        <div class="timeline-meta">Main Gate • All Participants</div>
-                        <span class="timeline-status done">COMPLETED</span>
+                        <div class="timeline-name">Glitchverse</div>
+                        <div class="timeline-meta">Decode ciphers, crack enigmatic puzzles, and navigate multi-layered cryptographic challenges in this offline decryption arena.</div>
+                        <span class="timeline-status upcoming">UPCOMING</span>
                     </div>
                 </div>
                 <div class="timeline-item reveal reveal-delay-1">
-                    <div class="timeline-time">09:00 AM</div>
+                    <div class="timeline-time">18th September</div>
                     <div class="timeline-content">
-                        <div class="timeline-name">INAUGURATION CEREMONY</div>
-                        <div class="timeline-meta">Auditorium • All Teams</div>
+                        <div class="timeline-name">Scratch Xplorers</div>
+                        <div class="timeline-meta">Block-based programming challenge for junior coders — build interactive projects, games, and animations using Scratch.</div>
                         <span class="timeline-status upcoming">UPCOMING</span>
                     </div>
                 </div>
@@ -632,6 +770,18 @@
         </div>
     </div>
 </section>
+
+
+<!-- ============================
+     EVENT DETAIL MODAL
+     ============================ -->
+<div class="event-modal-overlay" id="event-modal-overlay">
+    <div class="event-modal hud-cut-corner">
+        <button class="modal-close" id="modal-close" aria-label="Close modal">✕</button>
+        <div class="modal-header" id="modal-header"></div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
 
 
 <!-- ============================

@@ -114,14 +114,21 @@
 
                 <!-- Event Selection Tag Chips -->
                 <div>
-                    <label class="reg-field-label">Select Event Modules <span class="text-white/30">(tap to select multiple)</span> <span class="text-[#ff00c1]">*</span></label>
+                    <label class="reg-field-label">Select Event Modules <span class="text-white/30">(tap to select · filtered by class)</span> <span class="text-[#ff00c1]">*</span></label>
                     <div class="event-tag-grid" id="event-tag-grid">
-                        <button type="button" class="event-tag-chip" data-event="mission_decrypt">MISSION_DECRYPT</button>
-                        <button type="button" class="event-tag-chip" data-event="codequest">CODEQUEST</button>
-                        <button type="button" class="event-tag-chip" data-event="web_werkz">WEB_WERKZ</button>
-                        <button type="button" class="event-tag-chip" data-event="pixel_forge">PIXEL_FORGE</button>
-                        <button type="button" class="event-tag-chip" data-event="circuit_breaker">CIRCUIT_BREAKER</button>
-                        <button type="button" class="event-tag-chip" data-event="signal_craft">SIGNAL_CRAFT</button>
+                        <button type="button" class="event-tag-chip" data-event="glitchverse" data-min="6" data-max="10">GLITCHVERSE</button>
+                        <button type="button" class="event-tag-chip" data-event="pixelpulse" data-min="8" data-max="12">PIXELPULSE</button>
+                        <button type="button" class="event-tag-chip" data-event="byte_the_site" data-min="6" data-max="12">BYTE THE SITE</button>
+                        <button type="button" class="event-tag-chip" data-event="scratch_xplorers" data-min="4" data-max="6">SCRATCH XPLORERS</button>
+                        <button type="button" class="event-tag-chip" data-event="ihe_cineprism" data-min="6" data-max="12">IHE CINEPRISM</button>
+                        <button type="button" class="event-tag-chip" data-event="prompt_paradox" data-min="8" data-max="12">PROMPT PARADOX</button>
+                        <button type="button" class="event-tag-chip" data-event="qwerty_4" data-min="6" data-max="12">QWERTY 4.0</button>
+                        <button type="button" class="event-tag-chip" data-event="jailbreak" data-min="6" data-max="12">JAILBREAK</button>
+                        <button type="button" class="event-tag-chip" data-event="ihe_codequest" data-min="11" data-max="12">IHE CODEQUEST</button>
+                        <button type="button" class="event-tag-chip" data-event="ihe_kernel" data-min="9" data-max="12">IHE KERNEL</button>
+                        <button type="button" class="event-tag-chip" data-event="game_makers" data-min="10" data-max="12">GAME MAKERS</button>
+                        <button type="button" class="event-tag-chip" data-event="larene_esports" data-min="10" data-max="12">L'ARÈNE ESPORTS</button>
+                        <button type="button" class="event-tag-chip" data-event="biztech_nexus" data-min="10" data-max="12">BIZTECH NEXUS</button>
                     </div>
                     <input type="hidden" id="reg-events" name="events">
                     <p class="field-error-msg" id="err-events">⚠ Select at least one event module.</p>
