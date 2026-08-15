@@ -223,7 +223,7 @@ function initCustomCursor() {
     });
 
     // Add pointer hover effect for all clickable elements
-    const interactiveSelectors = 'a, button, input, select, textarea, .event-card, .faq-question, .filter-chip, .event-tag-chip, .timeline-tab, .resource-btn, .operator-card, .cmd-badge';
+    const interactiveSelectors = 'a, button, input, select, textarea, .event-card, .faq-question, .filter-chip, .event-tag-chip, .timeline-tab, .brochure-action-btn, .resource-btn, .operator-card, .cmd-badge';
 
     document.addEventListener('mouseover', (e) => {
         if (e.target.closest(interactiveSelectors)) {
