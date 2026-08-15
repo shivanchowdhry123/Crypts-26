@@ -638,6 +638,43 @@ function initTimelineTabs() {
     });
 }
 
+// ============================================================
+// DYNAMIC TIMELINE STATUS ENGINE
+// ============================================================
+function updateTimelineStatuses() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = String(now.getMonth() + 1).padStart(2, '0');
+    const currentDate = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${currentYear}-${currentMonth}-${currentDate}`;
+
+    const items = document.querySelectorAll('.timeline-item');
+    items.forEach(item => {
+        const dateStr = item.dataset.date;
+        const startDateStr = item.dataset.startDate || dateStr;
+        const endDateStr = item.dataset.endDate || dateStr;
+        const statusEl = item.querySelector('.timeline-status');
+        if (!statusEl || !startDateStr) return;
+
+        // Clear existing dynamic status classes
+        statusEl.classList.remove('upcoming', 'in-progress', 'live', 'completed', 'done');
+        item.classList.remove('in-progress', 'live', 'completed', 'done');
+
+        if (todayStr < startDateStr) {
+            statusEl.textContent = 'UPCOMING';
+            statusEl.classList.add('upcoming');
+        } else if (todayStr >= startDateStr && todayStr <= endDateStr) {
+            statusEl.textContent = 'IN PROGRESS';
+            statusEl.classList.add('in-progress', 'live');
+            item.classList.add('live', 'in-progress');
+        } else {
+            statusEl.textContent = 'COMPLETED';
+            statusEl.classList.add('completed', 'done');
+            item.classList.add('completed', 'done');
+        }
+    });
+}
+
 
 // ============================================================
 // ACCORDION FAQ
@@ -1081,8 +1118,8 @@ function initEventModal() {
         document.body.style.overflow = '';
     }
 
-    // Card click handlers
-    document.querySelectorAll('.event-card[data-event]').forEach(card => {
+    // Card & timeline item click handlers
+    document.querySelectorAll('.event-card[data-event], .timeline-item[data-event]').forEach(card => {
         card.addEventListener('click', () => {
             openModal(card.dataset.event);
         });
@@ -1124,6 +1161,7 @@ function bootApp() {
     safe('cmdPalette',     () => initCommandPalette());
     safe('faq',            () => initFAQ());
     safe('timelineTabs',   () => initTimelineTabs());
+    safe('timelineStatus', () => updateTimelineStatuses());
     safe('activeNav',      () => initActiveNav());
     safe('scrollReveal',   () => initScrollReveal());
     safe('footerYear',     () => initFooterYear());
