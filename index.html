@@ -444,48 +444,50 @@
      04 — RESOURCE MATRIX
      ============================ -->
 <section id="matrix" class="py-24 px-6 border-t border-white/5">
-    <div class="container mx-auto max-w-8xl">
+    <div class="container mx-auto max-w-6xl">
         <div class="section-heading reveal">
             <span class="section-tag">// KNOWLEDGE_DATABASE</span>
             <h2 class="glitch text-[#00f3ff] text-2xl" data-text="04_RESOURCE_MATRIX">04_RESOURCE_MATRIX</h2>
+            <p class="text-xs text-white/50 tracking-wider mt-2 font-mono">// OFFICIAL SYMPOSIUM BROCHURE &amp; COMPREHENSIVE EVENT DOSSIER</p>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="resource-card reveal reveal-delay-1">
-                <div class="resource-icon">📋</div>
-                <div class="resource-title">Event Rulebooks</div>
-                <p class="resource-desc">Complete rules, judging criteria, and format specifications for all registered events.</p>
-                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
+        <div class="brochure-embed-container reveal relative overflow-hidden mt-6">
+            <!-- HUD Top Bar -->
+            <div class="brochure-header-bar flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-b border-white/10 bg-white/[0.02]">
+                <div class="flex items-center gap-3">
+                    <span class="inline-block w-2 h-2 rounded-full bg-[#00f3ff] animate-pulse"></span>
+                    <span class="text-[11px] font-mono tracking-widest text-[#00f3ff] font-bold">CRYPTS_5.0_BROCHURE</span>
+                    <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/40 uppercase">INTERACTIVE DOSSIER</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="https://www.canva.com/design/DAHJvv9pohw/H2dzOSOkvWclrRNtV_OmMQ/view" target="_blank" rel="noopener noreferrer" class="brochure-action-btn">
+                        <span>↗ OPEN FULL VIEW</span>
+                    </a>
+                </div>
             </div>
-            <div class="resource-card reveal reveal-delay-2">
-                <div class="resource-icon">🗓️</div>
-                <div class="resource-title">Schedule Packet</div>
-                <p class="resource-desc">Finalized event schedule, venue assignments, and reporting times for all participants.</p>
-                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
+
+            <!-- Canva Iframe Container -->
+            <div class="brochure-iframe-wrapper">
+                <iframe 
+                    loading="lazy" 
+                    src="https://www.canva.com/design/DAHJvv9pohw/H2dzOSOkvWclrRNtV_OmMQ/view?embed" 
+                    allowfullscreen="allowfullscreen" 
+                    allow="fullscreen"
+                    class="brochure-iframe"
+                    title="CRYPTS 5.0 Official Brochure">
+                </iframe>
             </div>
-            <div class="resource-card reveal reveal-delay-3">
-                <div class="resource-icon">🎯</div>
-                <div class="resource-title">Participant Guide</div>
-                <p class="resource-desc">Entry requirements, allowed resources, code-of-conduct, and venue access protocols.</p>
-                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
-            </div>
-            <div class="resource-card reveal reveal-delay-1">
-                <div class="resource-icon">📡</div>
-                <div class="resource-title">Registration FAQ</div>
-                <p class="resource-desc">Common questions about enrollment, event selection, team registration, and confirmations.</p>
-                <a href="#resolution" class="resource-btn">→ VIEW FAQ</a>
-            </div>
-            <div class="resource-card reveal reveal-delay-2">
-                <div class="resource-icon">⚙️</div>
-                <div class="resource-title">Tech Specs</div>
-                <p class="resource-desc">Hardware, software, and environment requirements for all competitive programming events.</p>
-                <a href="#" class="resource-btn">↓ DOWNLOAD PDF</a>
-            </div>
-            <div class="resource-card reveal reveal-delay-3">
-                <div class="resource-icon">🏆</div>
-                <div class="resource-title">Prize Structure</div>
-                <p class="resource-desc">Points allocation, trophies, certificates, and merit recognition for each event tier.</p>
-                <a href="#" class="resource-btn">↓ VIEW PRIZES</a>
+
+            <!-- HUD Bottom Bar -->
+            <div class="brochure-footer-bar flex flex-wrap items-center justify-between gap-3 px-5 py-3 border-t border-white/10 bg-black/40 text-[10px] text-white/40 font-mono">
+                <div class="flex items-center gap-3">
+                    <span>⚡ TRANSMISSION: ACTIVE</span>
+                    <span>•</span>
+                    <span>CRYPTS 5.0 OFFICIAL RESOURCE</span>
+                </div>
+                <div>
+                    <span class="text-[#00f3ff]/70">USE CONTROLS INSIDE VIEWER TO FLIP PAGES &amp; TOGGLE FULLSCREEN</span>
+                </div>
             </div>
         </div>
     </div>
