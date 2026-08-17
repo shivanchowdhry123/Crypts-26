@@ -82,9 +82,9 @@
 
                 <!-- Name -->
                 <div>
-                    <label class="reg-field-label" for="reg-name">Operator Name <span class="text-[#ff00c1]">*</span></label>
-                    <input type="text" id="reg-name" class="reg-field-input" placeholder="Full Name" required>
-                    <p class="field-error-msg" id="err-name">⚠ Name must be at least 2 characters.</p>
+                    <label class="reg-field-label" for="reg-name">Full Name or List of Group Members <span class="text-white/40 font-normal text-[10px] normal-case">(in case of a group competition)</span> <span class="text-[#ff00c1]">*</span></label>
+                    <input type="text" id="reg-name" class="reg-field-input" placeholder="Full name or list of group member names" required>
+                    <p class="field-error-msg" id="err-name">⚠ Enter your full name or list of group members.</p>
                 </div>
 
                 <!-- Class & Section -->
@@ -120,18 +120,23 @@
                         <button type="button" class="event-tag-chip" data-event="pixelpulse" data-min="8" data-max="12">PIXELPULSE</button>
                         <button type="button" class="event-tag-chip" data-event="byte_the_site" data-min="6" data-max="12">BYTE THE SITE</button>
                         <button type="button" class="event-tag-chip" data-event="scratch_xplorers" data-min="4" data-max="6">SCRATCH XPLORERS</button>
-                        <button type="button" class="event-tag-chip" data-event="ihe_cineprism" data-min="6" data-max="12">IHE CINEPRISM</button>
                         <button type="button" class="event-tag-chip" data-event="prompt_paradox" data-min="8" data-max="12">PROMPT PARADOX</button>
                         <button type="button" class="event-tag-chip" data-event="qwerty_4" data-min="6" data-max="12">QWERTY 4.0</button>
                         <button type="button" class="event-tag-chip" data-event="jailbreak" data-min="6" data-max="12">JAILBREAK</button>
-                        <button type="button" class="event-tag-chip" data-event="ihe_codequest" data-min="11" data-max="12">IHE CODEQUEST</button>
-                        <button type="button" class="event-tag-chip" data-event="ihe_kernel" data-min="9" data-max="12">IHE KERNEL</button>
                         <button type="button" class="event-tag-chip" data-event="game_makers" data-min="10" data-max="12">GAME MAKERS</button>
                         <button type="button" class="event-tag-chip" data-event="larene_esports" data-min="10" data-max="12">L'ARÈNE ESPORTS</button>
                         <button type="button" class="event-tag-chip" data-event="biztech_nexus" data-min="10" data-max="12">BIZTECH NEXUS</button>
                     </div>
                     <input type="hidden" id="reg-events" name="events">
                     <p class="field-error-msg" id="err-events">⚠ Select at least one event module.</p>
+
+                    <!-- IHE Event Info Note -->
+                    <div class="mt-3 p-3 bg-[#00f3ff]/5 border border-[#00f3ff]/20 rounded text-[11px] text-white/70 font-mono flex items-start gap-2.5">
+                        <span class="text-[#00f3ff] text-sm leading-none mt-0.5">ℹ</span>
+                        <div>
+                            <span class="text-[#00f3ff] font-bold">NOTE FOR IHE EVENTS:</span> In case you wish to participate in Inter-House Events (IHE), kindly contact your respective House Wardens.
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Status Console readout -->
