@@ -149,6 +149,23 @@ body::before {
     box-shadow: 0 0 20px var(--magenta-glow);
 }
 
+/* Hide custom cursor and restore default/pointer cursor on mobile & touch devices */
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+    #custom-cursor {
+        display: none !important;
+    }
+    body, html, *, *::before, *::after {
+        cursor: auto !important;
+    }
+    a, button, input, select, textarea, [role="button"], label,
+    .btn-cyber-primary, .btn-cyber-secondary, .event-card, .event-action-btn,
+    .filter-chip, .faq-question, .brochure-action-btn, .resource-btn,
+    .timeline-tab, .event-tag-chip, .nav-link, .operator-card, .matrix-cell,
+    .matrix-tab {
+        cursor: pointer !important;
+    }
+}
+
 /* ============================================================
    CYBERPUNK LOADING SCREEN
    ============================================================ */
