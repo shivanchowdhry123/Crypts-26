@@ -52,13 +52,94 @@ async function runInitialLogs() {
     if (terminalInput) terminalInput.focus();
 }
 
+// ============================================================
+// DYNAMIC HIGHLIGHTS & EVENT SCHEDULE ENGINE
+// ============================================================
+const EVENT_SCHEDULE = [
+    { dateStr: "Sept 17", month: 8, day: 17, name: "GLITCHVERSE", type: "OFFLINE", desc: "Offline Decryption & Cryptography Arena (Class 6–10)", cat: "Cryptic Hunt" },
+    { dateStr: "Sept 18", month: 8, day: 18, name: "SCRATCH XPLORERS", type: "OFFLINE", desc: "Scratch Block Programming Challenge (Class 4–6)", cat: "Junior Coding" },
+    { dateStr: "Sept 19", month: 8, day: 19, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Kicks Off — FC 26, Valorant & Minecraft", cat: "Gaming" },
+    { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 10–12)", cat: "Gaming" },
+    { dateStr: "Sept 21", month: 8, day: 21, name: "PROMPT PARADOX", type: "OFFLINE", desc: "AI Prompt Engineering Arena (Class 8–12)", cat: "AI & Logic" },
+    { dateStr: "Sept 22", month: 8, day: 22, name: "QWERTY 4.0", type: "OFFLINE", desc: "Speed Typing & Keyboard Tournament (Class 6–12)", cat: "Typing" },
+    { dateStr: "Sept 23", month: 8, day: 23, name: "JAILBREAK", type: "OFFLINE", desc: "Logic Puzzle Escape Room (Class 6–12)", cat: "Security & Puzzles" },
+    { dateStr: "Sept 24", month: 8, day: 24, name: "IHE KERNEL", type: "OFFLINE", desc: "Hardware & Systems Challenge (Class 9–12)", cat: "Systems & Hardware" },
+    { dateStr: "Sept 25", month: 8, day: 25, name: "PIXELPULSE & BYTE THE SITE & GAME MAKERS", type: "ONLINE & OFFLINE", desc: "Mega Submissions Day: Digital Poster, Web Dev, Short Films & Game Dev", cat: "Design, Coding & AV" },
+    { dateStr: "Sept 26", month: 8, day: 26, name: "L'ARÈNE ESPORTS FINALS", type: "ONLINE", desc: "Esports Grand Finals", cat: "Gaming" },
+    { dateStr: "Sept 28", month: 8, day: 28, name: "IHE CODEQUEST", type: "OFFLINE", desc: "Competitive Algorithmic Coding (Class 11–12)", cat: "Competitive Coding" },
+    { dateStr: "Sept 30", month: 8, day: 30, name: "BIZTECH NEXUS", type: "OFFLINE", desc: "Business-Tech Fusion & Pitch Deck Challenge (Class 10–12)", cat: "Business & Tech" }
+];
+
+function getTodayHighlights() {
+    const now = new Date();
+    const curMonth = now.getMonth(); // 0-indexed (8 = September)
+    const curDay   = now.getDate();
+
+    // Check if today matches a scheduled event
+    const todayEvent = EVENT_SCHEDULE.find(e => e.month === curMonth && e.day === curDay);
+
+    if (todayEvent) {
+        return {
+            badge: "TODAY'S EVENT",
+            badgeClass: "bg-[#ff00c1]/20 text-[#ff00c1]",
+            lines: [
+                `<p><span class="text-[#ff00c1] font-bold">🔥 TODAY'S LIVE EVENT:</span> <strong class="text-white">${todayEvent.name}</strong> is happening today!</p>`,
+                `<p><span class="text-[#00f3ff] font-semibold">• Details:</span> ${todayEvent.desc} [${todayEvent.type}]</p>`,
+                `<p><span class="text-yellow-400 font-semibold">• Action:</span> Live battle active today at OPG World School! Good luck operators.</p>`
+            ],
+            logLines: [
+                `=== 🔥 TODAY'S LIVE MISSION: ${todayEvent.name} IS LIVE TODAY! ===`,
+                `• Event: ${todayEvent.name} (${todayEvent.type})`,
+                `• Details: ${todayEvent.desc}`,
+                `• Venue: OPG World School Campus / Online Portal`,
+                `• Action: Type 'enroll' to register or 'team' to contact event in-charges.`
+            ]
+        };
+    }
+
+    // Find next upcoming event
+    const upcoming = EVENT_SCHEDULE.find(e => e.month > curMonth || (e.month === curMonth && e.day > curDay)) || EVENT_SCHEDULE[0];
+
+    return {
+        badge: "LIVE FEED",
+        badgeClass: "bg-[#00f3ff]/20 text-[#00f3ff]",
+        lines: [
+            `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong> (${upcoming.desc})</p>`,
+            `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`,
+            `<p><span class="text-yellow-400 font-semibold">• Quick Command:</span> Type <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">highlights</code> or <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code> below to explore schedule!</p>`
+        ],
+        logLines: [
+            `=== 📢 LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS ===`,
+            `• Next Up: ${upcoming.dateStr} — ${upcoming.name} (${upcoming.desc})`,
+            `• Registrations Open: Enroll now for all 12+ competitive events.`,
+            `• Rules & Dossier: View details under Section 02 EVENT MODULES.`,
+            `• Type 'enroll' to register or 'team' for organizing committee contacts.`
+        ]
+    };
+}
+
+function initTerminalHighlights() {
+    const bodyEl  = document.getElementById('terminal-highlights-body');
+    const badgeEl = document.getElementById('highlights-badge');
+    if (!bodyEl) return;
+
+    const data = getTodayHighlights();
+
+    if (badgeEl) {
+        badgeEl.className = `text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${data.badgeClass}`;
+        badgeEl.innerText = data.badge;
+    }
+
+    bodyEl.innerHTML = data.lines.join('');
+}
+
 function handleCommand(cmd) {
     const command = cmd.toLowerCase().trim();
     addLog(`root@crypts:~# ${cmd}`, "text-white/30");
 
     const cmds = {
         clear: () => { if (terminalOutput) terminalOutput.innerHTML = ''; },
-        help: () => addLog("COMMANDS: help · clear · enroll · modules · status · about · matrix · schedule · team", "text-[#00f3ff]"),
+        help: () => addLog("COMMANDS: help · clear · enroll · modules · status · about · matrix · schedule · team · highlights · news", "text-[#00f3ff]"),
         enroll: () => {
             addLog("> REDIRECTING TO REGISTRATION PORTAL...", "text-[#ff00c1]");
             setTimeout(() => { window.location.href = "register.html"; }, 400);
@@ -79,13 +160,18 @@ function handleCommand(cmd) {
             addLog("> LOADING OPERATOR PROFILES...", "text-[#00f3ff]");
             setTimeout(() => { window.location.hash = "operators"; }, 400);
         },
+        highlights: () => {
+            const data = getTodayHighlights();
+            data.logLines.forEach(line => addLog(line, "text-white/90"));
+        },
+        news: () => cmds.highlights(),
         status: () => {
             addLog(`> SYSTEM_STATE:    OPERATIONAL`, "text-[#00f3ff]");
             addLog(`> NODES:           7 / 7 ACTIVE`, "text-white/50");
             addLog(`> PACKET_LOSS:     0.00%`, "text-white/50");
         },
         about: () => {
-            addLog(`> CRYPTS 5.0 | OPG WORLD SCHOOL | TECHNICAL SYMPOSIUM`, "text-white");
+            addLog(`> CRYPTS 5.0 | OPG WORLD SCHOOL | TECHFEST`, "text-white");
             addLog(`> THEME: THE SINGULARITY OVERLOAD`, "text-white/50");
             addLog(`> CONTACT: CLASS TEACHER / ORGANIZING COMMITTEE`, "text-white/30");
         },
@@ -1208,6 +1294,20 @@ function bootApp() {
     safe('taglineTyping',  () => initTaglineTyping());
     safe('sectionObserver',() => initSectionObserver());
     safe('eventModal',     () => initEventModal());
+    safe('operatorEmails', () => initOperatorEmailRedirect());
+    safe('highlightsEngine',() => initTerminalHighlights());
+}
+
+function initOperatorEmailRedirect() {
+    document.querySelectorAll('.operator-email').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const targetUrl = link.getAttribute('href');
+            if (targetUrl) {
+                e.preventDefault();
+                window.open(targetUrl, '_blank', 'noopener,noreferrer');
+            }
+        });
+    });
 }
 
 if (document.readyState === 'loading') {

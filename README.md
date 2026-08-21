@@ -1,9 +1,9 @@
-# CRYPTS 5.0 | OPG World School Technical Symposium
+# CRYPTS 5.0 | OPG World School TechFest
 [![Netlify Status](https://api.netlify.com/api/v1/badges/077b6f09-3495-42d0-9483-4f949b5b6a46/deploy-status)](https://app.netlify.com/projects/crypts5/deploys)
 [![Deploy static content to Pages](https://github.com/shivanchowdhry123/Crypts-5.0/actions/workflows/static.yml/badge.svg)](https://github.com/shivanchowdhry123/Crypts-5.0/actions/workflows/static.yml)
 ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/crypts5)
 
-Welcome to the official repository for the **CRYPTS 5.0** (Cryptic Realms of Yielding Problem Solving) Technical Symposium landing page and interactive terminal platform. Hosted by **OPG World School**, CRYPTS 5.0 is an intra-school event and technical festival designed for students in Classes 4–12.
+Welcome to the official repository for the **CRYPTS 5.0** (Cryptic Realms of Yielding Problem Solving) TechFest landing page and interactive terminal platform. Hosted by **OPG World School**, CRYPTS 5.0 is an intra-school event and technical festival designed for students in Classes 4–12.
 
 Themed around *"Born From Chaos, Built for Innovation"*, the platform emphasizes logic, security, system efficiency, hardware resilience, and terminal-first aesthetics.
 
@@ -93,7 +93,7 @@ The integrated terminal simulation (`script.js`) allows users to query system co
 | `schedule` | Navigates to Chronos Schedule section |
 | `team` | Navigates to Operators section |
 | `status` | Checks and prints simulated system operational status |
-| `about` | Displays system information and symposium metadata |
+| `about` | Displays system information and TechFest metadata |
 
 ---
 

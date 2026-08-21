@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRYPTS 5.0 | The Singularity Overload — OPG World School Technical Symposium</title>
-    <meta name="description" content="CRYPTS 5.0: The Singularity Overload. OPG World School's premier annual Technical Symposium. Featuring competitive coding, cryptography, web design, and more — for Classes 4–12.">
+    <title>CRYPTS 5.0 | The Singularity Overload — OPG World School TechFest</title>
+    <meta name="description" content="CRYPTS 5.0: The Singularity Overload. OPG World School's premier annual TechFest. Featuring competitive coding, cryptography, web design, and more — for Classes 4–12.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
@@ -122,7 +122,7 @@
     <!-- Hero Title -->
     <div class="mb-10 text-center relative z-10">
         <h1 class="glitch glitch-hero" data-text="CRYPTS_5.0">CRYPTS_<span class="highlight-v">5.0</span></h1>
-        <p class="tracking-[0.6em] text-[#00f3ff] mt-4 opacity-60 uppercase font-bold">OPG World School • Technical Symposium</p>
+        <p class="tracking-[0.6em] text-[#00f3ff] mt-4 opacity-60 uppercase font-bold">OPG World School • TechFest</p>
         <p class="text-[8px] tracking-[0.4em] text-white/25 mt-2 uppercase">THE SINGULARITY OVERLOAD</p>
         <p class="tagline-typed" id="hero-tagline"></p>
         <p class="tagline-chaos" id="hero-tagline-sub">In Chaos We Create. Through Innovation We Evolve.</p>
@@ -148,6 +148,22 @@
                 <div class="status-item"><span class="status-label">SECURITY_SYNC</span><span class="status-value">STABLE</span></div>
                 <div class="status-item"><span class="status-label">PACKET_LOSS  </span><span class="status-value" style="color:var(--magenta)">0.00%</span></div>
             </div>
+
+            <!-- Highlights & Announcements Banner -->
+            <div class="terminal-highlights-box mb-4 p-3 rounded bg-[#001726] border border-[#00f3ff]/30 text-white/90">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[#00f3ff] font-bold text-xs tracking-wider flex items-center gap-1.5">
+                        <span>📢</span> LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS
+                    </span>
+                    <span id="highlights-badge" class="text-[9px] px-2 py-0.5 rounded bg-[#00f3ff]/20 text-[#00f3ff] font-bold uppercase tracking-wider">LIVE FEED</span>
+                </div>
+                <div id="terminal-highlights-body" class="space-y-1 text-[11px] text-white/80">
+                    <p><span class="text-[#00f3ff] font-semibold">• Registrations Open:</span> Enroll now for competitive coding, cryptography, design & gaming events.</p>
+                    <p><span class="text-[#ff00c1] font-semibold">• Event Dates:</span> Offline & Online rounds kick off starting September 17.</p>
+                    <p><span class="text-yellow-400 font-semibold">• Quick Command:</span> Type <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">highlights</code> or <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code> below to explore events!</p>
+                </div>
+            </div>
+
             <div id="terminal-output" class="space-y-1.5 mb-3 text-white/80"></div>
             <div id="input-line" class="flex items-center hidden">
                 <span class="mr-2 text-white/30 text-[10px]">root@crypts:~#</span>
@@ -168,10 +184,6 @@
         </div>
         <!-- Stats block takes 1 col -->
         <div class="flex flex-col gap-6 border-l border-white/10 pl-8">
-            <div>
-                <div class="text-[#ff00c1] font-bold text-4xl">600+</div>
-                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Participants</div>
-            </div>
             <div>
                 <div class="text-[#ff00c1] font-bold text-4xl">12+</div>
                 <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Missions</div>
@@ -202,7 +214,6 @@
             <!-- 1. GLITCHVERSE -->
             <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="security" data-event="glitchverse">
                 <span class="hud-tag hud-tag-tr">EVT-001</span>
-                <div class="event-icon-badge" data-cat="security">GV</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_1</span><span class="op">():</span></div>
                 <h3 class="card-title">GLITCHVERSE</h3>
                 <p class="card-desc">Decode ciphers, crack enigmatic puzzles, and navigate multi-layered cryptographic challenges in this offline decryption arena.</p>
@@ -217,7 +228,6 @@
             <!-- 2. PIXELPULSE -->
             <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="design" data-event="pixelpulse">
                 <span class="hud-tag hud-tag-tr">EVT-002</span>
-                <div class="event-icon-badge" data-cat="design">PP</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_2</span><span class="op">():</span></div>
                 <h3 class="card-title">PIXELPULSE</h3>
                 <p class="card-desc">Digital poster design competition judged on creativity, visual communication, and technical mastery of design tools.</p>
@@ -232,7 +242,6 @@
             <!-- 3. BYTE THE SITE -->
             <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-event="byte_the_site">
                 <span class="hud-tag hud-tag-tr">EVT-003</span>
-                <div class="event-icon-badge" data-cat="coding">BTS</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_3</span><span class="op">():</span></div>
                 <h3 class="card-title">BYTE THE SITE</h3>
                 <p class="card-desc">Frontend web development challenge — build responsive, visually stunning websites under time constraints using HTML, CSS & JS.</p>
@@ -247,7 +256,6 @@
             <!-- 4. SCRATCH XPLORERS -->
             <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="scratch_xplorers">
                 <span class="hud-tag hud-tag-tr">EVT-004</span>
-                <div class="event-icon-badge" data-cat="coding">SX</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_4</span><span class="op">():</span></div>
                 <h3 class="card-title">SCRATCH XPLORERS</h3>
                 <p class="card-desc">Block-based programming challenge for junior coders — build interactive projects, games, and animations using Scratch.</p>
@@ -262,7 +270,6 @@
             <!-- 5. IHE CINEPRISM -->
             <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="av" data-event="ihe_cineprism">
                 <span class="hud-tag hud-tag-tr">EVT-005</span>
-                <div class="event-icon-badge" data-cat="av">CP</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_5</span><span class="op">():</span></div>
                 <h3 class="card-title">IHE CINEPRISM</h3>
                 <p class="card-desc">Short film and video production competition — narrative structure, cinematography, pacing, and post-production judged.</p>
@@ -277,7 +284,6 @@
             <!-- 6. PROMPT PARADOX -->
             <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="ai" data-event="prompt_paradox">
                 <span class="hud-tag hud-tag-tr">EVT-006</span>
-                <div class="event-icon-badge" data-cat="ai">PX</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_6</span><span class="op">():</span></div>
                 <h3 class="card-title">PROMPT PARADOX</h3>
                 <p class="card-desc">AI prompt engineering challenge — craft precise, creative prompts to generate outputs matching specific goals and constraints.</p>
@@ -292,7 +298,6 @@
             <!-- 7. QWERTY 4.0 -->
             <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="qwerty_4">
                 <span class="hud-tag hud-tag-tr">EVT-007</span>
-                <div class="event-icon-badge" data-cat="coding">QW</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_7</span><span class="op">():</span></div>
                 <h3 class="card-title">QWERTY 4.0</h3>
                 <p class="card-desc">Speed typing tournament — accuracy, WPM, and consistency under pressure. Keyboard warriors, assemble.</p>
@@ -307,7 +312,6 @@
             <!-- 8. JAILBREAK -->
             <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="security" data-event="jailbreak">
                 <span class="hud-tag hud-tag-tr">EVT-008</span>
-                <div class="event-icon-badge" data-cat="security">JB</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_8</span><span class="op">():</span></div>
                 <h3 class="card-title">JAILBREAK</h3>
                 <p class="card-desc">Escape room meets tech — solve interconnected logic puzzles, decode sequences, and break free before the timer runs out.</p>
@@ -322,7 +326,6 @@
             <!-- 9. IHE CODEQUEST -->
             <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-event="ihe_codequest">
                 <span class="hud-tag hud-tag-tr">EVT-009</span>
-                <div class="event-icon-badge" data-cat="coding">CQ</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_9</span><span class="op">():</span></div>
                 <h3 class="card-title">IHE CODEQUEST</h3>
                 <p class="card-desc">Competitive programming — algorithmic complexity and optimization under clock pressure. Solve. Optimize. Execute.</p>
@@ -337,7 +340,6 @@
             <!-- 10. IHE KERNEL -->
             <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="ihe_kernel">
                 <span class="hud-tag hud-tag-tr">EVT-010</span>
-                <div class="event-icon-badge" data-cat="coding">KR</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_10</span><span class="op">():</span></div>
                 <h3 class="card-title">IHE KERNEL</h3>
                 <p class="card-desc">Inter-house hardware and systems challenge — circuit design, component identification, and technical diagnostics.</p>
@@ -352,7 +354,6 @@
             <!-- 11. GAME MAKERS -->
             <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="gaming" data-event="game_makers">
                 <span class="hud-tag hud-tag-tr">EVT-011</span>
-                <div class="event-icon-badge" data-cat="gaming">GM</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_11</span><span class="op">():</span></div>
                 <h3 class="card-title">GAME MAKERS</h3>
                 <p class="card-desc">Game development from scratch — design, build, and present playable games judged on mechanics, creativity, and polish.</p>
@@ -367,7 +368,6 @@
             <!-- 12. L'ARÈNE ESPORTS -->
             <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="gaming" data-event="larene_esports">
                 <span class="hud-tag hud-tag-tr">EVT-012</span>
-                <div class="event-icon-badge" data-cat="gaming">ES</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_12</span><span class="op">():</span></div>
                 <h3 class="card-title">L'ARÈNE ESPORTS</h3>
                 <p class="card-desc">Multi-title esports tournament — FC 26, Valorant, and Minecraft. Strategy, reflexes, and teamwork across elimination rounds.</p>
@@ -382,7 +382,6 @@
             <!-- 13. BIZTECH NEXUS -->
             <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="biz" data-event="biztech_nexus">
                 <span class="hud-tag hud-tag-tr">EVT-013</span>
-                <div class="event-icon-badge" data-cat="biz">BN</div>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_13</span><span class="op">():</span></div>
                 <h3 class="card-title">BIZTECH NEXUS</h3>
                 <p class="card-desc">Business-tech fusion — ideation, pitch decks, market analysis, and startup prototyping for the next-gen entrepreneur.</p>
@@ -448,7 +447,7 @@
         <div class="section-heading reveal">
             <span class="section-tag">// KNOWLEDGE_DATABASE</span>
             <h2 class="glitch text-[#00f3ff] text-2xl" data-text="04_RESOURCE_MATRIX">04_RESOURCE_MATRIX</h2>
-            <p class="text-xs text-white/50 tracking-wider mt-2 font-mono">// OFFICIAL SYMPOSIUM BROCHURE &amp; COMPREHENSIVE EVENT DOSSIER</p>
+            <p class="text-xs text-white/50 tracking-wider mt-2 font-mono">// OFFICIAL TECHFEST BROCHURE &amp; COMPREHENSIVE EVENT DOSSIER</p>
         </div>
 
         <div class="brochure-embed-container reveal relative overflow-hidden mt-6">
@@ -754,87 +753,123 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
 
             <div class="operator-card reveal reveal-delay-1">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Saumya</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Saumya Tyagi" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Saumya Tyagi</div>
                 <span class="operator-section-tag">CLASS XI-A</span>
-                <a href="mailto:saumya.cryptsopg@gmail.com" class="operator-email">saumya.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=saumya.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">saumya.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-2">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Shivan</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Shivan Chowdhry" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Shivan Chowdhry</div>
                 <span class="operator-section-tag">CLASS XI-C</span>
-                <a href="mailto:shivan.cryptsopg@gmail.com" class="operator-email">shivan.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=shivan.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">shivan.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-3">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Eeshaan</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Eeshaan Chhabra" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Eeshaan Chhabra</div>
                 <span class="operator-section-tag">CLASS XII-A</span>
-                <a href="mailto:eeshaan.cryptsopg@gmail.com" class="operator-email">eeshaan.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=eeshaan.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">eeshaan.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-4">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Saksham</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Saksham Khatri" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Saksham Khatri</div>
                 <span class="operator-section-tag">CLASS XII-B</span>
-                <a href="mailto:sakshamvinaykhatri.cryptsopg@gmail.com" class="operator-email">sakshamvinaykhatri.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sakshamvinaykhatri.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">sakshamvinaykhatri.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-1">
-                <div class="operator-avatar">👤</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Bhavya Tuli" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
                 <div class="operator-name">Bhavya Tuli</div>
                 <span class="operator-section-tag">CLASS XII-A</span>
-                <a href="mailto:bhavya.cryptsopg@gmail.com" class="operator-email">bhavya.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bhavya.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">bhavya.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-2">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Bhavya</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Bhavya Sachdeva" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Bhavya Sachdeva</div>
                 <span class="operator-section-tag">CLASS XII-B</span>
-                <a href="mailto:bhavyas.cryptsopg@gmail.com" class="operator-email">bhavyas.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bhavyas.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">bhavyas.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-3">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Prakriti</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Prakriti Chaturvedi" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Prakriti Chaturvedi</div>
                 <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="mailto:prakriti.cryptsopg@gmail.com" class="operator-email">prakriti.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=prakriti.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">prakriti.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-4">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Aaryan</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Aaryan Yadav" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Aaryan Yadav</div>
                 <span class="operator-section-tag">CLASS XII-A</span>
-                <a href="mailto:aaryan.cryptsopg@gmail.com" class="operator-email">aaryan.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=aaryan.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">aaryan.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-1">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Rishit</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Rishit Jain" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Rishit Jain</div>
                 <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="mailto:rishit.cryptsopg@gmail.com" class="operator-email">rishit.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=rishit.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">rishit.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-2">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Somansh</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Somansh Kumar" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Somansh Kumar</div>
                 <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="mailto:somansh.cryptsopg@gmail.com" class="operator-email">somansh.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=somansh.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">somansh.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-3">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Yajas</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Yajas Yashasvi" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Yajas Yashasvi</div>
                 <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="mailto:yajas.cryptsopg@gmail.com" class="operator-email">yajas.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=yajas.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">yajas.cryptsopg@gmail.com</a>
             </div>
 
             <div class="operator-card reveal reveal-delay-4">
-                <div class="operator-avatar">👤</div>
-                <div class="operator-name">Anshika</div>
+                <div class="operator-avatar">
+                    <img src="" alt="Anshika Yadav" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">👤</span>
+                </div>
+                <div class="operator-name">Anshika Yadav</div>
                 <span class="operator-section-tag">CLASS XI-D</span>
-                <a href="mailto:anshika.cryptsopg@gmail.com" class="operator-email">anshika.cryptsopg@gmail.com</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=anshika.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">anshika.cryptsopg@gmail.com</a>
             </div>
 
         </div>
@@ -858,7 +893,7 @@
      FOOTER
      ============================ -->
 <footer class="site-footer">
-    <p>CRYPTS 5.0 &nbsp;•&nbsp; OPG World School &nbsp;•&nbsp; Technical Symposium &nbsp;•&nbsp; <span id="footer-year"></span></p>
+    <p>CRYPTS 5.0 &nbsp;•&nbsp; OPG World School &nbsp;•&nbsp; TechFest &nbsp;•&nbsp; <span id="footer-year"></span></p>
     <p class="mt-2">Built with precision. Encrypted by design.</p>
 </footer>
 
