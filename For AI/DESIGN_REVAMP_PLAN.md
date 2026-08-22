@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Design Vision
 
-The objective of this design revamp is to elevate the CRYPTS'26 web platform into a world-class, high-contrast, interactive cyberpunk web application directly aligned with the official 31-page brochure ([CRYPTS 5.0.pdf](file:///Users/sarangchowdhry/repos/Other/Crypts-5.0/For%20AI/CRYPTS%205.0.pdf)). Drawing design principles from top-tier industry benchmarks (Awwwards, Linear, Vercel, Raycast, HackMIT, ETHGlobal, Devfolio, Lusion), the updated site features seamless motion design, multi-layered HUD framing, dynamic interactive event modals, and smart class-based registration.
+The objective of this design revamp is to elevate the CRYPTS'26 web platform into a world-class, high-contrast, interactive cyberpunk web application directly aligned with the official 31-page brochure ([CRYPTS'26.pdf](file:///Users/sarangchowdhry/repos/Other/Crypts-5.0/For%20AI/CRYPTS%205.0.pdf)). Drawing design principles from top-tier industry benchmarks (Awwwards, Linear, Vercel, Raycast, HackMIT, ETHGlobal, Devfolio, Lusion), the updated site features seamless motion design, multi-layered HUD framing, dynamic interactive event modals, and smart class-based registration.
 
 ---
 
