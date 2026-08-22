@@ -1,5 +1,5 @@
 /* ============================================================
-   CRYPTS 5.0 — SCRIPT ENGINE
+   CRYPTS'26 — SCRIPT ENGINE
    ============================================================ */
 
 // ============================================================
@@ -22,7 +22,7 @@ const initialLogs = [
     { text: "> PARTICLE_GRID INITIALIZED.",                color: "text-white/40" },
     { text: "> ENCRYPTION_LAYER: ACTIVE.",                 color: "text-white/40" },
     { text: "------------------------------------------------", color: "text-white/10" },
-    { text: "CRYPTS 5.0 Terminal  [AUTHORIZED_SESSION]",   color: "text-[#ff00c1]" },
+    { text: "CRYPTS'26 Terminal  [AUTHORIZED_SESSION]",   color: "text-[#ff00c1]" },
     { text: "Type 'help' for available commands.",          color: "text-white/30" },
 ];
 
@@ -171,7 +171,7 @@ function handleCommand(cmd) {
             addLog(`> PACKET_LOSS:     0.00%`, "text-white/50");
         },
         about: () => {
-            addLog(`> CRYPTS 5.0 | OPG WORLD SCHOOL | TECHFEST`, "text-white");
+            addLog(`> CRYPTS'26 | OPG WORLD SCHOOL | TECHFEST`, "text-white");
             addLog(`> THEME: THE SINGULARITY OVERLOAD`, "text-white/50");
             addLog(`> CONTACT: CLASS TEACHER / ORGANIZING COMMITTEE`, "text-white/30");
         },
@@ -381,7 +381,7 @@ function initLoaderScreen() {
         { pct: 40,  msg: "> ESTABLISHING SECURE GATEWAY..." },
         { pct: 70,  msg: "> INDEXING EVENT MODULE MATRIX..." },
         { pct: 90,  msg: "> VERIFYING SECURITY SIGNATURES..." },
-        { pct: 100, msg: "> SYSTEM READY. WELCOME TO CRYPTS 5.0" }
+        { pct: 100, msg: "> SYSTEM READY. WELCOME TO CRYPTS'26" }
     ];
 
     let currentStage = 0;

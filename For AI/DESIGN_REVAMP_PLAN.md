@@ -1,14 +1,14 @@
-# 🌐 CRYPTS 5.0 — Design Revamp Plan & Technical Benchmarks
+# 🌐 CRYPTS'26 — Design Revamp Plan & Technical Benchmarks
 
-**Project:** OPG World School TechFest (CRYPTS 5.0)  
+**Project:** OPG World School TechFest (CRYPTS'26)  
 **Target Aesthetic:** Cyberpunk HUD / Dark Industrial Tech  
-**Document Purpose:** Strategic blueprint and architectural reference for AI agents and developers for the CRYPTS 5.0 website UI/UX.
+**Document Purpose:** Strategic blueprint and architectural reference for AI agents and developers for the CRYPTS'26 website UI/UX.
 
 ---
 
 ## 1. Executive Summary & Design Vision
 
-The objective of this design revamp is to elevate the CRYPTS 5.0 web platform into a world-class, high-contrast, interactive cyberpunk web application directly aligned with the official 31-page brochure ([CRYPTS 5.0.pdf](file:///Users/sarangchowdhry/repos/Other/Crypts-5.0/For%20AI/CRYPTS%205.0.pdf)). Drawing design principles from top-tier industry benchmarks (Awwwards, Linear, Vercel, Raycast, HackMIT, ETHGlobal, Devfolio, Lusion), the updated site features seamless motion design, multi-layered HUD framing, dynamic interactive event modals, and smart class-based registration.
+The objective of this design revamp is to elevate the CRYPTS'26 web platform into a world-class, high-contrast, interactive cyberpunk web application directly aligned with the official 31-page brochure ([CRYPTS 5.0.pdf](file:///Users/sarangchowdhry/repos/Other/Crypts-5.0/For%20AI/CRYPTS%205.0.pdf)). Drawing design principles from top-tier industry benchmarks (Awwwards, Linear, Vercel, Raycast, HackMIT, ETHGlobal, Devfolio, Lusion), the updated site features seamless motion design, multi-layered HUD framing, dynamic interactive event modals, and smart class-based registration.
 
 ---
 
@@ -66,7 +66,7 @@ The objective of this design revamp is to elevate the CRYPTS 5.0 web platform in
 
 ## 3. Current Implementation Status
 
-| Feature Area | Current State in CRYPTS 5.0 | Status |
+| Feature Area | Current State in CRYPTS'26 | Status |
 | :--- | :--- | :--- |
 | **Background & Atmosphere** | Interactive particle grid + animated 40px circuit board grid + SVG noise grain overlay | ✅ Complete |
 | **Card Mechanics** | HUD chamfered cut-corner frames (`.hud-cut-corner`), animated gradient glow borders, telemetry tags | ✅ Complete |

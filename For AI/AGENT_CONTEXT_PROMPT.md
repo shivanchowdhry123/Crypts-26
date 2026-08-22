@@ -1,7 +1,7 @@
-# SYSTEM CONTEXT & DEVELOPER GUIDE: CRYPTS 5.0 WEBSITE
+# SYSTEM CONTEXT & DEVELOPER GUIDE: CRYPTS'26 WEBSITE
 
 ## 1. PROJECT OVERVIEW
-* **Project Name:** CRYPTS 5.0 Technical Symposium Website
+* **Project Name:** CRYPTS'26 Technical Symposium Website
 * **Organization:** OPG World School
 * **Core Concept:** An industrial cyberpunk-themed landing page and interactive terminal platform for an annual school tech fest.
 * **Tagline/Theme:** *Born From Chaos, Built for Innovation* — *In Chaos We Create. Through Innovation We Evolve.*
@@ -17,7 +17,7 @@ The current project structure consists of the following key files:
 ├── script.js            # Terminal CLI, event modals, typing animation, scroll observer, registration
 ├── doPost.gs            # Google Apps Script backend for database insertion & email notifications
 ├── logo/
-│   └── logo.png         # Official CRYPTS 5.0 transparent PNG emblem
+│   └── logo.png         # Official CRYPTS'26 transparent PNG emblem
 ├── For AI/
 │   ├── AGENT_CONTEXT_PROMPT.md   # This file — developer guide for AI agents
 │   ├── DESIGN_REVAMP_PLAN.md     # Design benchmark & architectural roadmap
@@ -115,7 +115,7 @@ The site is organized into 7 sequential operational sections indexed via anchor 
 }
 ```
 * **Apps Script Actions (`doPost.gs`):**
-  1. Appends record to `CRYPTS_5.0_FORMS_DATABASE` sheet.
+  1. Appends record to `CRYPTS_26_FORMS_DATABASE` sheet.
   2. Dynamically pulls organizer emails from an `ORGANISERS` sheet.
   3. Dispatches user confirmation email via `GmailApp.sendEmail`.
   4. Sends real-time notification emails to all listed admin organizers.

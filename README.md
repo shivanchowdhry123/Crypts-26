@@ -1,9 +1,9 @@
-# CRYPTS 5.0 | OPG World School TechFest
+# CRYPTS'26 | OPG World School TechFest
 [![Netlify Status](https://api.netlify.com/api/v1/badges/077b6f09-3495-42d0-9483-4f949b5b6a46/deploy-status)](https://app.netlify.com/projects/crypts5/deploys)
 [![Deploy static content to Pages](https://github.com/shivanchowdhry123/Crypts-5.0/actions/workflows/static.yml/badge.svg)](https://github.com/shivanchowdhry123/Crypts-5.0/actions/workflows/static.yml)
 ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/crypts5)
 
-Welcome to the official repository for the **CRYPTS 5.0** (Cryptic Realms of Yielding Problem Solving) TechFest landing page and interactive terminal platform. Hosted by **OPG World School**, CRYPTS 5.0 is an intra-school event and technical festival designed for students in Classes 4–12.
+Welcome to the official repository for the **CRYPTS'26** (Cryptic Realms of Yielding Problem Solving) TechFest landing page and interactive terminal platform. Hosted by **OPG World School**, CRYPTS'26 is an intra-school event and technical festival designed for students in Classes 4–12.
 
 Themed around *"Born From Chaos, Built for Innovation"*, the platform emphasizes logic, security, system efficiency, hardware resilience, and terminal-first aesthetics.
 
@@ -53,7 +53,7 @@ Themed around *"Born From Chaos, Built for Innovation"*, the platform emphasizes
 ├── script.js            # Terminal CLI, event modals, typing animation, scroll observer
 ├── doPost.gs            # Google Apps Script backend for database insertion & email notifications
 ├── logo/
-│   └── logo.png         # Official CRYPTS 5.0 transparent PNG emblem
+│   └── logo.png         # Official CRYPTS'26 transparent PNG emblem
 ├── For AI/
 │   ├── AGENT_CONTEXT_PROMPT.md   # Developer guide for AI agents
 │   ├── DESIGN_REVAMP_PLAN.md     # Design benchmark & roadmap reference
@@ -114,7 +114,7 @@ The registration workflow submits payload packets directly to a **Google Apps Sc
 ```
 
 > [!NOTE]
-> Upon submission, the Apps Script writes the data to the central Google Sheet (`CRYPTS_5.0_FORMS_DATABASE`), triggers email confirmations to the participant, and notifies all listed administrative organizers.
+> Upon submission, the Apps Script writes the data to the central Google Sheet (`CRYPTS_26_FORMS_DATABASE`), triggers email confirmations to the participant, and notifies all listed administrative organizers.
 
 ---
 

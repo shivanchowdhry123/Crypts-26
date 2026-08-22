@@ -1,6 +1,6 @@
 /**
  * ==============================================================================
- * CRYPTS 5.0 - GOOGLE APPS SCRIPT BACKEND
+ * CRYPTS'26 - GOOGLE APPS SCRIPT BACKEND
  * ==============================================================================
  * NOTE: This local file is a direct replica of the code published in the 
  * Google Apps Script Web App Editor. 
@@ -16,8 +16,8 @@ function doPost(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
   // 1. DATABASE SETUP
-  var databaseSheet = ss.getSheetByName("CRYPTS_5.0_FORMS_DATABASE") || ss.getSheets()[0];
-  databaseSheet.setName("CRYPTS_5.0_FORMS_DATABASE");
+  var databaseSheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE") || ss.getSheetByName("CRYPTS_5.0_FORMS_DATABASE") || ss.getSheets()[0];
+  databaseSheet.setName("CRYPTS_26_FORMS_DATABASE");
   
   if (databaseSheet.getLastRow() === 0) {
     databaseSheet.appendRow(["Timestamp", "Operator Name", "Email", "Class", "Section", "Events Selected"]);
@@ -74,14 +74,14 @@ function doPost(e) {
     <body>
       <div class="card">
         <div class="header">
-          <h1 class="glitch-title">CRYPTS 5.0</h1>
+          <h1 class="glitch-title">CRYPTS'26</h1>
           <div class="header-sub">[ REGISTRATION SYNCHRONIZED ]</div>
         </div>
         <div class="body-content">
           <div class="greeting">Greetings, ${firstName}</div>
           <div class="text">
             Shivan this side from Team CRYPTS! Welcome aboard.<br><br>
-            Your entry packet for the <strong>CRYPTS 5.0</strong> cyber simulation has been received and committed to our primary servers.
+            Your entry packet for the <strong>CRYPTS'26</strong> cyber simulation has been received and committed to our primary servers.
           </div>
           
           <div class="details-box">
@@ -108,7 +108,7 @@ function doPost(e) {
           </div>
         </div>
         <div class="footer">
-          &copy; CRYPTS 5.0 TEAM &bull; ALL SYSTEMS OPERATIONAL
+          &copy; CRYPTS'26 TEAM &bull; ALL SYSTEMS OPERATIONAL
         </div>
       </div>
     </body>
@@ -116,17 +116,17 @@ function doPost(e) {
   `;
 
   var userBodyPlain = "Greetings " + firstName + ",\n\nShivan this side from Team CRYPTS!\n\n" +
-                      "Your registration for CRYPTS 5.0 has been received:\n" +
+                      "Your registration for CRYPTS'26 has been received:\n" +
                       "- Operator: " + data.name + "\n" +
                       "- Sector: Class " + data.class + "-" + data.section + "\n" +
                       "- Modules: " + data.events + "\n\n" +
                       "- Portal: https://crypts5.vercel.app/\n\n" +
-                      "Best regards,\nShivan Chowdhry & Team CRYPTS 5.0";
+                      "Best regards,\nShivan Chowdhry & Team CRYPTS'26";
 
   // SEND REGISTRANT EMAIL
-  GmailApp.sendEmail(data.email, "Welcome to CRYPTS 5.0 | Registration Synchronized", userBodyPlain, {
+  GmailApp.sendEmail(data.email, "Welcome to CRYPTS'26 | Registration Synchronized", userBodyPlain, {
     from: "shivan.cryptsopg@gmail.com",
-    name: "Shivan Chowdhry & The CRYPTS 5.0 Team (via Admin Console)",
+    name: "Shivan Chowdhry & The CRYPTS'26 Team (via Admin Console)",
     htmlBody: userHtmlTemplate
   });
 
@@ -148,7 +148,7 @@ function doPost(e) {
     <body>
       <div class="card admin-card">
         <div class="header admin-header">
-          <h1 class="glitch-title">CRYPTS 5.0</h1>
+          <h1 class="glitch-title">CRYPTS'26</h1>
           <div class="header-sub">[ ADMIN ALERT &bull; INCOMING REGISTRATION ]</div>
         </div>
         <div class="body-content">
@@ -185,7 +185,7 @@ function doPost(e) {
           </div>
         </div>
         <div class="footer">
-          CRYPTS 5.0 INTERNAL CONSOLE &bull; AUTOMATED SYSTEM NOTIFICATION
+          CRYPTS'26 INTERNAL CONSOLE &bull; AUTOMATED SYSTEM NOTIFICATION
         </div>
       </div>
     </body>
@@ -204,7 +204,7 @@ function doPost(e) {
   if (adminEmails.length > 0) {
     GmailApp.sendEmail(adminEmails.join(","), "ALERT: NEW OPERATOR REGISTERED - " + data.name, adminBodyPlain, {
       from: "shivan.cryptsopg@gmail.com",
-      name: "Shivan Chowdhry & The CRYPTS 5.0 Team (via Admin Console)",
+      name: "Shivan Chowdhry & The CRYPTS'26 Team (via Admin Console)",
       htmlBody: adminHtmlTemplate
     });
   }
