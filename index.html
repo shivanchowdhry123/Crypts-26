@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRYPTS'26 | The Singularity Overload — OPG World School TechFest</title>
     <meta name="description" content="CRYPTS'26: The Singularity Overload. OPG World School's premier annual TechFest. Featuring competitive coding, cryptography, web design, and more — for Classes 4–12.">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="tailwind.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <!-- model-viewer for 3D GLB logo (zero-dependency web component) -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <script src="logo/model_data.js"></script>
 </head>
 <body class="antialiased">
 
@@ -159,6 +160,7 @@
             <div class="absolute w-64 h-64 rounded-full bg-[#ff007f]/20 blur-[80px] pointer-events-none"></div>
             <model-viewer
                 src="logo/new_logo.glb"
+                poster="logo/logo.png"
                 camera-controls
                 auto-rotate
                 disable-zoom
@@ -166,7 +168,9 @@
                 id="hero-model-viewer"
                 alt="CRYPTS'26 3D Logo"
                 style="width: 360px; height: 360px; background: transparent; --poster-color: transparent;"
-            ></model-viewer>
+            >
+                <img src="logo/logo.png" alt="CRYPTS'26 Logo" class="w-full h-full object-contain pointer-events-none" slot="poster">
+            </model-viewer>
         </div>
 
     </div>
@@ -574,7 +578,6 @@
                 <iframe 
                     loading="lazy" 
                     src="https://www.canva.com/design/DAHJvv9pohw/H2dzOSOkvWclrRNtV_OmMQ/view?embed" 
-                    allowfullscreen="allowfullscreen" 
                     allow="fullscreen"
                     class="brochure-iframe"
                     title="CRYPTS'26 Official Brochure">

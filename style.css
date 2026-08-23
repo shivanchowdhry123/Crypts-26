@@ -573,7 +573,7 @@ body::before {
 
 /* 3D Model Viewer */
 #hero-model-viewer {
-    outline: none;
+    outline: 0;
     border-radius: 8px;
     filter: drop-shadow(0 0 20px rgba(255,0,127,0.3));
     animation: modelFloat 6s ease-in-out infinite;
@@ -879,7 +879,7 @@ body::before {
     color: #fff;
     font-size: 13px;
     font-family: 'JetBrains Mono', monospace;
-    outline: none;
+    outline: 0;
     margin-bottom: 20px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     border-radius: 3px;
@@ -922,6 +922,7 @@ body::before {
     font-family: 'JetBrains Mono', monospace;
     transition: all 0.2s ease;
     border-radius: 3px;
+    -webkit-user-select: none;
     user-select: none;
 }
 .event-tag-chip:hover {
@@ -967,6 +968,7 @@ body::before {
 .brochure-embed-container {
     background: var(--dark-glass);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 243, 255, 0.2);
     border-radius: 6px;
     box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 25px rgba(0, 243, 255, 0.05);
@@ -1150,7 +1152,6 @@ body::before {
     padding-top: 2px;
     font-weight: 500;
 }
-.timeline-content {}
 .timeline-name {
     font-size: 15px;
     font-weight: bold;
@@ -1211,6 +1212,7 @@ body::before {
     color: rgba(255,255,255,0.7);
     letter-spacing: 0.05em;
     transition: color 0.2s ease;
+    -webkit-user-select: none;
     user-select: none;
     gap: 16px;
 }
@@ -1250,6 +1252,7 @@ body::before {
     position: relative;
     background: var(--dark-glass);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.06);
     padding: 28px 24px;
     border-radius: 6px;
@@ -1360,6 +1363,7 @@ body::before {
     max-width: 560px;
     background: var(--dark-glass);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(0, 243, 255, 0.2);
     border-radius: 8px;
     overflow: hidden;
@@ -1387,7 +1391,7 @@ body::before {
     flex: 1;
     background: transparent;
     border: none;
-    outline: none;
+    outline: 0;
     color: #fff;
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;

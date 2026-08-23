@@ -731,35 +731,6 @@ function initCommandPalette() {
     });
 }
 
-// ============================================================
-// EVENT FILTER TAGS (Modules Section)
-// ============================================================
-function initEventFilter() {
-    const chips = document.querySelectorAll('.filter-chip');
-    const cards = document.querySelectorAll('#event-grid .event-card');
-
-    chips.forEach(chip => {
-        chip.addEventListener('click', (e) => {
-            if (e) e.preventDefault();
-            chips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-
-            const filter = chip.dataset.filter;
-            cards.forEach(card => {
-                const cat = card.dataset.category;
-                const show = (filter === 'all' || cat === filter);
-                if (show) {
-                    card.style.display = 'block';
-                    card.classList.add('visible');
-                    card.style.opacity = '1';
-                    card.style.transform = 'none';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    });
-}
 
 // ============================================================
 // TIMELINE TABS (Chronos Schedule)
@@ -1370,6 +1341,24 @@ function bootApp() {
     safe('eventModal',     () => initEventModal());
     safe('operatorEmails', () => initOperatorEmailRedirect());
     safe('highlightsEngine',() => initTerminalHighlights());
+    safe('modelViewer',    () => initModelViewer());
+}
+
+function initModelViewer() {
+    const mv = document.getElementById('hero-model-viewer');
+    if (!mv) return;
+
+    function loadBase64Model() {
+        if (window.CRYPTS_MODEL_DATA && mv.src !== window.CRYPTS_MODEL_DATA) {
+            mv.src = window.CRYPTS_MODEL_DATA;
+        }
+    }
+
+    if (window.location.protocol === 'file:') {
+        loadBase64Model();
+    } else {
+        mv.addEventListener('error', loadBase64Model);
+    }
 }
 
 function initOperatorEmailRedirect() {
