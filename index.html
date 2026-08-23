@@ -192,14 +192,22 @@
             </div>
         </div>
         <!-- Stats block takes 1 col -->
-        <div class="flex flex-col gap-6 border-l border-white/10 pl-8">
+        <div class="grid grid-cols-2 gap-6 border-l border-white/10 pl-8">
             <div>
-                <div class="text-[#ff00c1] font-bold text-4xl">12+</div>
-                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Missions</div>
+                <div class="text-[#ff00c1] font-bold text-3xl">2026</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">EDITION</div>
             </div>
             <div>
-                <div class="text-[#ff00c1] font-bold text-4xl">2026</div>
-                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Edition</div>
+                <div class="text-[#00f3ff] font-bold text-3xl">13</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">MISSIONS</div>
+            </div>
+            <div>
+                <div class="text-[#00f3ff] font-bold text-3xl">13</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">DAYS</div>
+            </div>
+            <div>
+                <div class="text-[#ff00c1] font-bold text-3xl">4–12</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">CLASSES</div>
             </div>
         </div>
     </div>
@@ -417,23 +425,53 @@
             <h2 class="glitch text-[#00f3ff] text-2xl" data-text="03_ENROLLMENT_PORTAL">03_ENROLLMENT_PORTAL</h2>
         </div>
 
-        <div class="registration-container mt-4 p-10 md:p-14 text-center reveal relative overflow-hidden">
-            <div class="inline-block text-[9px] tracking-[0.3em] text-[#00f3ff] border border-[#00f3ff]/30 bg-[#00f3ff]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
-                STANDALONE TRANSMISSION NODE
-            </div>
-            
-            <h3 class="text-3xl font-bold tracking-tight text-white uppercase mb-4">
-                Ready to Enter the Singularity?
-            </h3>
-            
-            <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-8">
-                Official registration for all 12+ competitive missions is hosted on a dedicated, encrypted portal. Select your modules and claim your operator status.
-            </p>
+        <div class="registration-container mt-4 p-8 md:p-12 reveal relative overflow-hidden">
+            <div class="text-center">
+                <div class="inline-block text-[9px] tracking-[0.3em] text-[#00f3ff] border border-[#00f3ff]/30 bg-[#00f3ff]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
+                    STANDALONE TRANSMISSION NODE
+                </div>
+                
+                <h3 class="text-3xl font-bold tracking-tight text-white uppercase mb-4">
+                    Ready to Enter the Singularity?
+                </h3>
+                
+                <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-8">
+                    Official registration for all 13 competitive missions is hosted on a dedicated, encrypted portal. Select your modules and claim your operator status.
+                </p>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="register.html" class="transmit-btn sm:w-auto px-10 py-4 inline-flex items-center justify-center shadow-[0_0_30px_rgba(217,0,188,0.4)]">
-                    INITIALIZE REGISTRATION →
-                </a>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+                    <a href="register.html" class="transmit-btn sm:w-auto px-10 py-4 inline-flex items-center justify-center shadow-[0_0_30px_rgba(217,0,188,0.4)]">
+                        INITIALIZE REGISTRATION →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Enrollment Guidance & Warning Panels -->
+            <div class="grid md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-white/10 text-left font-mono text-xs">
+                <!-- Step-by-Step Instructions -->
+                <div class="bg-black/40 border border-white/10 p-5 rounded hud-cut-corner">
+                    <div class="text-[#00f3ff] font-bold text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <span>// OPERATOR ENROLLMENT PROTOCOL</span>
+                    </div>
+                    <ol class="space-y-2 text-white/70 text-[11px] list-decimal list-inside leading-relaxed">
+                        <li>Open the registration portal via the button above.</li>
+                        <li>Select your grade class to auto-filter eligible events.</li>
+                        <li>Provide team member details (names, section, and contact email).</li>
+                        <li>Submit your transmission packet to receive instant confirmation.</li>
+                    </ol>
+                </div>
+
+                <!-- Warning & IHE Notes -->
+                <div class="space-y-4">
+                    <div class="bg-[#ff0055]/10 border border-[#ff0055]/40 p-4 rounded text-[11px] text-white/90 leading-relaxed">
+                        <strong class="text-[#ff0055] font-bold uppercase tracking-wider block mb-1">⚠️ FIRST COME, FIRST SERVED WARNING:</strong>
+                        Event slot allocations are strictly limited per school and module. Registrations operate on a first-come, first-served basis. Complete your transmission early to guarantee your slot.
+                    </div>
+                    <div class="bg-[#00f3ff]/10 border border-[#00f3ff]/30 p-4 rounded text-[11px] text-white/80 leading-relaxed">
+                        <strong class="text-[#00f3ff] font-bold uppercase tracking-wider block mb-1">📌 INTER-HOUSE EVENTS (IHE) NOTE:</strong>
+                        Events designated with <code class="text-white bg-black/50 px-1 py-0.5 rounded">IHE</code> (IHE CinePrism, IHE CodeQuest, IHE Kernel) represent house-level competitions. Coordinate with your House Teacher In-Charge or House Captains prior to submitting your entry.
+                    </div>
+                </div>
             </div>
 
             <div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap justify-center items-center gap-6 text-[10px] text-white/40 uppercase tracking-widest font-mono">
@@ -468,8 +506,8 @@
                     <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/40 uppercase">INTERACTIVE DOSSIER</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <a href="https://www.canva.com/design/DAHJvv9pohw/H2dzOSOkvWclrRNtV_OmMQ/view" target="_blank" rel="noopener noreferrer" class="brochure-action-btn">
-                        <span>↗ OPEN FULL VIEW</span>
+                    <a href="For AI/CRYPTS 5.0.pdf" download="CRYPTS_26_Official_Brochure.pdf" target="_blank" rel="noopener noreferrer" class="brochure-action-btn bg-[#00f3ff]/10 border border-[#00f3ff]/40 text-[#00f3ff] hover:bg-[#00f3ff] hover:text-black px-4 py-2 text-xs font-mono font-bold rounded inline-flex items-center gap-2 transition-colors">
+                        <span>⬇ DOWNLOAD BROCHURE (PDF)</span>
                     </a>
                 </div>
             </div>
@@ -664,6 +702,50 @@
                 </div>
             </div>
         </div>
+
+        <!-- Event Day Daily Itinerary (Interschool Schedule) -->
+        <div class="mt-12 p-6 md:p-8 bg-black/40 border border-white/10 rounded hud-cut-corner reveal font-mono">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
+                <div>
+                    <h3 class="text-[#00f3ff] font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+                        <span>// OFFICIAL EVENT DAY ITINERARY (DAILY TIMELINE)</span>
+                    </h3>
+                    <p class="text-[11px] text-white/50 mt-1">Standard schedule flow for on-site offline competition days &amp; interschool teams</p>
+                </div>
+                <span class="text-[9px] px-2.5 py-1 bg-[#ff00c1]/10 border border-[#ff00c1]/30 text-[#ff00c1] rounded uppercase font-bold">ON-SITE PROTOCOL</span>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4 text-xs">
+                <div class="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded">
+                    <span class="text-[#00f3ff] font-bold">08:15 AM – 08:30 AM</span>
+                    <span class="text-white/80">Reporting &amp; Registration</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded">
+                    <span class="text-[#00f3ff] font-bold">08:30 AM – 09:30 AM</span>
+                    <span class="text-white/80">Tech Fair &amp; Interactive Exhibition</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded">
+                    <span class="text-[#ffd700] font-bold">09:30 AM – 10:00 AM</span>
+                    <span class="text-white font-semibold">☕ Breakfast &amp; Refreshments</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded">
+                    <span class="text-[#00f3ff] font-bold">10:00 AM – 10:15 AM</span>
+                    <span class="text-white/80">Welcome Address &amp; Briefing</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-white/[0.02] border border-white/5 rounded">
+                    <span class="text-[#00f3ff] font-bold">10:15 AM – 01:15 PM</span>
+                    <span class="text-white/80">Event Missions &amp; Competition Rounds</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded">
+                    <span class="text-[#ffd700] font-bold">01:15 PM – 02:00 PM</span>
+                    <span class="text-white font-semibold">🍱 Lunch &amp; Refreshment Break</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-[#ff00c1]/10 border border-[#ff00c1]/30 rounded md:col-span-2">
+                    <span class="text-[#ff00c1] font-bold">02:00 PM – 03:00 PM</span>
+                    <span class="text-white font-semibold">🏆 Valedictory Ceremony &amp; Prize Distribution (Auditorium)</span>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -741,9 +823,24 @@
                     <span>Who do I contact for queries?</span>
                     <span class="faq-chevron">▾</span>
                 </div>
-                <div class="faq-answer"><div class="faq-answer-inner">Reach out to the organizing team directly through your class teacher or the CRYPTS organizing committee. You can also use the `help` command in the terminal above — type `about` for contact information.</div></div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        Reach out to the organizing team directly through your class teacher or the CRYPTS organizing committee. For fast email resolution, email our faculty coordinator at <a href="mailto:ankitayadav@opgworldschool.com" class="text-[#00f3ff] underline font-bold">ankitayadav@opgworldschool.com</a> or contact the student event in-charges. You can also type <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code> or <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">about</code> in the CLI terminal.
+                    </div>
+                </div>
             </div>
 
+        </div>
+
+        <!-- Query Direct Email Banner -->
+        <div class="mt-8 p-5 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-white/90">
+            <div>
+                <strong class="text-[#00f3ff] font-bold block mb-1">✉️ DIRECT EMAIL SUPPORT FOR QUERIES:</strong>
+                <span>Having trouble navigating the terminal or need instant query resolution? Contact our Faculty Coordinator directly.</span>
+            </div>
+            <a href="mailto:ankitayadav@opgworldschool.com" class="px-4 py-2 bg-[#00f3ff] text-black font-bold rounded hover:bg-white transition-colors">
+                EMAIL COORDINATOR →
+            </a>
         </div>
     </div>
 </section>
@@ -760,6 +857,17 @@
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+            <!-- Faculty Coordinator -->
+            <div class="operator-card reveal border-[#00f3ff]/40 bg-[#00f3ff]/5">
+                <div class="operator-avatar border-[#00f3ff]/50">
+                    <img src="" alt="Ankita Yadav" class="operator-photo hidden" onerror="this.classList.add('hidden')">
+                    <span class="operator-icon">🎓</span>
+                </div>
+                <div class="operator-name text-[#00f3ff]">Ankita Yadav</div>
+                <span class="operator-section-tag bg-[#00f3ff]/20 text-[#00f3ff] border border-[#00f3ff]/30 font-bold">FACULTY IN-CHARGE</span>
+                <a href="mailto:ankitayadav@opgworldschool.com" target="_blank" rel="noopener noreferrer" class="operator-email text-[#00f3ff]/90 font-bold">ankitayadav@opgworldschool.com</a>
+            </div>
 
             <div class="operator-card reveal reveal-delay-1">
                 <div class="operator-avatar">
