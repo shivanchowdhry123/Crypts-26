@@ -426,7 +426,7 @@ function initEventFilter() {
     function applyFilter(filter) {
         cards.forEach((card, i) => {
             const cat  = card.dataset.category;
-            const mode = card.querySelector('.badge-mode-offline') ? 'offline' : 'online';
+            const mode = card.dataset.mode;
             const show = filter === 'all' || cat === filter || mode === filter;
 
             if (show) {
