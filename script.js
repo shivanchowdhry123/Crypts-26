@@ -373,15 +373,16 @@ function initLoaderScreen() {
     const loaderBar    = document.getElementById('loader-bar');
     const loaderLog    = document.getElementById('loader-log');
     const loaderNum    = document.getElementById('loader-percent');
+    const loaderSub    = document.getElementById('loader-sub-status');
 
     if (!loaderScreen || !loaderBar) return;
 
     const stages = [
-        { pct: 15,  msg: "> INITIALIZING SYSTEM CORE..." },
-        { pct: 40,  msg: "> ESTABLISHING SECURE GATEWAY..." },
-        { pct: 70,  msg: "> INDEXING EVENT MODULE MATRIX..." },
-        { pct: 90,  msg: "> VERIFYING SECURITY SIGNATURES..." },
-        { pct: 100, msg: "> SYSTEM READY. WELCOME TO CRYPTS'26" }
+        { pct: 15,  msg: '> INITIALIZING KERNEL...',              sub: "CRYPTS'26 // ESTABLISHING SECURE CONNECTION" },
+        { pct: 40,  msg: '> ESTABLISHING SECURE CONNECTION...',   sub: "CRYPTS'26 // LOADING MODULES" },
+        { pct: 70,  msg: '> LOADING MODULES...',                  sub: "CRYPTS'26 // VERIFYING SIGNATURES" },
+        { pct: 90,  msg: '> VERIFYING SECURITY SIGNATURES...',    sub: "CRYPTS'26 // SYSTEM READY" },
+        { pct: 100, msg: '> SYSTEM READY.',                       sub: "CRYPTS'26 // AUTHORIZED SESSION" }
     ];
 
     let currentStage = 0;
@@ -396,6 +397,7 @@ function initLoaderScreen() {
 
         if (currentStage < stages.length && progress >= stages[currentStage].pct) {
             if (loaderLog) loaderLog.innerText = stages[currentStage].msg;
+            if (loaderSub) loaderSub.textContent = stages[currentStage].sub;
             currentStage++;
         }
 
@@ -406,33 +408,56 @@ function initLoaderScreen() {
                 setTimeout(() => {
                     loaderScreen.style.display = 'none';
                 }, 600);
-            }, 300);
+            }, 400);
         }
-    }, 45);
+    }, 40);
 }
 
 
 // ============================================================
-// EVENT FILTER TAGS (Modules Section)
+// EVENT FILTER TAGS (Modules Section) — animated card transitions
 // ============================================================
 function initEventFilter() {
-    const chips = document.querySelectorAll('.filter-chip');
+    const chips = document.querySelectorAll('#event-filter-bar .filter-chip');
     const cards = document.querySelectorAll('#event-grid .event-card');
+
+    if (!chips.length) return;
+
+    function applyFilter(filter) {
+        cards.forEach((card, i) => {
+            const cat  = card.dataset.category;
+            const mode = card.querySelector('.badge-mode-offline') ? 'offline' : 'online';
+            const show = filter === 'all' || cat === filter || mode === filter;
+
+            if (show) {
+                card.style.display = '';
+                // Staggered entrance
+                card.style.transitionDelay = `${i * 30}ms`;
+                card.classList.remove('card-hiding', 'card-hidden');
+                card.classList.add('card-showing');
+                setTimeout(() => card.style.transitionDelay = '', 400);
+            } else {
+                card.classList.remove('card-showing');
+                card.classList.add('card-hiding');
+                setTimeout(() => {
+                    card.classList.add('card-hidden');
+                    card.style.display = 'none';
+                }, 350);
+            }
+        });
+    }
 
     chips.forEach(chip => {
         chip.addEventListener('click', (e) => {
             if (e) e.preventDefault();
             chips.forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
-
-            const filter = chip.dataset.filter;
-            cards.forEach(card => {
-                const cat = card.dataset.category;
-                const show = filter === 'all' || cat === filter;
-                card.style.display = show ? '' : 'none';
-            });
+            applyFilter(chip.dataset.filter);
         });
     });
+
+    // Ensure all cards start in showing state
+    cards.forEach(card => card.classList.add('card-showing'));
 }
 
 
@@ -1263,6 +1288,54 @@ function initEventModal() {
 
 
 // ============================================================
+// NAV SLIDING INDICATOR (V2-style)
+// ============================================================
+function initNavIndicator() {
+    const indicator = document.getElementById('nav-indicator');
+    if (!indicator) return;
+
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function moveIndicatorTo(link) {
+        if (!link) return;
+        const navContainer = link.closest('.hidden.lg\\:flex');
+        if (!navContainer) return;
+        const containerRect = navContainer.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        indicator.style.left  = (linkRect.left - containerRect.left) + 'px';
+        indicator.style.width = linkRect.width + 'px';
+        indicator.classList.add('visible');
+    }
+
+    // Move indicator whenever active class changes
+    const observer = new MutationObserver(() => {
+        const active = document.querySelector('.nav-link.active');
+        if (active) moveIndicatorTo(active);
+    });
+
+    navLinks.forEach(link => {
+        observer.observe(link, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // Hover preview
+    navLinks.forEach(link => {
+        link.addEventListener('mouseenter', () => moveIndicatorTo(link));
+        link.addEventListener('mouseleave', () => {
+            const active = document.querySelector('.nav-link.active');
+            if (active) moveIndicatorTo(active);
+            else indicator.classList.remove('visible');
+        });
+    });
+
+    // Initial position
+    setTimeout(() => {
+        const active = document.querySelector('.nav-link.active');
+        if (active) moveIndicatorTo(active);
+    }, 200);
+}
+
+
+// ============================================================
 // BOOT SEQUENCE
 // ============================================================
 function bootApp() {
@@ -1274,6 +1347,7 @@ function bootApp() {
     safe('loaderScreen',   () => initLoaderScreen());
     safe('customCursor',   () => initCustomCursor());
     safe('navigation',     () => initNavigation());
+    safe('navIndicator',   () => initNavIndicator());
     safe('timestamp',      () => {
         setInterval(updateTimestamp, 1000);
         updateTimestamp();
