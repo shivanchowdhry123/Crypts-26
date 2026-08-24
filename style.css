@@ -571,7 +571,20 @@ body::before {
     transform: translateY(-2px);
 }
 
-/* 3D Model Viewer */
+/* 3D Model Viewer & Responsive Wrapper (Visible on Laptop, Desktop, Landscape Tablets) */
+.hero-3d-wrapper {
+    display: none;
+}
+
+@media (min-width: 1024px), (min-width: 768px) and (orientation: landscape) {
+    .hero-3d-wrapper {
+        display: flex;
+    }
+    .hero-grid-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 #hero-model-viewer {
     outline: 0;
     border-radius: 8px;
