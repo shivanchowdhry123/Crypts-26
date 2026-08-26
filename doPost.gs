@@ -16,7 +16,7 @@ function doPost(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
   // 1. DATABASE SETUP
-  var databaseSheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE") || ss.getSheetByName("CRYPTS_5.0_FORMS_DATABASE") || ss.getSheets()[0];
+  var databaseSheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE") || ss.getSheets()[0];
   databaseSheet.setName("CRYPTS_26_FORMS_DATABASE");
   
   if (databaseSheet.getLastRow() === 0) {
@@ -100,7 +100,7 @@ function doPost(e) {
           </div>
 
           <div style="text-align: center; margin-bottom: 25px;">
-            <a href="https://crypts5.vercel.app/" class="cta-button">Access Cyber Portal</a>
+            <a href="https://crypts26.vercel.app/" class="cta-button">Access Cyber Portal</a>
           </div>
 
           <div class="text" style="font-size: 11px; color: #484f58; text-align: center;">
@@ -120,7 +120,7 @@ function doPost(e) {
                       "- Operator: " + data.name + "\n" +
                       "- Sector: Class " + data.class + "-" + data.section + "\n" +
                       "- Modules: " + data.events + "\n\n" +
-                      "- Portal: https://crypts5.vercel.app/\n\n" +
+                      "- Portal: https://crypts26.vercel.app/\n\n" +
                       "Best regards,\nShivan Chowdhry & Team CRYPTS'26";
 
   // SEND REGISTRANT EMAIL
