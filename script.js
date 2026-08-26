@@ -11,19 +11,19 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUt5jwpOGtOksKnoFBx
 // TERMINAL ENGINE
 // ============================================================
 const terminalOutput = document.getElementById('terminal-output');
-const terminalBody   = document.getElementById('terminal-body');
-const inputLine      = document.getElementById('input-line');
-const terminalInput  = document.getElementById('terminal-input');
-const timestampEl    = document.getElementById('timestamp');
+const terminalBody = document.getElementById('terminal-body');
+const inputLine = document.getElementById('input-line');
+const terminalInput = document.getElementById('terminal-input');
+const timestampEl = document.getElementById('timestamp');
 
 const initialLogs = [
-    { text: "> RELAYING STRUCTURE UPDATE...",              color: "text-[#00f3ff] font-bold" },
+    { text: "> RELAYING STRUCTURE UPDATE...", color: "text-[#00f3ff] font-bold" },
     { text: "> INDEXING 01_BRIEFING THROUGH 07_OPERATORS", color: "text-white/60" },
-    { text: "> PARTICLE_GRID INITIALIZED.",                color: "text-white/40" },
-    { text: "> ENCRYPTION_LAYER: ACTIVE.",                 color: "text-white/40" },
+    { text: "> PARTICLE_GRID INITIALIZED.", color: "text-white/40" },
+    { text: "> ENCRYPTION_LAYER: ACTIVE.", color: "text-white/40" },
     { text: "------------------------------------------------", color: "text-white/10" },
-    { text: "CRYPTS'26 Terminal  [AUTHORIZED_SESSION]",   color: "text-[#ff00c1]" },
-    { text: "Type 'help' for available commands.",          color: "text-white/30" },
+    { text: "CRYPTS'26 Terminal  [AUTHORIZED_SESSION]", color: "text-[#ff00c1]" },
+    { text: "Type 'help' for available commands.", color: "text-white/30" },
 ];
 
 function updateTimestamp() {
@@ -49,7 +49,7 @@ async function runInitialLogs() {
         await new Promise(r => setTimeout(r, 280));
     }
     if (inputLine) inputLine.classList.remove('hidden');
-    if (terminalInput) terminalInput.focus();
+    if (terminalInput) terminalInput.focus({ preventScroll: true });
 }
 
 // ============================================================
@@ -73,7 +73,7 @@ const EVENT_SCHEDULE = [
 function getTodayHighlights() {
     const now = new Date();
     const curMonth = now.getMonth(); // 0-indexed (8 = September)
-    const curDay   = now.getDate();
+    const curDay = now.getDate();
 
     // Check if today matches a scheduled event
     const todayEvent = EVENT_SCHEDULE.find(e => e.month === curMonth && e.day === curDay);
@@ -104,13 +104,13 @@ function getTodayHighlights() {
         badge: "LIVE FEED",
         badgeClass: "bg-[#00f3ff]/20 text-[#00f3ff]",
         lines: [
-            `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong> (${upcoming.desc})</p>`,
+            `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong></p>`,
             `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`,
             `<p><span class="text-yellow-400 font-semibold">• Quick Command:</span> Type <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">highlights</code> or <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code> below to explore schedule!</p>`
         ],
         logLines: [
             `=== 📢 LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS ===`,
-            `• Next Up: ${upcoming.dateStr} — ${upcoming.name} (${upcoming.desc})`,
+            `• Next Up: ${upcoming.dateStr} — ${upcoming.name}`,
             `• Registrations Open: Enroll now for all 12+ competitive events.`,
             `• Rules & Dossier: View details under Section 02 EVENT MODULES.`,
             `• Type 'enroll' to register or 'team' for organizing committee contacts.`
@@ -119,7 +119,7 @@ function getTodayHighlights() {
 }
 
 function initTerminalHighlights() {
-    const bodyEl  = document.getElementById('terminal-highlights-body');
+    const bodyEl = document.getElementById('terminal-highlights-body');
     const badgeEl = document.getElementById('highlights-badge');
     if (!bodyEl) return;
 
@@ -217,23 +217,23 @@ function initParticleCanvas() {
 
     function resize() {
         const parent = canvas.parentElement;
-        width  = canvas.width  = parent ? parent.offsetWidth  : window.innerWidth;
+        width = canvas.width = parent ? parent.offsetWidth : window.innerWidth;
         height = canvas.height = parent ? parent.offsetHeight : window.innerHeight;
     }
 
     class Particle {
         constructor() { this.reset(); }
         reset() {
-            this.x  = Math.random() * width;
-            this.y  = Math.random() * height;
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
             this.vx = (Math.random() - 0.5) * PARTICLE_SPEED;
             this.vy = (Math.random() - 0.5) * PARTICLE_SPEED;
-            this.r  = Math.random() * 1.8 + 0.6;
+            this.r = Math.random() * 1.8 + 0.6;
         }
         move() {
             this.x += this.vx;
             this.y += this.vy;
-            if (this.x < 0 || this.x > width)  this.vx *= -1;
+            if (this.x < 0 || this.x > width) this.vx *= -1;
             if (this.y < 0 || this.y > height) this.vy *= -1;
         }
         draw() {
@@ -370,19 +370,19 @@ function initCustomCursor() {
 // ============================================================
 function initLoaderScreen() {
     const loaderScreen = document.getElementById('loader-screen');
-    const loaderBar    = document.getElementById('loader-bar');
-    const loaderLog    = document.getElementById('loader-log');
-    const loaderNum    = document.getElementById('loader-percent');
-    const loaderSub    = document.getElementById('loader-sub-status');
+    const loaderBar = document.getElementById('loader-bar');
+    const loaderLog = document.getElementById('loader-log');
+    const loaderNum = document.getElementById('loader-percent');
+    const loaderSub = document.getElementById('loader-sub-status');
 
     if (!loaderScreen || !loaderBar) return;
 
     const stages = [
-        { pct: 15,  msg: '> INITIALIZING KERNEL...',              sub: "CRYPTS'26 // ESTABLISHING SECURE CONNECTION" },
-        { pct: 40,  msg: '> ESTABLISHING SECURE CONNECTION...',   sub: "CRYPTS'26 // LOADING MODULES" },
-        { pct: 70,  msg: '> LOADING MODULES...',                  sub: "CRYPTS'26 // VERIFYING SIGNATURES" },
-        { pct: 90,  msg: '> VERIFYING SECURITY SIGNATURES...',    sub: "CRYPTS'26 // SYSTEM READY" },
-        { pct: 100, msg: '> SYSTEM READY.',                       sub: "CRYPTS'26 // AUTHORIZED SESSION" }
+        { pct: 15, msg: '> INITIALIZING KERNEL...', sub: "CRYPTS'26 // ESTABLISHING SECURE CONNECTION" },
+        { pct: 40, msg: '> ESTABLISHING SECURE CONNECTION...', sub: "CRYPTS'26 // LOADING MODULES" },
+        { pct: 70, msg: '> LOADING MODULES...', sub: "CRYPTS'26 // VERIFYING SIGNATURES" },
+        { pct: 90, msg: '> VERIFYING SECURITY SIGNATURES...', sub: "CRYPTS'26 // SYSTEM READY" },
+        { pct: 100, msg: '> SYSTEM READY.', sub: "CRYPTS'26 // AUTHORIZED SESSION" }
     ];
 
     let currentStage = 0;
@@ -425,7 +425,7 @@ function initEventFilter() {
 
     function applyFilter(filter) {
         cards.forEach((card, i) => {
-            const cat  = card.dataset.category;
+            const cat = card.dataset.category;
             const mode = card.dataset.mode;
             const show = filter === 'all' || cat === filter || mode === filter;
 
@@ -519,12 +519,12 @@ function initEventTagChips() {
 // LIVE FORM VALIDATION + SUBMISSION
 // ============================================================
 function initRegistrationForm(selectedEvents) {
-    const form          = document.getElementById('registration-form');
-    const emailEl       = document.getElementById('reg-email');
-    const nameEl        = document.getElementById('reg-name');
-    const classEl       = document.getElementById('reg-class');
-    const sectionEl     = document.getElementById('reg-section');
-    const submitBtn     = document.getElementById('transmit-btn');
+    const form = document.getElementById('registration-form');
+    const emailEl = document.getElementById('reg-email');
+    const nameEl = document.getElementById('reg-name');
+    const classEl = document.getElementById('reg-class');
+    const sectionEl = document.getElementById('reg-section');
+    const submitBtn = document.getElementById('transmit-btn');
     const consoleOutput = document.getElementById('reg-console-output');
     const successScreen = document.getElementById('success-screen');
 
@@ -533,9 +533,9 @@ function initRegistrationForm(selectedEvents) {
     // Inline validation helpers
     const validators = {
         email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-        name:  (v) => v.trim().length >= 2,
+        name: (v) => v.trim().length >= 2,
         class: (v) => v !== '',
-        section:(v)=> v.trim().length >= 1,
+        section: (v) => v.trim().length >= 1,
     };
 
     function setError(input, errId, valid) {
@@ -550,9 +550,9 @@ function initRegistrationForm(selectedEvents) {
         }
     }
 
-    if (emailEl)   emailEl.addEventListener('input',   () => setError(emailEl,   'err-email',   validators.email(emailEl.value)));
-    if (nameEl)    nameEl.addEventListener('input',    () => setError(nameEl,    'err-name',    validators.name(nameEl.value)));
-    if (classEl)   classEl.addEventListener('change',  () => setError(classEl,   'err-class',   validators.class(classEl.value)));
+    if (emailEl) emailEl.addEventListener('input', () => setError(emailEl, 'err-email', validators.email(emailEl.value)));
+    if (nameEl) nameEl.addEventListener('input', () => setError(nameEl, 'err-name', validators.name(nameEl.value)));
+    if (classEl) classEl.addEventListener('change', () => setError(classEl, 'err-class', validators.class(classEl.value)));
     if (sectionEl) sectionEl.addEventListener('input', () => setError(sectionEl, 'err-section', validators.section(sectionEl.value)));
 
     form.addEventListener('submit', async (e) => {
@@ -560,10 +560,10 @@ function initRegistrationForm(selectedEvents) {
 
         // Validate all fields
         let valid = true;
-        if (emailEl   && !validators.email(emailEl.value))    { setError(emailEl,   'err-email',   false); valid = false; }
-        if (nameEl    && !validators.name(nameEl.value))      { setError(nameEl,    'err-name',    false); valid = false; }
-        if (classEl   && !validators.class(classEl.value))    { setError(classEl,   'err-class',   false); valid = false; }
-        if (sectionEl && !validators.section(sectionEl.value)){ setError(sectionEl, 'err-section', false); valid = false; }
+        if (emailEl && !validators.email(emailEl.value)) { setError(emailEl, 'err-email', false); valid = false; }
+        if (nameEl && !validators.name(nameEl.value)) { setError(nameEl, 'err-name', false); valid = false; }
+        if (classEl && !validators.class(classEl.value)) { setError(classEl, 'err-class', false); valid = false; }
+        if (sectionEl && !validators.section(sectionEl.value)) { setError(sectionEl, 'err-section', false); valid = false; }
 
         const errEventsEl = document.getElementById('err-events');
         if (selectedEvents && selectedEvents.size === 0) {
@@ -583,11 +583,11 @@ function initRegistrationForm(selectedEvents) {
         }
 
         const data = {
-            email:     emailEl ? emailEl.value.trim() : '',
-            name:      nameEl  ? nameEl.value.trim()  : '',
-            class:     classEl ? classEl.value        : '',
-            section:   sectionEl ? sectionEl.value.trim() : '',
-            events:    selectedEvents ? Array.from(selectedEvents).join(', ') : '',
+            email: emailEl ? emailEl.value.trim() : '',
+            name: nameEl ? nameEl.value.trim() : '',
+            class: classEl ? classEl.value : '',
+            section: sectionEl ? sectionEl.value.trim() : '',
+            events: selectedEvents ? Array.from(selectedEvents).join(', ') : '',
             timestamp: new Date().toLocaleString(),
         };
 
@@ -612,9 +612,9 @@ function initRegistrationForm(selectedEvents) {
             // On standalone register.html, render the ticket confirmation card!
             if (successScreen) {
                 form.classList.add('hidden');
-                document.getElementById('summary-email').innerText  = data.email;
-                document.getElementById('summary-name').innerText   = data.name;
-                document.getElementById('summary-class').innerText  = `${data.class} (${data.section})`;
+                document.getElementById('summary-email').innerText = data.email;
+                document.getElementById('summary-name').innerText = data.name;
+                document.getElementById('summary-class').innerText = `${data.class} (${data.section})`;
                 document.getElementById('summary-events').innerText = data.events;
                 successScreen.classList.remove('hidden');
             } else {
@@ -642,21 +642,21 @@ function initRegistrationForm(selectedEvents) {
 // COMMAND PALETTE (Ctrl + K)
 // ============================================================
 function initCommandPalette() {
-    const palette     = document.getElementById('cmd-palette');
-    const input       = document.getElementById('palette-input');
-    const results     = document.getElementById('palette-results');
-    const badgeTrigger= document.getElementById('cmd-badge-trigger');
+    const palette = document.getElementById('cmd-palette');
+    const input = document.getElementById('palette-input');
+    const results = document.getElementById('palette-results');
+    const badgeTrigger = document.getElementById('cmd-badge-trigger');
 
     if (!palette || !input || !results) return;
 
     const navItems = [
-        { label: '01_BRIEFING — Hero & Terminal',      href: '#briefing',   shortcut: 'G B' },
-        { label: '02_EVENT_MODULES — Mission List',    href: '#modules',    shortcut: 'G M' },
-        { label: '03_ENROLLMENT_PORTAL — Register',   href: '#enrollment', shortcut: 'G R' },
-        { label: '04_RESOURCE_MATRIX — Downloads',    href: '#matrix',     shortcut: 'G X' },
-        { label: '05_CHRONOS_SCHEDULE — Timeline',    href: '#chronos',    shortcut: 'G C' },
-        { label: '06_QUERY_RESOLUTION — FAQ',         href: '#resolution', shortcut: 'G Q' },
-        { label: '07_CORE_OPERATORS — Team',          href: '#operators',  shortcut: 'G O' },
+        { label: '01_BRIEFING — Hero & Terminal', href: '#briefing', shortcut: 'G B' },
+        { label: '02_EVENT_MODULES — Mission List', href: '#modules', shortcut: 'G M' },
+        { label: '03_ENROLLMENT_PORTAL — Register', href: '#enrollment', shortcut: 'G R' },
+        { label: '04_RESOURCE_MATRIX — Downloads', href: '#matrix', shortcut: 'G X' },
+        { label: '05_CHRONOS_SCHEDULE — Timeline', href: '#chronos', shortcut: 'G C' },
+        { label: '06_QUERY_RESOLUTION — FAQ', href: '#resolution', shortcut: 'G Q' },
+        { label: '07_CORE_OPERATORS — Team', href: '#operators', shortcut: 'G O' },
     ];
 
     let highlighted = 0;
@@ -736,7 +736,7 @@ function initCommandPalette() {
 // TIMELINE TABS (Chronos Schedule)
 // ============================================================
 function initTimelineTabs() {
-    const tabs   = document.querySelectorAll('.timeline-tab');
+    const tabs = document.querySelectorAll('.timeline-tab');
     const panels = document.querySelectorAll('.timeline-panel');
 
     tabs.forEach(tab => {
@@ -855,13 +855,13 @@ function initFAQ() {
 function initActiveNav() {
     const sections = document.querySelectorAll('section[id]');
     const navMap = {
-        briefing:   document.getElementById('nav-briefing'),
-        modules:    document.getElementById('nav-modules'),
+        briefing: document.getElementById('nav-briefing'),
+        modules: document.getElementById('nav-modules'),
         enrollment: document.getElementById('nav-enrollment'),
-        matrix:     document.getElementById('nav-matrix'),
-        chronos:    document.getElementById('nav-chronos'),
+        matrix: document.getElementById('nav-matrix'),
+        chronos: document.getElementById('nav-chronos'),
         resolution: document.getElementById('nav-resolution'),
-        operators:  document.getElementById('nav-operators'),
+        operators: document.getElementById('nav-operators'),
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -922,7 +922,7 @@ function initScrollReveal() {
 // ============================================================
 function initNavigation() {
     const menuToggle = document.getElementById('menu-toggle');
-    const menuClose  = document.getElementById('menu-close');
+    const menuClose = document.getElementById('menu-close');
     const mobileMenu = document.getElementById('mobile-menu');
 
     const hideMenu = () => {
@@ -1029,8 +1029,8 @@ const EVENTS_DATA = {
         eligibility: "Class 8–12",
         date: "September 25, 2026",
         classRange: [8, 12],
-        desc: "Digital poster design & photography competition judged on creativity, visual communication, and technical mastery of design tools.",
-        rules: ["Individual participation or teams of 2", "Topic revealed on Event Day (September 25, 2026 at 09:00 AM)", "Original photographs & artwork only — no templates or AI-generated photos", "Submit image title & concept description before deadline"],
+        desc: "Photography competition judged on creativity, visual communication, and technical mastery of design tools.",
+        rules: ["Individual participation or teams of 2", "Submission Deadline (September 25, 2026 at 09:00 AM)", "Original photographs & artwork only — no templates or AI-generated photos", "Submit image title & concept description before deadline"],
         criteria: ["Creativity and originality", "Visual communication", "Technical skill and tool mastery", "Relevance to theme"],
         contact: "Eeshaan (XII-A): eeshaan.cryptsopg@gmail.com"
     },
@@ -1068,8 +1068,8 @@ const EVENTS_DATA = {
         eligibility: "Class 6–12",
         date: "September 25, 2026",
         classRange: [6, 12],
-        desc: "Short film & video production competition. Theme: 'Between the Headlines / Stories Left Behind' (Time Manipulation theme concept).",
-        rules: ["Team of up to 9 members allowed", "Original films based on the theme 'Time Manipulation'", "Maximum duration & technical standards strictly enforced", "Submit film title & concept description before deadline"],
+        desc: "Short film & video production competition. Theme: 'Between the Headlines / Stories Left Behind'.",
+        rules: ["Team of up to 9 members allowed", "Original films based on the theme", "Maximum duration & technical standards strictly enforced", "Submit film title & concept description before deadline"],
         criteria: ["Narrative and storytelling", "Cinematography and framing", "Editing and post-production", "Audio quality and sound design"],
         contact: "Bhavya Sachdeva (XII-B): bhavyas.cryptsopg@gmail.com"
     },
@@ -1210,7 +1210,7 @@ function initEventModal() {
             <p style="color:rgba(255,255,255,0.6); font-size:12px; line-height:1.7; margin-bottom:18px;">${data.desc}</p>
 
             <div class="sub-panel-box">
-                <div class="sub-panel-label">&gt;&gt; DATE &amp; TIME</div>
+                <div class="sub-panel-label">&gt;&gt; ${data.mode === 'online' ? 'SUBMISSION DEADLINE' : 'DATE &amp; TIME'}</div>
                 <div class="sub-panel-content"><span class="badge-date">${data.date}</span></div>
             </div>
 
@@ -1226,7 +1226,7 @@ function initEventModal() {
 
             <div class="sub-panel-box">
                 <div class="sub-panel-label">&gt;&gt; EVENT IN-CHARGE</div>
-                <div class="sub-panel-content">${data.contact}</div>
+                <div class="sub-panel-content">${data.contact.split(' | ').join('<br>')}</div>
             </div>
         `;
 
@@ -1271,10 +1271,8 @@ function initNavIndicator() {
         if (!link) return;
         const navContainer = link.closest('.hidden.lg\\:flex');
         if (!navContainer) return;
-        const containerRect = navContainer.getBoundingClientRect();
-        const linkRect = link.getBoundingClientRect();
-        indicator.style.left  = (linkRect.left - containerRect.left) + 'px';
-        indicator.style.width = linkRect.width + 'px';
+        indicator.style.left = link.offsetLeft + 'px';
+        indicator.style.width = link.offsetWidth + 'px';
         indicator.classList.add('visible');
     }
 
@@ -1315,33 +1313,33 @@ function bootApp() {
         catch (e) { console.error(`[CRYPTS] ${name} failed:`, e); }
     };
 
-    safe('loaderScreen',   () => initLoaderScreen());
-    safe('customCursor',   () => initCustomCursor());
-    safe('navigation',     () => initNavigation());
-    safe('navIndicator',   () => initNavIndicator());
-    safe('timestamp',      () => {
+    safe('loaderScreen', () => initLoaderScreen());
+    safe('customCursor', () => initCustomCursor());
+    safe('navigation', () => initNavigation());
+    safe('navIndicator', () => initNavIndicator());
+    safe('timestamp', () => {
         setInterval(updateTimestamp, 1000);
         updateTimestamp();
     });
-    safe('terminal',       () => runInitialLogs());
+    safe('terminal', () => runInitialLogs());
     safe('particleCanvas', () => initParticleCanvas());
-    safe('eventFilter',    () => initEventFilter());
+    safe('eventFilter', () => initEventFilter());
     let selectedEvents = new Set();
-    safe('eventTagChips',  () => { selectedEvents = initEventTagChips(); });
-    safe('regForm',        () => initRegistrationForm(selectedEvents));
-    safe('cmdPalette',     () => initCommandPalette());
-    safe('faq',            () => initFAQ());
-    safe('timelineTabs',   () => initTimelineTabs());
+    safe('eventTagChips', () => { selectedEvents = initEventTagChips(); });
+    safe('regForm', () => initRegistrationForm(selectedEvents));
+    safe('cmdPalette', () => initCommandPalette());
+    safe('faq', () => initFAQ());
+    safe('timelineTabs', () => initTimelineTabs());
     safe('timelineStatus', () => updateTimelineStatuses());
-    safe('activeNav',      () => initActiveNav());
-    safe('scrollReveal',   () => initScrollReveal());
-    safe('footerYear',     () => initFooterYear());
-    safe('taglineTyping',  () => initTaglineTyping());
-    safe('sectionObserver',() => initSectionObserver());
-    safe('eventModal',     () => initEventModal());
+    safe('activeNav', () => initActiveNav());
+    safe('scrollReveal', () => initScrollReveal());
+    safe('footerYear', () => initFooterYear());
+    safe('taglineTyping', () => initTaglineTyping());
+    safe('sectionObserver', () => initSectionObserver());
+    safe('eventModal', () => initEventModal());
     safe('operatorEmails', () => initOperatorEmailRedirect());
-    safe('highlightsEngine',() => initTerminalHighlights());
-    safe('modelViewer',    () => initModelViewer());
+    safe('highlightsEngine', () => initTerminalHighlights());
+    safe('modelViewer', () => initModelViewer());
 }
 
 function initModelViewer() {
