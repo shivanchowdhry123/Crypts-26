@@ -56,14 +56,14 @@ async function runInitialLogs() {
 // DYNAMIC HIGHLIGHTS & EVENT SCHEDULE ENGINE
 // ============================================================
 const EVENT_SCHEDULE = [
-    { dateStr: "Sept 17", month: 8, day: 17, name: "GLITCHVERSE", type: "OFFLINE", desc: "Offline Decryption & Cryptography Arena (Class 6–10)", cat: "Cryptic Hunt" },
+    { dateStr: "Sept 17", month: 8, day: 17, name: "GLITCHVERSE", type: "OFFLINE", desc: "Digital Art Competition, Create digital art in a given time duration (Class 6–10)", cat: "Digital Art" },
     { dateStr: "Sept 18", month: 8, day: 18, name: "SCRATCH XPLORERS", type: "OFFLINE", desc: "Scratch Block Programming Challenge (Class 4–6)", cat: "Junior Coding" },
     { dateStr: "Sept 19", month: 8, day: 19, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Kicks Off — FC 26, Valorant & Minecraft", cat: "Gaming" },
     { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 10–12)", cat: "Gaming" },
     { dateStr: "Sept 21", month: 8, day: 21, name: "PROMPT PARADOX", type: "OFFLINE", desc: "AI Prompt Engineering Arena (Class 8–12)", cat: "AI & Logic" },
     { dateStr: "Sept 22", month: 8, day: 22, name: "QWERTY 4.0", type: "OFFLINE", desc: "Speed Typing & Keyboard Tournament (Class 6–12)", cat: "Typing" },
     { dateStr: "Sept 23", month: 8, day: 23, name: "JAILBREAK", type: "OFFLINE", desc: "Logic Puzzle Escape Room (Class 6–12)", cat: "Security & Puzzles" },
-    { dateStr: "Sept 24", month: 8, day: 24, name: "IHE KERNEL", type: "OFFLINE", desc: "Hardware & Systems Challenge (Class 9–12)", cat: "Systems & Hardware" },
+    { dateStr: "Sept 24", month: 8, day: 24, name: "IHE KERNEL", type: "OFFLINE", desc: "Hardware & Systems Challenge Quiz (Class 9–12)", cat: "Quiz" },
     { dateStr: "Sept 25", month: 8, day: 25, name: "PIXELPULSE & BYTE THE SITE & GAME MAKERS", type: "ONLINE & OFFLINE", desc: "Mega Submissions Day: Digital Poster, Web Dev, Short Films & Game Dev", cat: "Design, Coding & AV" },
     { dateStr: "Sept 26", month: 8, day: 26, name: "L'ARÈNE ESPORTS FINALS", type: "ONLINE", desc: "Esports Grand Finals", cat: "Gaming" },
     { dateStr: "Sept 28", month: 8, day: 28, name: "IHE CODEQUEST", type: "OFFLINE", desc: "Competitive Algorithmic Coding (Class 11–12)", cat: "Competitive Coding" },
