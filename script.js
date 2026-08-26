@@ -373,15 +373,16 @@ function initLoaderScreen() {
     const loaderBar    = document.getElementById('loader-bar');
     const loaderLog    = document.getElementById('loader-log');
     const loaderNum    = document.getElementById('loader-percent');
+    const loaderSub    = document.getElementById('loader-sub-status');
 
     if (!loaderScreen || !loaderBar) return;
 
     const stages = [
-        { pct: 15,  msg: "> INITIALIZING SYSTEM CORE..." },
-        { pct: 40,  msg: "> ESTABLISHING SECURE GATEWAY..." },
-        { pct: 70,  msg: "> INDEXING EVENT MODULE MATRIX..." },
-        { pct: 90,  msg: "> VERIFYING SECURITY SIGNATURES..." },
-        { pct: 100, msg: "> SYSTEM READY. WELCOME TO CRYPTS'26" }
+        { pct: 15,  msg: '> INITIALIZING KERNEL...',              sub: "CRYPTS'26 // ESTABLISHING SECURE CONNECTION" },
+        { pct: 40,  msg: '> ESTABLISHING SECURE CONNECTION...',   sub: "CRYPTS'26 // LOADING MODULES" },
+        { pct: 70,  msg: '> LOADING MODULES...',                  sub: "CRYPTS'26 // VERIFYING SIGNATURES" },
+        { pct: 90,  msg: '> VERIFYING SECURITY SIGNATURES...',    sub: "CRYPTS'26 // SYSTEM READY" },
+        { pct: 100, msg: '> SYSTEM READY.',                       sub: "CRYPTS'26 // AUTHORIZED SESSION" }
     ];
 
     let currentStage = 0;
@@ -396,6 +397,7 @@ function initLoaderScreen() {
 
         if (currentStage < stages.length && progress >= stages[currentStage].pct) {
             if (loaderLog) loaderLog.innerText = stages[currentStage].msg;
+            if (loaderSub) loaderSub.textContent = stages[currentStage].sub;
             currentStage++;
         }
 
@@ -406,33 +408,56 @@ function initLoaderScreen() {
                 setTimeout(() => {
                     loaderScreen.style.display = 'none';
                 }, 600);
-            }, 300);
+            }, 400);
         }
-    }, 45);
+    }, 40);
 }
 
 
 // ============================================================
-// EVENT FILTER TAGS (Modules Section)
+// EVENT FILTER TAGS (Modules Section) — animated card transitions
 // ============================================================
 function initEventFilter() {
-    const chips = document.querySelectorAll('.filter-chip');
+    const chips = document.querySelectorAll('#event-filter-bar .filter-chip');
     const cards = document.querySelectorAll('#event-grid .event-card');
+
+    if (!chips.length) return;
+
+    function applyFilter(filter) {
+        cards.forEach((card, i) => {
+            const cat  = card.dataset.category;
+            const mode = card.dataset.mode;
+            const show = filter === 'all' || cat === filter || mode === filter;
+
+            if (show) {
+                card.style.display = '';
+                // Staggered entrance
+                card.style.transitionDelay = `${i * 30}ms`;
+                card.classList.remove('card-hiding', 'card-hidden');
+                card.classList.add('card-showing');
+                setTimeout(() => card.style.transitionDelay = '', 400);
+            } else {
+                card.classList.remove('card-showing');
+                card.classList.add('card-hiding');
+                setTimeout(() => {
+                    card.classList.add('card-hidden');
+                    card.style.display = 'none';
+                }, 350);
+            }
+        });
+    }
 
     chips.forEach(chip => {
         chip.addEventListener('click', (e) => {
             if (e) e.preventDefault();
             chips.forEach(c => c.classList.remove('active'));
             chip.classList.add('active');
-
-            const filter = chip.dataset.filter;
-            cards.forEach(card => {
-                const cat = card.dataset.category;
-                const show = filter === 'all' || cat === filter;
-                card.style.display = show ? '' : 'none';
-            });
+            applyFilter(chip.dataset.filter);
         });
     });
+
+    // Ensure all cards start in showing state
+    cards.forEach(card => card.classList.add('card-showing'));
 }
 
 
@@ -706,35 +731,6 @@ function initCommandPalette() {
     });
 }
 
-// ============================================================
-// EVENT FILTER TAGS (Modules Section)
-// ============================================================
-function initEventFilter() {
-    const chips = document.querySelectorAll('.filter-chip');
-    const cards = document.querySelectorAll('#event-grid .event-card');
-
-    chips.forEach(chip => {
-        chip.addEventListener('click', (e) => {
-            if (e) e.preventDefault();
-            chips.forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
-
-            const filter = chip.dataset.filter;
-            cards.forEach(card => {
-                const cat = card.dataset.category;
-                const show = (filter === 'all' || cat === filter);
-                if (show) {
-                    card.style.display = 'block';
-                    card.classList.add('visible');
-                    card.style.opacity = '1';
-                    card.style.transform = 'none';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        });
-    });
-}
 
 // ============================================================
 // TIMELINE TABS (Chronos Schedule)
@@ -1021,9 +1017,9 @@ const EVENTS_DATA = {
         date: "September 17, 2026",
         classRange: [6, 10],
         desc: "Decode ciphers, crack enigmatic puzzles, and navigate multi-layered cryptographic challenges in this offline decryption arena.",
-        rules: ["Teams of 2 participants", "Multiple rounds of increasing difficulty", "No external devices or internet access", "Time-limited per round"],
+        rules: ["Teams of 2 participants", "Multiple rounds of increasing difficulty", "Internet & AI tools permitted: ChatGPT, Perplexity, Canva, Pixlr, PhotoMosh allowed for research and asset generation", "Time-limited per round"],
         criteria: ["Accuracy of solutions", "Speed of completion", "Logical approach and methodology"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Saumya (XI-A): saumya.cryptsopg@gmail.com | Shivan (XI-C): shivan.cryptsopg@gmail.com"
     },
     pixelpulse: {
         name: "PixelPulse",
@@ -1033,10 +1029,10 @@ const EVENTS_DATA = {
         eligibility: "Class 8–12",
         date: "September 25, 2026",
         classRange: [8, 12],
-        desc: "Digital poster design competition judged on creativity, visual communication, and technical mastery of design tools.",
-        rules: ["Individual participation", "Topic revealed on event day", "Original work only — no templates", "Submit within deadline"],
+        desc: "Digital poster design & photography competition judged on creativity, visual communication, and technical mastery of design tools.",
+        rules: ["Individual participation or teams of 2", "Topic revealed on Event Day (September 25, 2026 at 09:00 AM)", "Original photographs & artwork only — no templates or AI-generated photos", "Submit image title & concept description before deadline"],
         criteria: ["Creativity and originality", "Visual communication", "Technical skill and tool mastery", "Relevance to theme"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Eeshaan (XII-A): eeshaan.cryptsopg@gmail.com"
     },
     byte_the_site: {
         name: "Byte the Site",
@@ -1049,7 +1045,7 @@ const EVENTS_DATA = {
         desc: "Frontend web development challenge — build responsive, visually stunning websites under time constraints using HTML, CSS & JS.",
         rules: ["Individual or team of 2", "HTML, CSS, and JavaScript only", "No frameworks or libraries", "Submit via provided link"],
         criteria: ["Design aesthetics and UI/UX", "Responsiveness", "Code quality and structure", "Creativity"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Saksham (XII-B): sakshamvinaykhatri.cryptsopg@gmail.com"
     },
     scratch_xplorers: {
         name: "Scratch Xplorers",
@@ -1062,7 +1058,7 @@ const EVENTS_DATA = {
         desc: "Block-based programming challenge for junior coders — build interactive projects, games, and animations using Scratch.",
         rules: ["Individual participation", "Scratch platform only", "Project built from scratch during event", "Time limit: 90 minutes"],
         criteria: ["Creativity of project", "Use of Scratch features", "Interactivity", "Presentation"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Bhavya Tuli (XII-A): bhavya.cryptsopg@gmail.com | Saksham (XII-B): sakshamvinaykhatri.cryptsopg@gmail.com"
     },
     ihe_cineprism: {
         name: "IHE CinePrism",
@@ -1072,10 +1068,10 @@ const EVENTS_DATA = {
         eligibility: "Class 6–12",
         date: "September 25, 2026",
         classRange: [6, 12],
-        desc: "Short film and video production competition — narrative structure, cinematography, pacing, and post-production judged.",
-        rules: ["Team of up to 4 members", "Maximum duration: 5 minutes", "Original content only", "Submit before deadline"],
+        desc: "Short film & video production competition. Theme: 'Between the Headlines / Stories Left Behind' (Time Manipulation theme concept).",
+        rules: ["Team of up to 9 members allowed", "Original films based on the theme 'Time Manipulation'", "Maximum duration & technical standards strictly enforced", "Submit film title & concept description before deadline"],
         criteria: ["Narrative and storytelling", "Cinematography and framing", "Editing and post-production", "Audio quality and sound design"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Bhavya Sachdeva (XII-B): bhavyas.cryptsopg@gmail.com"
     },
     prompt_paradox: {
         name: "Prompt Paradox",
@@ -1088,7 +1084,7 @@ const EVENTS_DATA = {
         desc: "AI prompt engineering challenge — craft precise, creative prompts to generate outputs matching specific goals and constraints.",
         rules: ["Individual participation", "Multiple rounds", "AI tools provided on-site", "No pre-prepared prompts"],
         criteria: ["Prompt precision and clarity", "Output quality and relevance", "Creative problem-solving", "Efficiency of approach"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Shivan (XI-C): shivan.cryptsopg@gmail.com"
     },
     qwerty_4: {
         name: "QWERTY 4.0",
@@ -1101,20 +1097,20 @@ const EVENTS_DATA = {
         desc: "Speed typing tournament — accuracy, WPM, and consistency under pressure. Keyboard warriors, assemble.",
         rules: ["Individual participation", "Standard QWERTY keyboard", "Multiple timed rounds", "No auto-correct or predictive text"],
         criteria: ["Words per minute (WPM)", "Accuracy percentage", "Consistency across rounds"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Prakriti (XI-B): prakriti.cryptsopg@gmail.com"
     },
     jailbreak: {
         name: "Jailbreak",
         icon: "JB",
         cat: "security",
         mode: "offline",
-        eligibility: "Class 6–12",
+        eligibility: "Class 6–10",
         date: "September 23, 2026",
-        classRange: [6, 12],
+        classRange: [6, 10],
         desc: "Escape room meets tech — solve interconnected logic puzzles, decode sequences, and break free before the timer runs out.",
         rules: ["Teams of 3–4 members", "Time limit per room", "No external devices", "Hints available with penalty"],
         criteria: ["Puzzles solved correctly", "Time taken", "Teamwork and coordination"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Aaryan (XII-A): aaryan.cryptsopg@gmail.com"
     },
     ihe_codequest: {
         name: "IHE CodeQuest",
@@ -1127,7 +1123,7 @@ const EVENTS_DATA = {
         desc: "Competitive programming — algorithmic complexity and optimization under clock pressure. Solve. Optimize. Execute.",
         rules: ["Individual participation", "C++, Python, or Java", "Multiple problems of varying difficulty", "Standard competitive programming format"],
         criteria: ["Problems solved correctly", "Time and space efficiency", "Partial scores for sub-tasks"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Ankita Yadav (Faculty): ankitayadav@opgworldschool.com"
     },
     ihe_kernel: {
         name: "IHE Kernel",
@@ -1140,7 +1136,7 @@ const EVENTS_DATA = {
         desc: "Inter-house hardware and systems challenge — circuit design, component identification, and technical diagnostics.",
         rules: ["Inter-house teams", "Multiple rounds: theory + practical", "Components and tools provided", "No external resources"],
         criteria: ["Technical accuracy", "Speed of completion", "Understanding of concepts"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Eeshaan (XII-A): eeshaan.cryptsopg@gmail.com | Bhavya Sachdeva (XII-B): bhavyas.cryptsopg@gmail.com | Prakriti (XI-B): prakriti.cryptsopg@gmail.com"
     },
     game_makers: {
         name: "Game Makers",
@@ -1151,9 +1147,9 @@ const EVENTS_DATA = {
         date: "September 25, 2026",
         classRange: [10, 12],
         desc: "Game development from scratch — design, build, and present playable games judged on mechanics, creativity, and polish.",
-        rules: ["Teams of 2–3 members", "Any game engine or platform", "Game must be playable at submission", "Time limit: 4 hours"],
+        rules: ["Teams of 2–3 members", "Any game engine or platform (Scratch, Pygame, Construct)", "Game must be playable at submission", "Time limit: 2 hours"],
         criteria: ["Gameplay mechanics", "Creativity and originality", "Visual and audio polish", "Presentation"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Eeshaan (XII-A): eeshaan.cryptsopg@gmail.com | Saumya (XI-A): saumya.cryptsopg@gmail.com"
     },
     larene_esports: {
         name: "L'Arène Esports",
@@ -1164,9 +1160,9 @@ const EVENTS_DATA = {
         date: "FC 26: Sept 19 | Valorant: Sept 20 | Minecraft: Sept 26",
         classRange: [10, 12],
         desc: "Multi-title esports tournament — FC 26, Valorant, and Minecraft. Strategy, reflexes, and teamwork across elimination rounds.",
-        rules: ["Team-based (size varies by title)", "Online matches via designated platform", "Single elimination format", "Match schedules shared in advance"],
+        rules: ["Team size per title: Minecraft (3–4 players/team), Valorant (3–4 players/team), EA FC 26 (1 player/solo)", "Online matches via designated platform with mandatory screen sharing", "Single elimination knockout format", "Match schedules shared in advance"],
         criteria: ["Match wins", "Sportsmanship", "Team coordination"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Rishit (XI-B): rishit.cryptsopg@gmail.com | Somansh (XI-B): somansh.cryptsopg@gmail.com | Yajas (XI-B): yajas.cryptsopg@gmail.com"
     },
     biztech_nexus: {
         name: "BizTech Nexus",
@@ -1177,9 +1173,9 @@ const EVENTS_DATA = {
         date: "September 30, 2026",
         classRange: [10, 12],
         desc: "Business-tech fusion — ideation, pitch decks, market analysis, and startup prototyping for the next-gen entrepreneur.",
-        rules: ["Teams of 2–4 members", "Pitch deck + live presentation", "Time limit: 10 minutes + Q&A", "Original business idea required"],
+        rules: ["Teams of 6–7 members per team", "Pitch deck + 10 minute presentation + live website prototype", "Shortlisting via PPT presentation", "Original AI business idea required"],
         criteria: ["Innovation and feasibility", "Market understanding", "Presentation quality", "Technical integration"],
-        contact: "Event In-Charge (see brochure)"
+        contact: "Anshika (XI-D): anshika.cryptsopg@gmail.com"
     }
 };
 
@@ -1263,6 +1259,54 @@ function initEventModal() {
 
 
 // ============================================================
+// NAV SLIDING INDICATOR (V2-style)
+// ============================================================
+function initNavIndicator() {
+    const indicator = document.getElementById('nav-indicator');
+    if (!indicator) return;
+
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function moveIndicatorTo(link) {
+        if (!link) return;
+        const navContainer = link.closest('.hidden.lg\\:flex');
+        if (!navContainer) return;
+        const containerRect = navContainer.getBoundingClientRect();
+        const linkRect = link.getBoundingClientRect();
+        indicator.style.left  = (linkRect.left - containerRect.left) + 'px';
+        indicator.style.width = linkRect.width + 'px';
+        indicator.classList.add('visible');
+    }
+
+    // Move indicator whenever active class changes
+    const observer = new MutationObserver(() => {
+        const active = document.querySelector('.nav-link.active');
+        if (active) moveIndicatorTo(active);
+    });
+
+    navLinks.forEach(link => {
+        observer.observe(link, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // Hover preview
+    navLinks.forEach(link => {
+        link.addEventListener('mouseenter', () => moveIndicatorTo(link));
+        link.addEventListener('mouseleave', () => {
+            const active = document.querySelector('.nav-link.active');
+            if (active) moveIndicatorTo(active);
+            else indicator.classList.remove('visible');
+        });
+    });
+
+    // Initial position
+    setTimeout(() => {
+        const active = document.querySelector('.nav-link.active');
+        if (active) moveIndicatorTo(active);
+    }, 200);
+}
+
+
+// ============================================================
 // BOOT SEQUENCE
 // ============================================================
 function bootApp() {
@@ -1274,6 +1318,7 @@ function bootApp() {
     safe('loaderScreen',   () => initLoaderScreen());
     safe('customCursor',   () => initCustomCursor());
     safe('navigation',     () => initNavigation());
+    safe('navIndicator',   () => initNavIndicator());
     safe('timestamp',      () => {
         setInterval(updateTimestamp, 1000);
         updateTimestamp();
@@ -1296,6 +1341,24 @@ function bootApp() {
     safe('eventModal',     () => initEventModal());
     safe('operatorEmails', () => initOperatorEmailRedirect());
     safe('highlightsEngine',() => initTerminalHighlights());
+    safe('modelViewer',    () => initModelViewer());
+}
+
+function initModelViewer() {
+    const mv = document.getElementById('hero-model-viewer');
+    if (!mv) return;
+
+    function loadBase64Model() {
+        if (window.CRYPTS_MODEL_DATA && mv.src !== window.CRYPTS_MODEL_DATA) {
+            mv.src = window.CRYPTS_MODEL_DATA;
+        }
+    }
+
+    if (window.location.protocol === 'file:') {
+        loadBase64Model();
+    } else {
+        mv.addEventListener('error', loadBase64Model);
+    }
 }
 
 function initOperatorEmailRedirect() {

@@ -270,6 +270,20 @@ body::before {
     letter-spacing: 0.1em;
 }
 
+.loader-sub-status {
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    animation: loaderSubBlink 1.8s ease-in-out infinite;
+}
+@keyframes loaderSubBlink {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #010307; }
@@ -455,6 +469,23 @@ body::before {
     width: 100%;
 }
 
+/* Sliding bottom indicator (V2-style) */
+.nav-indicator {
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    height: 2px;
+    background: var(--cyan-accent);
+    box-shadow: 0 0 10px var(--cyan-glow), 0 0 20px var(--cyan-glow);
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    border-radius: 2px;
+    opacity: 0;
+}
+.nav-indicator.visible {
+    opacity: 1;
+}
+
 .cmd-badge {
     font-size: 9px;
     letter-spacing: 0.1em;
@@ -473,8 +504,97 @@ body::before {
 }
 
 /* ============================================================
-   PARTICLE CANVAS
+   HERO LAYOUT (2-COL WITH 3D MODEL)
    ============================================================ */
+#briefing {
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hero CTA Buttons */
+.hero-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 32px;
+    background: transparent;
+    border: 2px solid var(--magenta-hot);
+    color: var(--magenta-hot);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 15px var(--magenta-glow);
+    cursor: none !important;
+    border-radius: 2px;
+}
+.hero-cta-primary:hover {
+    background: var(--magenta-hot);
+    color: #fff;
+    box-shadow: 0 0 30px var(--magenta-glow), 0 0 60px rgba(255,0,127,0.2);
+    transform: translateY(-2px);
+}
+.hero-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    background: var(--dark-glass);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: none !important;
+    border-radius: 2px;
+}
+.hero-cta-secondary:hover {
+    background: var(--cyan-dim);
+    border-color: var(--cyan-glow);
+    color: var(--cyan-accent);
+    box-shadow: 0 0 15px var(--cyan-dim);
+    transform: translateY(-2px);
+}
+
+/* 3D Model Viewer & Responsive Wrapper (Visible on Laptop, Desktop, Landscape Tablets) */
+.hero-3d-wrapper {
+    display: none;
+}
+
+@media (min-width: 1024px), (min-width: 768px) and (orientation: landscape) {
+    .hero-3d-wrapper {
+        display: flex;
+    }
+    .hero-grid-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+#hero-model-viewer {
+    outline: 0;
+    border-radius: 8px;
+    filter: drop-shadow(0 0 20px rgba(255,0,127,0.3));
+    animation: modelFloat 6s ease-in-out infinite;
+}
+@keyframes modelFloat {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255,0,127,0.3)); }
+    50% { filter: drop-shadow(0 0 35px rgba(0,243,255,0.4)); }
+}
 #particle-canvas {
     position: absolute;
     top: 0; left: 0;
@@ -605,7 +725,7 @@ body::before {
 }
 
 /* ============================================================
-   EVENT MODULE CARDS
+   EVENT MODULE CARDS + FILTER ANIMATION
    ============================================================ */
 .event-card {
     position: relative;
@@ -640,12 +760,33 @@ body::before {
     animation-play-state: running;
 }
 .event-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     border-color: rgba(0, 243, 255, 0.2);
     box-shadow:
         0 16px 40px rgba(0,0,0,0.6),
         0 0 20px var(--cyan-dim),
         inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Card filter in/out animation */
+.event-card {
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease,
+                opacity 0.35s ease, scale 0.35s ease;
+}
+.event-card.card-hidden {
+    opacity: 0;
+    scale: 0.92;
+    pointer-events: none;
+    /* Keep in DOM flow but visually gone - grid handles layout */
+}
+.event-card.card-hiding {
+    opacity: 0;
+    scale: 0.92;
+    pointer-events: none;
+}
+.event-card.card-showing {
+    opacity: 1;
+    scale: 1;
 }
 
 @keyframes borderGlow {
@@ -751,7 +892,7 @@ body::before {
     color: #fff;
     font-size: 13px;
     font-family: 'JetBrains Mono', monospace;
-    outline: none;
+    outline: 0;
     margin-bottom: 20px;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     border-radius: 3px;
@@ -794,6 +935,7 @@ body::before {
     font-family: 'JetBrains Mono', monospace;
     transition: all 0.2s ease;
     border-radius: 3px;
+    -webkit-user-select: none;
     user-select: none;
 }
 .event-tag-chip:hover {
@@ -839,6 +981,7 @@ body::before {
 .brochure-embed-container {
     background: var(--dark-glass);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(0, 243, 255, 0.2);
     border-radius: 6px;
     box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 25px rgba(0, 243, 255, 0.05);
@@ -933,8 +1076,26 @@ body::before {
     box-shadow: inset 0 0 15px rgba(0, 243, 255, 0.04);
 }
 
-.timeline-panel { display: none; }
-.timeline-panel.active { display: block; }
+/* Timeline panel crossfade animation */
+.timeline-panel {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.25s ease;
+}
+.timeline-panel.active {
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+    overflow: visible;
+    animation: timelineFadeIn 0.3s ease forwards;
+}
+@keyframes timelineFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 .timeline-list { position: relative; padding-left: 24px; }
 .timeline-list::before {
@@ -1004,7 +1165,6 @@ body::before {
     padding-top: 2px;
     font-weight: 500;
 }
-.timeline-content {}
 .timeline-name {
     font-size: 15px;
     font-weight: bold;
@@ -1065,6 +1225,7 @@ body::before {
     color: rgba(255,255,255,0.7);
     letter-spacing: 0.05em;
     transition: color 0.2s ease;
+    -webkit-user-select: none;
     user-select: none;
     gap: 16px;
 }
@@ -1104,6 +1265,7 @@ body::before {
     position: relative;
     background: var(--dark-glass);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.06);
     padding: 28px 24px;
     border-radius: 6px;
@@ -1214,6 +1376,7 @@ body::before {
     max-width: 560px;
     background: var(--dark-glass);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(0, 243, 255, 0.2);
     border-radius: 8px;
     overflow: hidden;
@@ -1241,7 +1404,7 @@ body::before {
     flex: 1;
     background: transparent;
     border: none;
-    outline: none;
+    outline: 0;
     color: #fff;
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;

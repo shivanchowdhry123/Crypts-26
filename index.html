@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRYPTS'26 | The Singularity Overload — OPG World School TechFest</title>
     <meta name="description" content="CRYPTS'26: The Singularity Overload. OPG World School's premier annual TechFest. Featuring competitive coding, cryptography, web design, and more — for Classes 4–12.">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="tailwind.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- model-viewer for 3D GLB logo (zero-dependency web component) -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <script src="logo/model_data.js"></script>
 </head>
 <body class="antialiased">
 
@@ -21,19 +24,20 @@
 <div id="loader-screen">
     <div class="loader-content">
         <div class="loader-logo">
-            <img src="logo/logo.png" alt="CRYPTS'26 Logo">
+            <img src="logo/logo.png" alt="CRYPTS'26 Logo" class="loader-logo-img">
         </div>
         <div class="loader-title glitch" data-text="CRYPTS'26">CRYPTS'<span class="highlight-v">26</span></div>
-        <div class="loader-sub">OPG WORLD SCHOOL • SYSTEM BOOT</div>
+        <div class="loader-sub">OPG WORLD SCHOOL • THE SINGULARITY OVERLOAD</div>
 
         <div class="loader-bar-wrap">
             <div id="loader-bar" class="loader-bar"></div>
         </div>
 
         <div class="loader-status">
-            <span id="loader-log">> INITIALIZING SYSTEM CORE...</span>
+            <span id="loader-log">> INITIALIZING KERNEL...</span>
             <span id="loader-percent" class="loader-num">0%</span>
         </div>
+        <div class="loader-sub-status" id="loader-sub-status">CRYPTS'26 // ESTABLISHING SECURE CONNECTION</div>
     </div>
 </div>
 
@@ -59,13 +63,13 @@
 <!-- ============================
      NAVIGATION
      ============================ -->
-<nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-white/5 backdrop-blur-sm">
+<nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-white/5 backdrop-blur-sm" id="main-nav">
     <div class="container mx-auto px-6 py-5 flex justify-between items-center">
         <div class="flex items-center">
             <span class="glitch glitch-header text-white" data-text="CRYPTS'26">CRYPTS'<span class="highlight-v">26</span></span>
         </div>
 
-        <div class="hidden lg:flex items-center space-x-6">
+        <div class="hidden lg:flex items-center space-x-3.5 xl:space-x-6 relative text-[12px] xl:text-[13px]">
             <a href="#briefing"    class="nav-link text-white/60" id="nav-briefing">01_BRIEF</a>
             <a href="#modules"     class="nav-link text-white/60" id="nav-modules">02_MODULES</a>
             <a href="register.html" class="nav-link text-[#ff00c1] flex items-center font-bold" id="nav-enrollment">
@@ -75,6 +79,8 @@
             <a href="#chronos"     class="nav-link text-white/60" id="nav-chronos">05_CHRONOS</a>
             <a href="#resolution"  class="nav-link text-white/60" id="nav-resolution">06_QUERY</a>
             <a href="#operators"   class="nav-link text-white/60" id="nav-operators">07_OPS</a>
+            <!-- Sliding nav indicator -->
+            <div id="nav-indicator" class="nav-indicator"></div>
             <button class="cmd-badge" id="cmd-badge-trigger" title="Open Command Palette (Ctrl+K)">⌘ CTRL+K</button>
         </div>
 
@@ -112,20 +118,62 @@
     <div class="ambient-blob blob-2"></div>
     <div class="ambient-blob blob-3"></div>
 
-    <!-- Logo -->
-    <div class="logo-wrapper relative z-10">
-        <div class="logo-image-frame" style="width: 240px;">
-            <img src="logo/logo.png" alt="CRYPTS'26 Hero Logo">
-        </div>
-    </div>
+    <!-- Hero Layout: 2-column on desktop, stacked on mobile -->
+    <div class="w-full max-w-7xl relative z-10 grid lg:grid-cols-2 gap-8 items-center mb-10 hero-grid-layout">
 
-    <!-- Hero Title -->
-    <div class="mb-10 text-center relative z-10">
-        <h1 class="glitch glitch-hero" data-text="CRYPTS'26">CRYPTS'<span class="highlight-v">26</span></h1>
-        <p class="tracking-[0.6em] text-[#00f3ff] mt-4 opacity-60 uppercase font-bold">OPG World School • TechFest</p>
-        <p class="text-[8px] tracking-[0.4em] text-white/25 mt-2 uppercase">THE SINGULARITY OVERLOAD</p>
-        <p class="tagline-typed" id="hero-tagline"></p>
-        <p class="tagline-chaos" id="hero-tagline-sub">In Chaos We Create. Through Innovation We Evolve.</p>
+        <!-- Left: Branding + Tagline + CTA -->
+        <div class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-4">
+            <!-- Online badge -->
+            <div class="inline-flex items-center space-x-2 px-3 py-1 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded-sm">
+                <span class="w-2 h-2 rounded-full bg-[#00f3ff] animate-pulse"></span>
+                <span class="text-xs font-bold tracking-widest text-[#00f3ff]">SYSTEM ONLINE // v26.0.0</span>
+            </div>
+
+            <!-- Logo image -->
+            <div class="logo-wrapper">
+                <div class="logo-image-frame" style="width: 200px;">
+                    <img src="logo/logo.png" alt="CRYPTS'26 Hero Logo">
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div>
+                <h1 class="glitch glitch-hero" data-text="CRYPTS'26">CRYPTS'<span class="highlight-v">26</span></h1>
+                <p class="tracking-[0.6em] text-[#00f3ff] mt-2 opacity-60 uppercase font-bold text-sm">OPG World School • TechFest</p>
+            </div>
+
+            <!-- Tagline -->
+            <div class="min-h-[60px]">
+                <p class="tagline-typed" id="hero-tagline"></p>
+                <p class="tagline-chaos" id="hero-tagline-sub">In Chaos We Create. Through Innovation We Evolve.</p>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-wrap gap-4 pt-2">
+                <a href="register.html" class="hero-cta-primary">INITIALIZE ENROLLMENT →</a>
+                <a href="#modules" class="hero-cta-secondary">VIEW MODULES</a>
+            </div>
+        </div>
+
+        <!-- Right: 3D Rotating Logo (Visible on Laptop, Desktop, Landscape Tablets) -->
+        <div class="hero-3d-wrapper justify-center items-center relative">
+            <div class="absolute w-64 h-64 rounded-full bg-[#ff007f]/20 blur-[80px] pointer-events-none"></div>
+            <model-viewer
+                src="logo/new_logo.glb"
+                poster="logo/logo.png"
+                camera-controls
+                auto-rotate
+                disable-zoom
+                interaction-prompt="none"
+                loading="lazy"
+                id="hero-model-viewer"
+                alt="CRYPTS'26 3D Logo"
+                style="width: 360px; height: 360px; background: transparent; --poster-color: transparent;"
+            >
+                <img src="logo/logo.png" alt="CRYPTS'26 Logo" class="w-full h-full object-contain pointer-events-none" slot="poster">
+            </model-viewer>
+        </div>
+
     </div>
 
     <!-- Terminal Window -->
@@ -178,19 +226,36 @@
         <!-- Text block takes 2 cols -->
         <div class="md:col-span-2">
             <h2 class="glitch text-[#00f3ff] text-2xl mb-6 tracking-tighter" data-text="01_BRIEFING">01_BRIEFING</h2>
-            <p class="text-white/70 text-base leading-relaxed">
-                CRYPTS (Cryptic Realms of Yielding Problem Solving) is more than a fest — it's a high-stakes simulation. In CRYPTS'26, we prioritize <strong class="text-white">Efficiency, Logic, and Resilience</strong> across every module.
-            </p>
+            <div class="text-white/70 text-base leading-relaxed space-y-4">
+                <p>
+                    <strong class="text-white">CRYPTS — Cryptic Realms of Yielding Problem Solving</strong> — is more than just a fest; it is a high-stakes simulation where <strong class="text-white">Efficiency, Logic, and Resilience</strong> drive every challenge. Welcome to <strong class="text-white">CRYPTS'26, our school's premier celebration of technology, innovation, and creativity, inspired by the theme “Born From Chaos, Built for Innovation.”</strong> Bringing together coding, cybersecurity, AI, filmmaking, photography, web design, game development, quizzes, and speed-typing, CRYPTS creates an arena where bold ideas meet real-world problem-solving.
+                </p>
+                <p>
+                    <strong class="text-white">In Chaos We Create. Through Innovation We Evolve.</strong> Every module challenges participants to think critically, work efficiently, adapt under pressure, and turn uncertainty into opportunity. Step into an electrifying world where creativity meets technology, challenges spark innovation, and every decision counts. <strong class="text-white">Decode the future. Create the impossible. Rise to the challenge.</strong>
+                </p>
+                <p class="pt-2 text-sm">
+                    <strong class="text-white">Regards,</strong><br>
+                    <strong class="text-white">Team CRYPTS'26</strong>
+                </p>
+            </div>
         </div>
         <!-- Stats block takes 1 col -->
-        <div class="flex flex-col gap-6 border-l border-white/10 pl-8">
+        <div class="grid grid-cols-2 gap-6 border-l border-white/10 pl-8">
             <div>
-                <div class="text-[#ff00c1] font-bold text-4xl">12+</div>
-                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Missions</div>
+                <div class="text-[#ff00c1] font-bold text-3xl">2026</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">EDITION</div>
             </div>
             <div>
-                <div class="text-[#ff00c1] font-bold text-4xl">'26</div>
-                <div class="text-[9px] text-white/30 uppercase tracking-widest mt-1">Edition</div>
+                <div class="text-[#00f3ff] font-bold text-3xl">13</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">MISSIONS</div>
+            </div>
+            <div>
+                <div class="text-[#00f3ff] font-bold text-3xl">13</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">DAYS</div>
+            </div>
+            <div>
+                <div class="text-[#ff00c1] font-bold text-3xl">4–12</div>
+                <div class="text-[9px] text-white/40 uppercase tracking-widest mt-1">CLASSES</div>
             </div>
         </div>
     </div>
@@ -208,11 +273,25 @@
             <h2 class="glitch text-[#00f3ff] text-2xl" data-text="02_EVENT_MODULES">02_EVENT_MODULES</h2>
         </div>
 
+        <!-- Event Filter Bar -->
+        <div class="filter-bar reveal" id="event-filter-bar">
+            <button class="filter-chip active" data-filter="all">ALL_MODULES</button>
+            <button class="filter-chip" data-filter="offline">OFFLINE_ONLY</button>
+            <button class="filter-chip" data-filter="online">ONLINE_ONLY</button>
+            <button class="filter-chip" data-filter="coding">CODING</button>
+            <button class="filter-chip" data-filter="design">DESIGN</button>
+            <button class="filter-chip" data-filter="security">SECURITY</button>
+            <button class="filter-chip" data-filter="av">A/V</button>
+            <button class="filter-chip" data-filter="gaming">GAMING</button>
+            <button class="filter-chip" data-filter="ai">AI</button>
+            <button class="filter-chip" data-filter="biz">BUSINESS</button>
+        </div>
+
         <!-- Event Cards Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="event-grid">
 
             <!-- 1. GLITCHVERSE -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="security" data-event="glitchverse">
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="security" data-mode="offline" data-event="glitchverse">
                 <span class="hud-tag hud-tag-tr">EVT-001</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_1</span><span class="op">():</span></div>
                 <h3 class="card-title">GLITCHVERSE</h3>
@@ -226,7 +305,7 @@
             </div>
 
             <!-- 2. PIXELPULSE -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="design" data-event="pixelpulse">
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="design" data-mode="online" data-event="pixelpulse">
                 <span class="hud-tag hud-tag-tr">EVT-002</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_2</span><span class="op">():</span></div>
                 <h3 class="card-title">PIXELPULSE</h3>
@@ -240,7 +319,7 @@
             </div>
 
             <!-- 3. BYTE THE SITE -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-event="byte_the_site">
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-mode="online" data-event="byte_the_site">
                 <span class="hud-tag hud-tag-tr">EVT-003</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_3</span><span class="op">():</span></div>
                 <h3 class="card-title">BYTE THE SITE</h3>
@@ -254,7 +333,7 @@
             </div>
 
             <!-- 4. SCRATCH XPLORERS -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="scratch_xplorers">
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-mode="offline" data-event="scratch_xplorers">
                 <span class="hud-tag hud-tag-tr">EVT-004</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_4</span><span class="op">():</span></div>
                 <h3 class="card-title">SCRATCH XPLORERS</h3>
@@ -268,7 +347,7 @@
             </div>
 
             <!-- 5. IHE CINEPRISM -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="av" data-event="ihe_cineprism">
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="av" data-mode="online" data-event="ihe_cineprism">
                 <span class="hud-tag hud-tag-tr">EVT-005</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_5</span><span class="op">():</span></div>
                 <h3 class="card-title">IHE CINEPRISM</h3>
@@ -282,7 +361,7 @@
             </div>
 
             <!-- 6. PROMPT PARADOX -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="ai" data-event="prompt_paradox">
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="ai" data-mode="offline" data-event="prompt_paradox">
                 <span class="hud-tag hud-tag-tr">EVT-006</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_6</span><span class="op">():</span></div>
                 <h3 class="card-title">PROMPT PARADOX</h3>
@@ -296,7 +375,7 @@
             </div>
 
             <!-- 7. QWERTY 4.0 -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="qwerty_4">
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-mode="offline" data-event="qwerty_4">
                 <span class="hud-tag hud-tag-tr">EVT-007</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_7</span><span class="op">():</span></div>
                 <h3 class="card-title">QWERTY 4.0</h3>
@@ -310,7 +389,7 @@
             </div>
 
             <!-- 8. JAILBREAK -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="security" data-event="jailbreak">
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="security" data-mode="offline" data-event="jailbreak">
                 <span class="hud-tag hud-tag-tr">EVT-008</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_8</span><span class="op">():</span></div>
                 <h3 class="card-title">JAILBREAK</h3>
@@ -324,7 +403,7 @@
             </div>
 
             <!-- 9. IHE CODEQUEST -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-event="ihe_codequest">
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="coding" data-mode="offline" data-event="ihe_codequest">
                 <span class="hud-tag hud-tag-tr">EVT-009</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_9</span><span class="op">():</span></div>
                 <h3 class="card-title">IHE CODEQUEST</h3>
@@ -338,7 +417,7 @@
             </div>
 
             <!-- 10. IHE KERNEL -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-event="ihe_kernel">
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="coding" data-mode="offline" data-event="ihe_kernel">
                 <span class="hud-tag hud-tag-tr">EVT-010</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_10</span><span class="op">():</span></div>
                 <h3 class="card-title">IHE KERNEL</h3>
@@ -352,7 +431,7 @@
             </div>
 
             <!-- 11. GAME MAKERS -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="gaming" data-event="game_makers">
+            <div class="event-card hud-cut-corner reveal reveal-delay-2" data-category="gaming" data-mode="offline" data-event="game_makers">
                 <span class="hud-tag hud-tag-tr">EVT-011</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_11</span><span class="op">():</span></div>
                 <h3 class="card-title">GAME MAKERS</h3>
@@ -366,7 +445,7 @@
             </div>
 
             <!-- 12. L'ARÈNE ESPORTS -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="gaming" data-event="larene_esports">
+            <div class="event-card hud-cut-corner reveal reveal-delay-3" data-category="gaming" data-mode="online" data-event="larene_esports">
                 <span class="hud-tag hud-tag-tr">EVT-012</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_12</span><span class="op">():</span></div>
                 <h3 class="card-title">L'ARÈNE ESPORTS</h3>
@@ -380,7 +459,7 @@
             </div>
 
             <!-- 13. BIZTECH NEXUS -->
-            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="biz" data-event="biztech_nexus">
+            <div class="event-card hud-cut-corner reveal reveal-delay-1" data-category="biz" data-mode="offline" data-event="biztech_nexus">
                 <span class="hud-tag hud-tag-tr">EVT-013</span>
                 <div class="code-prefix"><span class="kw">def</span> <span class="fn">event_13</span><span class="op">():</span></div>
                 <h3 class="card-title">BIZTECH NEXUS</h3>
@@ -408,23 +487,53 @@
             <h2 class="glitch text-[#00f3ff] text-2xl" data-text="03_ENROLLMENT_PORTAL">03_ENROLLMENT_PORTAL</h2>
         </div>
 
-        <div class="registration-container mt-4 p-10 md:p-14 text-center reveal relative overflow-hidden">
-            <div class="inline-block text-[9px] tracking-[0.3em] text-[#00f3ff] border border-[#00f3ff]/30 bg-[#00f3ff]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
-                STANDALONE TRANSMISSION NODE
-            </div>
-            
-            <h3 class="text-3xl font-bold tracking-tight text-white uppercase mb-4">
-                Ready to Enter the Singularity?
-            </h3>
-            
-            <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-8">
-                Official registration for all 12+ competitive missions is hosted on a dedicated, encrypted portal. Select your modules and claim your operator status.
-            </p>
+        <div class="registration-container mt-4 p-8 md:p-12 reveal relative overflow-hidden">
+            <div class="text-center">
+                <div class="inline-block text-[9px] tracking-[0.3em] text-[#00f3ff] border border-[#00f3ff]/30 bg-[#00f3ff]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
+                    STANDALONE TRANSMISSION NODE
+                </div>
+                
+                <h3 class="text-3xl font-bold tracking-tight text-white uppercase mb-4">
+                    Ready to Enter the Singularity?
+                </h3>
+                
+                <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-8">
+                    Official registration for all 13 competitive missions is hosted on a dedicated, encrypted portal. Select your modules and claim your operator status.
+                </p>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="register.html" class="transmit-btn sm:w-auto px-10 py-4 inline-flex items-center justify-center shadow-[0_0_30px_rgba(217,0,188,0.4)]">
-                    INITIALIZE REGISTRATION →
-                </a>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+                    <a href="register.html" class="transmit-btn sm:w-auto px-10 py-4 inline-flex items-center justify-center shadow-[0_0_30px_rgba(217,0,188,0.4)]">
+                        INITIALIZE REGISTRATION →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Enrollment Guidance & Warning Panels -->
+            <div class="grid md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-white/10 text-left font-mono text-xs">
+                <!-- Step-by-Step Instructions -->
+                <div class="bg-black/40 border border-white/10 p-5 rounded hud-cut-corner">
+                    <div class="text-[#00f3ff] font-bold text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <span>// OPERATOR ENROLLMENT PROTOCOL</span>
+                    </div>
+                    <ol class="space-y-2 text-white/70 text-[11px] list-decimal list-inside leading-relaxed">
+                        <li>Open the registration portal via the button above.</li>
+                        <li>Select your grade class to auto-filter eligible events.</li>
+                        <li>Provide team member details (names, section, and contact email).</li>
+                        <li>Submit your transmission packet to receive instant confirmation.</li>
+                    </ol>
+                </div>
+
+                <!-- Warning & IHE Notes -->
+                <div class="space-y-4">
+                    <div class="bg-[#ff0055]/10 border border-[#ff0055]/40 p-4 rounded text-[11px] text-white/90 leading-relaxed">
+                        <strong class="text-[#ff0055] font-bold uppercase tracking-wider block mb-1">⚠️ FIRST COME, FIRST SERVED WARNING:</strong>
+                        Event slot allocations are strictly limited per school and module. Registrations operate on a first-come, first-served basis. Complete your transmission early to guarantee your slot.
+                    </div>
+                    <div class="bg-[#00f3ff]/10 border border-[#00f3ff]/30 p-4 rounded text-[11px] text-white/80 leading-relaxed">
+                        <strong class="text-[#00f3ff] font-bold uppercase tracking-wider block mb-1">📌 INTER-HOUSE EVENTS (IHE) NOTE:</strong>
+                        Events designated with <code class="text-white bg-black/50 px-1 py-0.5 rounded">IHE</code> (IHE CinePrism, IHE CodeQuest, IHE Kernel) represent house-level competitions. Coordinate with your House Teacher In-Charge or House Captains prior to submitting your entry.
+                    </div>
+                </div>
             </div>
 
             <div class="mt-8 pt-6 border-t border-white/10 flex flex-wrap justify-center items-center gap-6 text-[10px] text-white/40 uppercase tracking-widest font-mono">
@@ -459,8 +568,8 @@
                     <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-white/40 uppercase">INTERACTIVE DOSSIER</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <a href="https://www.canva.com/design/DAHJvv9pohw/H2dzOSOkvWclrRNtV_OmMQ/view" target="_blank" rel="noopener noreferrer" class="brochure-action-btn">
-                        <span>↗ OPEN FULL VIEW</span>
+                    <a href="For AI/CRYPTS 5.0.pdf" download="CRYPTS_26_Official_Brochure.pdf" target="_blank" rel="noopener noreferrer" class="brochure-action-btn bg-[#00f3ff]/10 border border-[#00f3ff]/40 text-[#00f3ff] hover:bg-[#00f3ff] hover:text-black px-4 py-2 text-xs font-mono font-bold rounded inline-flex items-center gap-2 transition-colors">
+                        <span>⬇ DOWNLOAD BROCHURE (PDF)</span>
                     </a>
                 </div>
             </div>
@@ -470,7 +579,6 @@
                 <iframe 
                     loading="lazy" 
                     src="https://www.canva.com/design/DAHJvv9pohw/H2dzOSOkvWclrRNtV_OmMQ/view?embed" 
-                    allowfullscreen="allowfullscreen" 
                     allow="fullscreen"
                     class="brochure-iframe"
                     title="CRYPTS'26 Official Brochure">
@@ -732,9 +840,24 @@
                     <span>Who do I contact for queries?</span>
                     <span class="faq-chevron">▾</span>
                 </div>
-                <div class="faq-answer"><div class="faq-answer-inner">Reach out to the organizing team directly through your class teacher or the CRYPTS organizing committee. You can also use the `help` command in the terminal above — type `about` for contact information.</div></div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        Reach out to the organizing team directly through your class teacher or the CRYPTS organizing committee. For fast email resolution, email our faculty coordinator at <a href="mailto:ankitayadav@opgworldschool.com" class="text-[#00f3ff] underline font-bold">ankitayadav@opgworldschool.com</a> or contact the student event in-charges. You can also type <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code> or <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">about</code> in the CLI terminal.
+                    </div>
+                </div>
             </div>
 
+        </div>
+
+        <!-- Query Direct Email Banner -->
+        <div class="mt-8 p-5 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-white/90">
+            <div>
+                <strong class="text-[#00f3ff] font-bold block mb-1">✉️ DIRECT EMAIL SUPPORT FOR QUERIES:</strong>
+                <span>Having trouble navigating the terminal or need instant query resolution? Contact our Faculty Coordinator directly.</span>
+            </div>
+            <a href="mailto:ankitayadav@opgworldschool.com" class="px-4 py-2 bg-[#00f3ff] text-black font-bold rounded hover:bg-white transition-colors">
+                EMAIL COORDINATOR →
+            </a>
         </div>
     </div>
 </section>
@@ -743,139 +866,178 @@
 <!-- ============================
      07 — CORE OPERATORS (TEAM)
      ============================ -->
-<section id="operators" class="py-24 px-6 border-t border-white/5">
-    <div class="container mx-auto max-w-8xl">
-        <div class="section-heading reveal">
-            <span class="section-tag">// OPERATOR_PROFILES</span>
-            <h2 class="glitch text-[#00f3ff] text-2xl" data-text="07_CORE_OPERATORS">07_CORE_OPERATORS</h2>
+    <section id="operators" class="py-24 px-6 border-t border-white/5">
+        <div class="container mx-auto max-w-8xl">
+            <div class="section-heading reveal">
+                <span class="section-tag">// OPERATOR_PROFILES</span>
+                <h2 class="glitch text-[#00f3ff] text-2xl" data-text="07_CORE_OPERATORS">07_CORE_OPERATORS</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+                <!-- Faculty Coordinator -->
+                <div class="operator-card reveal border-[#00f3ff]/40 bg-[#00f3ff]/5">
+                    <div class="operator-avatar border-[#00f3ff]/50">
+                        <img src="" alt="Ankita Yadav" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">🎓</span>
+                    </div>
+                    <div class="operator-name text-[#00f3ff]">Ankita Yadav</div>
+                    <span
+                        class="operator-section-tag bg-[#00f3ff]/20 text-[#00f3ff] border border-[#00f3ff]/30 font-bold">FACULTY
+                        IN-CHARGE</span>
+                    <a href="mailto:ankitayadav@opgworldschool.com" target="_blank" rel="noopener noreferrer"
+                        class="operator-email text-[#00f3ff]/90 font-bold">ankitayadav@opgworldschool.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-1">
+                    <div class="operator-avatar">
+                        <img src="" alt="Eeshaan Chhabra" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Eeshaan Chhabra</div>
+                    <span class="operator-section-tag">CLASS XII-A</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=eeshaan.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">eeshaan.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-2">
+                    <div class="operator-avatar">
+                        <img src="" alt="Bhavya Sachdeva" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Bhavya Sachdeva</div>
+                    <span class="operator-section-tag">CLASS XII-B</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bhavyas.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">bhavyas.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-3">
+                    <div class="operator-avatar">
+                        <img src="" alt="Aaryan Yadav" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Aaryan Yadav</div>
+                    <span class="operator-section-tag">CLASS XII-A</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=aaryan.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">aaryan.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-4">
+                    <div class="operator-avatar">
+                        <img src="" alt="Bhavya Tuli" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Bhavya Tuli</div>
+                    <span class="operator-section-tag">CLASS XII-A</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bhavya.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">bhavya.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-1">
+                    <div class="operator-avatar">
+                        <img src="" alt="Saksham Khatri" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Saksham Khatri</div>
+                    <span class="operator-section-tag">CLASS XII-B</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sakshamvinaykhatri.cryptsopg@gmail.com"
+                        target="_blank" rel="noopener noreferrer"
+                        class="operator-email">sakshamvinaykhatri.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-2">
+                    <div class="operator-avatar">
+                        <img src="" alt="Anshika Yadav" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Anshika Yadav</div>
+                    <span class="operator-section-tag">CLASS XI-D</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=anshika.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">anshika.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-3">
+                    <div class="operator-avatar">
+                        <img src="" alt="Prakriti Chaturvedi" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Prakriti Chaturvedi</div>
+                    <span class="operator-section-tag">CLASS XI-B</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=prakriti.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">prakriti.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-4">
+                    <div class="operator-avatar">
+                        <img src="" alt="Rishit Jain" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Rishit Jain</div>
+                    <span class="operator-section-tag">CLASS XI-B</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=rishit.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">rishit.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-1">
+                    <div class="operator-avatar">
+                        <img src="" alt="Saumya Tyagi" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Saumya Tyagi</div>
+                    <span class="operator-section-tag">CLASS XI-A</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=saumya.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">saumya.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-2">
+                    <div class="operator-avatar">
+                        <img src="" alt="Shivan Chowdhry" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Shivan Chowdhry</div>
+                    <span class="operator-section-tag">CLASS XI-C</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=shivan.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">shivan.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-3">
+                    <div class="operator-avatar">
+                        <img src="" alt="Somansh Kumar" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Somansh Kumar</div>
+                    <span class="operator-section-tag">CLASS XI-B</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=somansh.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">somansh.cryptsopg@gmail.com</a>
+                </div>
+
+                <div class="operator-card reveal reveal-delay-4">
+                    <div class="operator-avatar">
+                        <img src="" alt="Yajas Yashasvi" class="operator-photo hidden"
+                            onerror="this.classList.add('hidden')">
+                        <span class="operator-icon">👤</span>
+                    </div>
+                    <div class="operator-name">Yajas Yashasvi</div>
+                    <span class="operator-section-tag">CLASS XI-B</span>
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=yajas.cryptsopg@gmail.com" target="_blank"
+                        rel="noopener noreferrer" class="operator-email">yajas.cryptsopg@gmail.com</a>
+                </div>
+
+            </div>
         </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-
-            <div class="operator-card reveal reveal-delay-1">
-                <div class="operator-avatar">
-                    <img src="" alt="Saumya Tyagi" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Saumya Tyagi</div>
-                <span class="operator-section-tag">CLASS XI-A</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=saumya.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">saumya.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-2">
-                <div class="operator-avatar">
-                    <img src="" alt="Shivan Chowdhry" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Shivan Chowdhry</div>
-                <span class="operator-section-tag">CLASS XI-C</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=shivan.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">shivan.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-3">
-                <div class="operator-avatar">
-                    <img src="" alt="Eeshaan Chhabra" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Eeshaan Chhabra</div>
-                <span class="operator-section-tag">CLASS XII-A</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=eeshaan.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">eeshaan.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-4">
-                <div class="operator-avatar">
-                    <img src="" alt="Saksham Khatri" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Saksham Khatri</div>
-                <span class="operator-section-tag">CLASS XII-B</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sakshamvinaykhatri.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">sakshamvinaykhatri.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-1">
-                <div class="operator-avatar">
-                    <img src="" alt="Bhavya Tuli" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Bhavya Tuli</div>
-                <span class="operator-section-tag">CLASS XII-A</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bhavya.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">bhavya.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-2">
-                <div class="operator-avatar">
-                    <img src="" alt="Bhavya Sachdeva" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Bhavya Sachdeva</div>
-                <span class="operator-section-tag">CLASS XII-B</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bhavyas.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">bhavyas.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-3">
-                <div class="operator-avatar">
-                    <img src="" alt="Prakriti Chaturvedi" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Prakriti Chaturvedi</div>
-                <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=prakriti.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">prakriti.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-4">
-                <div class="operator-avatar">
-                    <img src="" alt="Aaryan Yadav" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Aaryan Yadav</div>
-                <span class="operator-section-tag">CLASS XII-A</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=aaryan.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">aaryan.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-1">
-                <div class="operator-avatar">
-                    <img src="" alt="Rishit Jain" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Rishit Jain</div>
-                <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=rishit.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">rishit.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-2">
-                <div class="operator-avatar">
-                    <img src="" alt="Somansh Kumar" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Somansh Kumar</div>
-                <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=somansh.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">somansh.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-3">
-                <div class="operator-avatar">
-                    <img src="" alt="Yajas Yashasvi" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Yajas Yashasvi</div>
-                <span class="operator-section-tag">CLASS XI-B</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=yajas.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">yajas.cryptsopg@gmail.com</a>
-            </div>
-
-            <div class="operator-card reveal reveal-delay-4">
-                <div class="operator-avatar">
-                    <img src="" alt="Anshika Yadav" class="operator-photo hidden" onerror="this.classList.add('hidden')">
-                    <span class="operator-icon">👤</span>
-                </div>
-                <div class="operator-name">Anshika Yadav</div>
-                <span class="operator-section-tag">CLASS XI-D</span>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=anshika.cryptsopg@gmail.com" target="_blank" rel="noopener noreferrer" class="operator-email">anshika.cryptsopg@gmail.com</a>
-            </div>
-
-        </div>
-    </div>
-</section>
-
+    </section>
 
 <!-- ============================
      EVENT DETAIL MODAL
