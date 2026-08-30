@@ -16,9 +16,34 @@ const inputLine = document.getElementById('input-line');
 const terminalInput = document.getElementById('terminal-input');
 const timestampEl = document.getElementById('timestamp');
 
-// Dummy functions to prevent reference errors
-function updateTimestamp() {}
-function addLog(text, color) { console.log(text); }
+function updateTimestamp() {
+    if (!timestampEl) return;
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+    });
+    timestampEl.innerText = formatter.format(now).replace(', ', ' ') + " IST";
+}
+
+let commandLogHistory = [];
+
+function addLog(text, color = "text-white/80", skipHistory = false) {
+    if (!skipHistory) {
+        commandLogHistory.push({ text, color });
+    }
+    if (!terminalOutput) return;
+    const div = document.createElement('div');
+    div.className = color;
+    div.innerText = text;
+    terminalOutput.appendChild(div);
+    if (terminalBody) {
+        const inner = terminalBody.querySelector('.terminal-body-inner');
+        if (inner) inner.scrollTop = inner.scrollHeight;
+    }
+}
 
 const cliLines = [
     { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.15rem 0.5rem; border-radius: 0.25rem; margin-bottom: 0.5rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.2);">
@@ -79,6 +104,11 @@ async function runInitialLogs() {
         }
         await delay(200);
     }
+
+    // Show the CLI input line after the intro animation finishes
+    if (inputLine) inputLine.classList.remove('hidden');
+    if (terminalInput) terminalInput.focus({ preventScroll: true });
+    updateTimestamp();
 }
 
 // ============================================================
@@ -166,7 +196,14 @@ function handleCommand(cmd) {
 
     const cmds = {
         clear: () => { if (terminalOutput) terminalOutput.innerHTML = ''; },
-        help: () => addLog("COMMANDS: help · clear · enroll · modules · status · about · matrix · schedule · team · highlights · news", "text-[#00f3ff]"),
+        help: () => addLog("COMMANDS: help · clear · enroll · modules · status · about · matrix · schedule · team · highlights · news · log", "text-[#00f3ff]"),
+        log: () => {
+            addLog(`--- COMMAND LOG HISTORY ---`, "text-[#00f3ff]", true);
+            commandLogHistory.forEach(item => {
+                addLog(item.text, item.color, true);
+            });
+            addLog(`--- END OF LOG ---`, "text-[#00f3ff]", true);
+        },
         enroll: () => {
             addLog("> REDIRECTING TO REGISTRATION PORTAL...", "text-[#ff00c1]");
             setTimeout(() => { window.location.href = "register.html"; }, 400);
