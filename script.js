@@ -16,40 +16,69 @@ const inputLine = document.getElementById('input-line');
 const terminalInput = document.getElementById('terminal-input');
 const timestampEl = document.getElementById('timestamp');
 
-const initialLogs = [
-    { text: "> RELAYING STRUCTURE UPDATE...", color: "text-[#00f3ff] font-bold" },
-    { text: "> INDEXING 01_BRIEFING THROUGH 07_OPERATORS", color: "text-white/60" },
-    { text: "> PARTICLE_GRID INITIALIZED.", color: "text-white/40" },
-    { text: "> ENCRYPTION_LAYER: ACTIVE.", color: "text-white/40" },
-    { text: "------------------------------------------------", color: "text-white/10" },
-    { text: "CRYPTS'26 Terminal  [AUTHORIZED_SESSION]", color: "text-[#ff00c1]" },
-    { text: "Type 'help' for available commands.", color: "text-white/30" },
+// Dummy functions to prevent reference errors
+function updateTimestamp() {}
+function addLog(text, color) { console.log(text); }
+
+const cliLines = [
+    { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.15rem 0.5rem; border-radius: 0.25rem; margin-bottom: 0.5rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.2);">
+        <span style="color: #ff00c1; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem;">&gt; Welcome to CRYPTS'26</span>
+    </div>` },
+    { type: 'text', content: " ██████╗██████╗ ██╗   ██╗██████╗ ████████╗███████╗ ██╗██████╗ ██████╗ \n██╔════╝██╔══██╗╚██╗ ██╔╝██╔══██╗╚══██╔══╝██╔════╝██╔╝╚════██╗██╔════╝\n██║     ██████╔╝ ╚████╔╝ ██████╔╝   ██║   ███████╗╚═╝  █████╔╝███████╗\n██║     ██╔══██╗  ╚██╔╝  ██╔═══╝    ██║   ╚════██║    ██╔═══╝ ██╔═══██╗\n╚██████╗██║  ██║   ██║   ██║        ██║   ███████║    ███████╗╚██████╔╝\n ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝        ╚═╝   ╚══════╝    ╚══════╝ ╚═════╝\n" },
+    { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; margin-bottom: 0.35rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+            <h3 style="color: #ff00c1; font-weight: bold; font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem; margin: 0;">
+                <span style="font-size: 0.85rem;">📢</span> LATEST ANNOUNCEMENTS & HIGHLIGHTS
+            </h3>
+            <span style="border: 1px solid #ff00c1; padding: 0.1rem 0.25rem; font-size: 0.6rem; border-radius: 0.125rem; color: #ff00c1; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 0 8px rgba(255,0,193,0.15);">LIVE FEED</span>
+        </div>
+        <div style="color: rgba(255,255,255,0.9); font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.15rem;">
+            <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Next Up (Sept 16):</span> GLITCHVERSE</p>
+            <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>
+        </div>
+    </div>` },
+    { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
+        <p style="color: #ff00c1; font-size: 0.75rem; margin: 0;"><span style="font-weight: bold;">Team Registration:</span> <span style="color: rgba(255,255,255,0.9);">If you are registering for a team event, kindly mail the team list to <a href="mailto:bhavyas.cryptsopg@gmail.com" style="color: #ff00c1; text-decoration: underline; cursor: pointer; position: relative; z-index: 50; pointer-events: auto;">bhavyas.cryptsopg@gmail.com</a></span></p>
+    </div>` }
 ];
 
-function updateTimestamp() {
-    if (!timestampEl) return;
-    timestampEl.innerText = new Date().toISOString().replace('T', ' ').split('.')[0] + " UTC";
-}
-
-function addLog(text, color = "text-white/80") {
-    if (!terminalOutput) return;
-    const div = document.createElement('div');
-    div.className = color;
-    div.innerText = text;
-    terminalOutput.appendChild(div);
-    if (terminalBody) {
-        const inner = terminalBody.querySelector('.terminal-body-inner');
-        if (inner) inner.scrollTop = inner.scrollHeight;
-    }
-}
-
 async function runInitialLogs() {
-    for (const log of initialLogs) {
-        addLog(log.text, log.color);
-        await new Promise(r => setTimeout(r, 280));
+    const cliOutput = document.getElementById('cli-output');
+    if (!cliOutput) return;
+    cliOutput.innerHTML = '';
+    
+    const delay = (ms) => new Promise(r => setTimeout(r, ms));
+    
+    for (let item of cliLines) {
+        if (item.type === 'text') {
+            const pre = document.createElement('pre');
+            pre.className = "text-[#ff00c1] mb-4 font-bold font-mono self-start sm:self-center drop-shadow-[0_0_8px_rgba(255,0,193,0.8)]";
+            pre.style.fontSize = window.innerWidth < 640 ? "5px" : (window.innerWidth < 1024 ? "9px" : "13px");
+            pre.style.lineHeight = "1.1";
+            cliOutput.appendChild(pre);
+            let lines = item.content.split('\n');
+            for (let line of lines) {
+                if (line.trim() !== '') {
+                    pre.innerHTML += line + '\n';
+                    await delay(60);
+                }
+            }
+        } else if (item.type === 'html') {
+            const wrapper = document.createElement('div');
+            wrapper.style.opacity = 0;
+            wrapper.style.width = '100%';
+            wrapper.innerHTML = item.content;
+            cliOutput.appendChild(wrapper);
+            
+            let op = 0;
+            while(op < 1) {
+                op += 0.15;
+                wrapper.style.opacity = Math.min(op, 1);
+                await delay(30);
+            }
+        }
+        await delay(200);
     }
-    if (inputLine) inputLine.classList.remove('hidden');
-    if (terminalInput) terminalInput.focus({ preventScroll: true });
 }
 
 // ============================================================
