@@ -1404,6 +1404,28 @@ function bootApp() {
     safe('operatorEmails', () => initOperatorEmailRedirect());
     safe('highlightsEngine', () => initTerminalHighlights());
     safe('modelViewer', () => initModelViewer());
+    safe('actionTracker', () => initUserActionTracker());
+}
+
+function initUserActionTracker() {
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('a, button, .event-card, .filter-chip, .timeline-tab');
+        if (target) {
+            let label = target.innerText ? target.innerText.trim().replace(/\n/g, ' ') : target.id || target.tagName;
+            if (label.length > 40) label = label.substring(0, 40) + '...';
+            const timestamp = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+            commandLogHistory.push({ text: `[${timestamp}] CLICK: ${label}`, color: "text-white/40" });
+        }
+    });
+
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const timestamp = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+            commandLogHistory.push({ text: `[${timestamp}] SCROLL: YOffset ${Math.floor(window.scrollY)}px`, color: "text-white/40" });
+        }, 800);
+    }, { passive: true });
 }
 
 function initModelViewer() {
