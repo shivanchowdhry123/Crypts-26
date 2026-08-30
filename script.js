@@ -57,12 +57,12 @@ async function runInitialLogs() {
 // ============================================================
 const EVENT_SCHEDULE = [
     { dateStr: "Sept 16", month: 8, day: 16, name: "GLITCHVERSE", type: "OFFLINE", desc: "Digital Art Competition, Create digital art in a given time duration (Class 6–10)", cat: "Digital Art" },
+    { dateStr: "Sept 17", month: 8, day: 17, name: "JAILBREAK", type: "OFFLINE", desc: "Logic Puzzle Escape Room (Class 6–12)", cat: "Security & Puzzles" },
     { dateStr: "Sept 18", month: 8, day: 18, name: "SCRATCH XPLORERS", type: "OFFLINE", desc: "Scratch Block Programming Challenge (Class 4–6)", cat: "Junior Coding" },
     { dateStr: "Sept 19", month: 8, day: 19, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Kicks Off — FC 26, Valorant & Minecraft", cat: "Gaming" },
     { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 10–12)", cat: "Gaming" },
     { dateStr: "Sept 21", month: 8, day: 21, name: "PROMPT PARADOX", type: "OFFLINE", desc: "AI Prompt Engineering Arena (Class 8–12)", cat: "AI & Logic" },
     { dateStr: "Sept 22", month: 8, day: 22, name: "QWERTY 4.0", type: "OFFLINE", desc: "Speed Typing & Keyboard Tournament (Class 6–12)", cat: "Typing" },
-    { dateStr: "Sept 17", month: 8, day: 17, name: "JAILBREAK", type: "OFFLINE", desc: "Logic Puzzle Escape Room (Class 6–12)", cat: "Security & Puzzles" },
     { dateStr: "Sept 24", month: 8, day: 24, name: "IHE KERNEL", type: "OFFLINE", desc: "Hardware & Systems Challenge Quiz (Class 9–12)", cat: "Quiz" },
     { dateStr: "Sept 25", month: 8, day: 25, name: "PIXELPULSE & BYTE THE SITE & GAME MAKERS", type: "ONLINE & OFFLINE", desc: "Mega Submissions Day: Digital Poster, Web Dev, Short Films & Game Dev", cat: "Design, Coding & AV" },
     { dateStr: "Sept 26", month: 8, day: 26, name: "L'ARÈNE ESPORTS FINALS", type: "ONLINE", desc: "Esports Grand Finals", cat: "Gaming" },
@@ -84,8 +84,7 @@ function getTodayHighlights() {
             badgeClass: "bg-[#ff00c1]/20 text-[#ff00c1]",
             lines: [
                 `<p><span class="text-[#ff00c1] font-bold">🔥 TODAY'S LIVE EVENT:</span> <strong class="text-white">${todayEvent.name}</strong> is happening today!</p>`,
-                `<p><span class="text-[#00f3ff] font-semibold">• Details:</span> ${todayEvent.desc} [${todayEvent.type}]</p>`,
-                `<p><span class="text-yellow-400 font-semibold">• Action:</span> Live battle active today at OPG World School! Good luck operators.</p>`
+                `<p><span class="text-[#00f3ff] font-semibold">• Details:</span> ${todayEvent.desc} [${todayEvent.type}]</p>`
             ],
             logLines: [
                 `=== 🔥 TODAY'S LIVE MISSION: ${todayEvent.name} IS LIVE TODAY! ===`,
@@ -105,8 +104,7 @@ function getTodayHighlights() {
         badgeClass: "bg-[#00f3ff]/20 text-[#00f3ff]",
         lines: [
             `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong></p>`,
-            `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`,
-            `<p><span class="text-yellow-400 font-semibold">• Quick Command:</span> Type <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">highlights</code> or <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code> below to explore schedule!</p>`
+            `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`
         ],
         logLines: [
             `=== 📢 LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS ===`,
@@ -126,7 +124,7 @@ function initTerminalHighlights() {
     const data = getTodayHighlights();
 
     if (badgeEl) {
-        badgeEl.className = `text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${data.badgeClass}`;
+        badgeEl.className = `text-xs px-2 py-1 rounded font-bold uppercase tracking-wider ${data.badgeClass}`;
         badgeEl.innerText = data.badge;
     }
 

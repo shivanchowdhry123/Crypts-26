@@ -206,58 +206,38 @@
                 <span class="terminal-dot yellow"></span>
                 <span class="terminal-dot green"></span>
                 <span class="terminal-chrome-title">CRYPTS'26 — COMMAND_SESSION</span>
-                <span id="timestamp" class="text-white/20 font-mono text-[9px] ml-auto"></span>
+                <span id="timestamp" class="text-white/20 font-mono text-xs ml-auto"></span>
             </div>
             <!-- Inner body -->
-            <div class="terminal-body-inner text-[11px] font-mono">
-                <div class="status-grid mb-4">
-                    <div class="status-item"><span class="status-label">SYSTEM_STATE </span><span
-                            class="status-value">OPERATIONAL</span></div>
-                    <div class="status-item"><span class="status-label">GATEWAY_IP </span><span
-                            class="status-value">192.168.1.1</span></div>
-                    <div class="status-item"><span class="status-label">SSL_CERT </span><span
-                            class="status-value">VERIFIED</span></div>
-                    <div class="status-item"><span class="status-label">NODES_ACTIVE </span><span class="status-value">7
-                            / 7</span></div>
-                    <div class="status-item"><span class="status-label">SECURITY_SYNC</span><span
-                            class="status-value">STABLE</span></div>
-                    <div class="status-item"><span class="status-label">PACKET_LOSS </span><span class="status-value"
-                            style="color:var(--magenta)">0.00%</span></div>
-                </div>
-
+            <div class="terminal-body-inner text-sm font-mono">
                 <!-- Highlights & Announcements Banner -->
                 <div
-                    class="terminal-highlights-box mb-4 p-3 rounded bg-[#001726] border border-[#00f3ff]/30 text-white/90">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[#00f3ff] font-bold text-xs tracking-wider flex items-center gap-1.5">
+                    class="terminal-highlights-box mb-4 p-4 rounded bg-[#001726] border border-[#00f3ff]/30 text-white/90">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[#00f3ff] font-bold text-base tracking-wider flex items-center gap-1.5">
                             <span>📢</span> LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS
                         </span>
                         <span id="highlights-badge"
-                            class="text-[9px] px-2 py-0.5 rounded bg-[#00f3ff]/20 text-[#00f3ff] font-bold uppercase tracking-wider">LIVE
+                            class="text-xs px-2 py-1 rounded bg-[#00f3ff]/20 text-[#00f3ff] font-bold uppercase tracking-wider">LIVE
                             FEED</span>
                     </div>
-                    <div id="terminal-highlights-body" class="space-y-1 text-[11px] text-white/80">
+                    <div id="terminal-highlights-body" class="space-y-2 text-sm text-white/80">
                         <p><span class="text-[#00f3ff] font-semibold">• Registrations Open:</span> Enroll now for
                             competitive coding, cryptography, design & gaming events.</p>
                         <p><span class="text-[#ff00c1] font-semibold">• Event Dates:</span> Offline & Online rounds kick
                             off starting September 17.</p>
-                        <p><span class="text-yellow-400 font-semibold">• Quick Command:</span> Type <code
-                                class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">highlights</code>
-                            or <code
-                                class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code>
-                            below to explore events!</p>
                         <div
-                            class="mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#00f3ff] text-xs font-bold tracking-widest font-mono">
+                            class="mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#00f3ff] text-sm font-bold tracking-widest font-mono">
                             [ ACCESS_DATA ] &rarr;
                         </div>
                     </div>
                 </div>
 
-                <div id="terminal-output" class="space-y-1.5 mb-3 text-white/80"></div>
-                <div id="input-line" class="flex items-center hidden">
-                    <span class="mr-2 text-white/30 text-[10px]">root@crypts:~#</span>
-                    <input type="text" id="terminal-input" autocomplete="off" spellcheck="false"
-                        class="bg-transparent outline-none text-white border-none p-0 m-0 w-full text-[11px]">
+                <!-- Team Registration Announcement -->
+                <div class="terminal-highlights-box mb-4 p-4 rounded bg-[#001726] border border-[#ff00c1]/30 text-white/90">
+                    <p class="text-sm text-white/80">
+                        <span class="text-[#ff00c1] font-semibold">Team Registration:</span> If you are registering for a team event, kindly mail the team list to <a href="mailto:bhavyas.cryptsopg@gmail.com" class="text-[#00f3ff] hover:underline cursor-pointer">bhavyas.cryptsopg@gmail.com</a>
+                    </p>
                 </div>
             </div>
         </div>
@@ -365,6 +345,32 @@
                     <div class="text-white/40 text-xs mt-1 mb-4">&bull; Class 6–10</div>
                     <p class="text-white/50 text-sm leading-relaxed">
                         Digital Art Competition, Create digital art in a given time duration (Class 6-10).
+                    </p>
+                    <div
+                        class="mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#00f3ff] text-xs font-bold tracking-widest font-mono">
+                        [ ACCESS_DATA ] &rarr;
+                    </div>
+                </div>
+
+                <!-- 8. JAILBREAK -->
+                <div class="event-card group reveal reveal-delay-2 border-t-[3px] border-[#ff00c1] "
+                    data-category="security" data-mode="offline" data-event="jailbreak">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="bg-[#ff00c1]/10 text-[#ff00c1] px-3 py-1.5 rounded font-bold text-sm tracking-wide">
+                            JB
+                        </div>
+                        <div
+                            class="bg-[#ff00c1]/10 text-[#ff00c1] text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded">
+                            OFFLINE
+                        </div>
+                    </div>
+                    <h3
+                        class="text-white group-hover:text-[#00f3ff] transition-colors duration-300 text-xl font-bold tracking-wide">
+                        Jailbreak</h3>
+                    <div class="text-white/40 text-xs mt-1 mb-4">&bull; Class 6–12</div>
+                    <p class="text-white/50 text-sm leading-relaxed">
+                        Escape room meets tech — solve interconnected logic puzzles, decode sequences, and break free
+                        before the timer runs out.
                     </p>
                     <div
                         class="mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#00f3ff] text-xs font-bold tracking-widest font-mono">
@@ -521,32 +527,6 @@
                     <p class="text-white/50 text-sm leading-relaxed">
                         Speed typing tournament — accuracy, WPM, and consistency under pressure. Keyboard warriors,
                         assemble.
-                    </p>
-                    <div
-                        class="mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#00f3ff] text-xs font-bold tracking-widest font-mono">
-                        [ ACCESS_DATA ] &rarr;
-                    </div>
-                </div>
-
-                <!-- 8. JAILBREAK -->
-                <div class="event-card group reveal reveal-delay-2 border-t-[3px] border-[#ff00c1] "
-                    data-category="security" data-mode="offline" data-event="jailbreak">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="bg-[#ff00c1]/10 text-[#ff00c1] px-3 py-1.5 rounded font-bold text-sm tracking-wide">
-                            JB
-                        </div>
-                        <div
-                            class="bg-[#ff00c1]/10 text-[#ff00c1] text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded">
-                            OFFLINE
-                        </div>
-                    </div>
-                    <h3
-                        class="text-white group-hover:text-[#00f3ff] transition-colors duration-300 text-xl font-bold tracking-wide">
-                        Jailbreak</h3>
-                    <div class="text-white/40 text-xs mt-1 mb-4">&bull; Class 6–12</div>
-                    <p class="text-white/50 text-sm leading-relaxed">
-                        Escape room meets tech — solve interconnected logic puzzles, decode sequences, and break free
-                        before the timer runs out.
                     </p>
                     <div
                         class="mt-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 text-[#00f3ff] text-xs font-bold tracking-widest font-mono">
@@ -864,6 +844,15 @@
                             <span class="timeline-status upcoming">UPCOMING</span>
                         </div>
                     </div>
+                    <div class="timeline-item reveal reveal-delay-1" data-date="2026-09-17" data-event="jailbreak">
+                        <div class="timeline-time">17th September</div>
+                        <div class="timeline-content">
+                            <div class="timeline-name">Jailbreak</div>
+                            <div class="timeline-meta">Escape room meets tech — solve interconnected logic puzzles,
+                                decode sequences, and break free before the timer runs out.</div>
+                            <span class="timeline-status upcoming">UPCOMING</span>
+                        </div>
+                    </div>
                     <div class="timeline-item reveal reveal-delay-1" data-date="2026-09-18"
                         data-event="scratch_xplorers">
                         <div class="timeline-time">18th September</div>
@@ -916,15 +905,7 @@
                             <span class="timeline-status upcoming">UPCOMING</span>
                         </div>
                     </div>
-                    <div class="timeline-item reveal reveal-delay-2" data-date="2026-09-17" data-event="jailbreak">
-                        <div class="timeline-time">17th September</div>
-                        <div class="timeline-content">
-                            <div class="timeline-name">Jailbreak</div>
-                            <div class="timeline-meta">Escape room meets tech — solve interconnected logic puzzles,
-                                decode sequences, and break free before the timer runs out.</div>
-                            <span class="timeline-status upcoming">UPCOMING</span>
-                        </div>
-                    </div>
+
                     <div class="timeline-item reveal reveal-delay-3" data-date="2026-09-24" data-event="ihe_kernel">
                         <div class="timeline-time">24th September</div>
                         <div class="timeline-content">
@@ -1321,7 +1302,7 @@
                     <p
                         class="text-[#00f3ff] font-mono text-sm leading-relaxed border border-[#00f3ff]/20 bg-[#00f3ff]/5 p-6 rounded animate-pulse text-center">
                         Contact Event Heads for event specific queries, for any other query contact Bhavya
-                        Sachdeva(XII-B) and Eeshaan(XII-A)
+                        Sachdeva(XII-B) and Eeshaan Chhabra(XII-A)
                     </p>
                 </div>
 
