@@ -58,6 +58,7 @@ const cliLines = [
             <span style="border: 1px solid #ff00c1; padding: 0.1rem 0.25rem; font-size: 0.6rem; border-radius: 0.125rem; color: #ff00c1; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 0 8px rgba(255,0,193,0.15);">LIVE FEED</span>
         </div>
         <div style="color: rgba(255,255,255,0.9); font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.15rem;">
+            <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• 🎮 L'Arène Esports Update:</span> Registrations are now <strong style="color: #00f3ff;">OPEN for Class 9</strong> as well (Eligibility: Class 9–12)! Squad up for FC 26, Valorant & Minecraft.</p>
             <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Next Up (Sept 16):</span> GLITCHVERSE</p>
             <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>
         </div>
@@ -119,7 +120,7 @@ const EVENT_SCHEDULE = [
     { dateStr: "Sept 17", month: 8, day: 17, name: "JAILBREAK", type: "OFFLINE", desc: "Logic Puzzle Escape Room (Class 6–12)", cat: "Security & Puzzles" },
     { dateStr: "Sept 18", month: 8, day: 18, name: "SCRATCH XPLORERS", type: "OFFLINE", desc: "Scratch Block Programming Challenge (Class 4–6)", cat: "Junior Coding" },
     { dateStr: "Sept 19", month: 8, day: 19, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Kicks Off — FC 26, Valorant & Minecraft", cat: "Gaming" },
-    { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 10–12)", cat: "Gaming" },
+    { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 9–12)", cat: "Gaming" },
     { dateStr: "Sept 21", month: 8, day: 21, name: "PROMPT PARADOX", type: "OFFLINE", desc: "AI Prompt Engineering Arena (Class 8–12)", cat: "AI & Logic" },
     { dateStr: "Sept 22", month: 8, day: 22, name: "QWERTY 4.0", type: "OFFLINE", desc: "Speed Typing & Keyboard Tournament (Class 6–12)", cat: "Typing" },
     { dateStr: "Sept 24", month: 8, day: 24, name: "IHE KERNEL", type: "OFFLINE", desc: "Hardware & Systems Challenge Quiz (Class 9–12)", cat: "Quiz" },
@@ -142,11 +143,13 @@ function getTodayHighlights() {
             badge: "TODAY'S EVENT",
             badgeClass: "bg-[#ff00c1]/20 text-[#ff00c1]",
             lines: [
+                `<p><span class="text-[#00f3ff] font-bold">• 🎮 L'Arène Esports:</span> Registrations are now open for Class 9 as well (Class 9–12 eligible)!</p>`,
                 `<p><span class="text-[#ff00c1] font-bold">🔥 TODAY'S LIVE EVENT:</span> <strong class="text-white">${todayEvent.name}</strong> is happening today!</p>`,
                 `<p><span class="text-[#00f3ff] font-semibold">• Details:</span> ${todayEvent.desc} [${todayEvent.type}]</p>`
             ],
             logLines: [
                 `=== 🔥 TODAY'S LIVE MISSION: ${todayEvent.name} IS LIVE TODAY! ===`,
+                `• 🎮 L'Arène Esports Update: Registrations are now OPEN for Class 9 (Class 9–12 eligible)!`,
                 `• Event: ${todayEvent.name} (${todayEvent.type})`,
                 `• Details: ${todayEvent.desc}`,
                 `• Venue: OPG World School Campus / Online Portal`,
@@ -162,11 +165,13 @@ function getTodayHighlights() {
         badge: "LIVE FEED",
         badgeClass: "bg-[#00f3ff]/20 text-[#00f3ff]",
         lines: [
+            `<p><span class="text-[#00f3ff] font-bold">• 🎮 L'Arène Esports:</span> Registrations are now open for Class 9 as well (Class 9–12 eligible)!</p>`,
             `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong></p>`,
             `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`
         ],
         logLines: [
             `=== 📢 LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS ===`,
+            `• 🎮 L'Arène Esports Update: Registrations are now OPEN for Class 9 (Class 9–12 eligible)!`,
             `• Next Up: ${upcoming.dateStr} — ${upcoming.name}`,
             `• Registrations Open: Enroll now for all 12+ competitive events.`,
             `• Rules & Dossier: View details under Section 02 EVENT MODULES.`,
@@ -1220,9 +1225,9 @@ const EVENTS_DATA = {
         icon: "ES",
         cat: "gaming",
         mode: "online",
-        eligibility: "Class 10–12",
+        eligibility: "Class 9–12",
         date: "FC 26: Sept 19 | Valorant: Sept 20 | Minecraft: Sept 26",
-        classRange: [10, 12],
+        classRange: [9, 12],
         desc: "Multi-title esports tournament — FC 26, Valorant, and Minecraft. Strategy, reflexes, and teamwork across elimination rounds.",
         rules: ["Team size per title: Minecraft (3–4 players/team), Valorant (3–4 players/team), EA FC 26 (1 player/solo)", "Online matches via designated platform with mandatory screen sharing", "Single elimination knockout format", "Match schedules shared in advance"],
         criteria: ["Match wins", "Sportsmanship", "Team coordination"],

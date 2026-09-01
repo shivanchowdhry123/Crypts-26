@@ -39,7 +39,7 @@ Themed around *"Born From Chaos, Built for Innovation"*, the platform emphasizes
 | 9 | **IHE CodeQuest** | Offline | Class 11–12 | Sept 28 |
 | 10 | **IHE Kernel** | Offline | Class 9–12 | Sept 24 |
 | 11 | **Game Makers** | Offline | Class 10–12 | Sept 25 |
-| 12 | **L'Arène Esports** | Online | Class 10–12 | Sept 19–26 |
+| 12 | **L'Arène Esports** | Online | Class 9–12 | Sept 19–26 |
 | 13 | **BizTech Nexus** | Offline | Class 10–12 | Sept 30 |
 
 ---
