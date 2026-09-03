@@ -23,8 +23,28 @@ var FROM_NAME         = "Shivan Chowdhry & The CRYPTS'26 Team (via Admin Console
 // ──────────────────────────────────────────────────────────────────────────────
 // ROUTER
 // ──────────────────────────────────────────────────────────────────────────────
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({
+      status: "online",
+      engine: "CRYPTS'26 Pure Gmail Engine Active",
+      sender: FROM_ADDRESS,
+      timestamp: new Date().toLocaleString()
+    }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
 function doPost(e) {
-  var data = JSON.parse(e.postData.contents);
+  if (!e || !e.postData || !e.postData.contents) {
+    return jsonResponse({ success: false, error: "NO_POST_DATA" });
+  }
+
+  var data;
+  try {
+    data = JSON.parse(e.postData.contents);
+  } catch (err) {
+    return jsonResponse({ success: false, error: "INVALID_JSON" });
+  }
 
   if (data.action === "sendOtp")             return handleSendOtp(data);
   if (data.action === "verifyOtpAndFetch")   return handleVerifyOtpAndFetch(data);
@@ -121,27 +141,19 @@ function sendSafeEmail(to, subject, plainText, htmlBody, replyTo) {
     }
   } catch (e) {}
 
-  // 1. Try GmailApp with alias if set
+  // 1. Try GmailApp with alias
   try {
     GmailApp.sendEmail(to, subject, plainText, options);
     return true;
   } catch (err1) {
-    // 2. Try GmailApp without 'from'
+    // 2. Try GmailApp without 'from' as fallback
     try {
       delete options.from;
       GmailApp.sendEmail(to, subject, plainText, options);
       return true;
     } catch (err2) {
-      // 3. Try MailApp fallback
-      MailApp.sendEmail({
-        to: to,
-        subject: subject,
-        body: plainText,
-        htmlBody: htmlBody,
-        name: FROM_NAME,
-        replyTo: replyTo || FROM_ADDRESS
-      });
-      return true;
+      console.error("sendSafeEmail failed for " + to + ": " + err2.message);
+      return false;
     }
   }
 }
@@ -197,28 +209,10 @@ function sendAdminAlert(ss, subject, plainText, htmlBody) {
     logMailAudit(ss, "ADMIN_ALERT_SUCCESS", "Broadcast sent via GmailApp (no-from) to " + primary + " (BCC: " + bccList.length + ")");
     return;
   } catch (err2) {
-    logMailAudit(ss, "ADMIN_ALERT_WARN", "GmailApp no-from failed: " + err2.message + ". Trying MailApp...");
+    logMailAudit(ss, "ADMIN_ALERT_WARN", "GmailApp no-from failed: " + err2.message + ". Falling back to individual dispatch...");
   }
 
-  // Attempt 3: Try MailApp broadcast
-  try {
-    var mailOpts = {
-      to: primary,
-      subject: subject,
-      body: plainText,
-      htmlBody: htmlBody,
-      name: FROM_NAME,
-      replyTo: FROM_ADDRESS
-    };
-    if (bccList.length > 0) mailOpts.bcc = bccList.join(",");
-    MailApp.sendEmail(mailOpts);
-    logMailAudit(ss, "ADMIN_ALERT_SUCCESS", "Broadcast sent via MailApp to " + primary + " (BCC: " + bccList.length + ")");
-    return;
-  } catch (err3) {
-    logMailAudit(ss, "ADMIN_ALERT_WARN", "MailApp broadcast failed: " + err3.message + ". Falling back to individual dispatch...");
-  }
-
-  // Attempt 4: Fallback to individual dispatch for each organizer
+  // Attempt 3: Fallback to individual dispatch for each organizer
   for (var k = 0; k < adminEmails.length; k++) {
     var rec = adminEmails[k];
     try {
