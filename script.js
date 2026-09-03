@@ -1692,10 +1692,11 @@ function initTeamManagement() {
                     membersArea.value = data.name.split(',').map(s => s.trim()).filter(Boolean).join('\n');
                 }
 
-                // Class dropdown
+                // Class dropdown — set value then re-filter chips
                 if (classSelect && data.class) {
                     classSelect.value = String(data.class).trim();
-                    filterTmEventChipsByClass(Number(data.class));
+                    // Trigger a real change event so any other listeners fire
+                    classSelect.dispatchEvent(new Event('change'));
                 }
 
                 // Section input
@@ -1704,22 +1705,32 @@ function initTeamManagement() {
                 }
 
                 // Pre-select event chips
+                // Normalise: compare against BOTH data-event attribute AND chip label
+                // (sheet may store label text like "BYTE THE SITE" or key like "byte_the_site")
                 tmSelectedEvents.clear();
                 if (data.events) {
-                    const savedEvents = data.events.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+                    // Build a set of normalised tokens from the saved string
+                    const normalize = s => s.trim().toLowerCase().replace(/[\s''\u2019]+/g, '_').replace(/[^a-z0-9_]/g, '');
+                    const savedTokens = data.events.split(',').map(normalize).filter(Boolean);
+
                     document.querySelectorAll('#tm-event-tag-grid .event-tag-chip').forEach(chip => {
-                        const ev = chip.dataset.event || chip.textContent.trim().toLowerCase();
-                        if (savedEvents.some(se => se === ev || chip.textContent.trim().toLowerCase().includes(se) || se.includes(chip.textContent.trim().toLowerCase()))) {
-                            chip.classList.add('selected');
-                            tmSelectedEvents.add(chip.textContent.trim());
-                        } else {
-                            chip.classList.remove('selected');
-                        }
+                        const byAttr  = normalize(chip.dataset.event || '');
+                        const byLabel = normalize(chip.textContent || '');
+                        const match   = savedTokens.some(t => t === byAttr || t === byLabel);
+                        chip.classList.toggle('selected', match);
+                        if (match) tmSelectedEvents.add(chip.textContent.trim());
                     });
                 }
+
+                // Console feedback
+                appendConsole('tm-console-2', '> DATA_LOADED: FORM PRE-FILLED FROM REGISTRY.', 'text-[#00f3ff]');
+                if (data.name)    appendConsole('tm-console-2', `  SQUAD   : ${data.name}`);
+                if (data.class)   appendConsole('tm-console-2', `  CLASS   : ${data.class}–${data.section || '?'}`);
+                if (data.events)  appendConsole('tm-console-2', `  EVENTS  : ${data.events}`);
             } else {
-                // No-cors fallback: trust it, let user fill fields manually
+                // No-cors fallback — data couldn't be read, let user fill manually
                 sessionToken = 'no-cors-session';
+                appendConsole('tm-console-2', '> CORS_FALLBACK: fill in your details manually.', 'text-yellow-400');
             }
 
             appendConsole('tm-console-2', '> ACCESS_GRANTED: IDENTITY CONFIRMED.', 'text-[#00f3ff]');
