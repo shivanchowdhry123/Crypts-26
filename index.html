@@ -289,6 +289,51 @@
 
 
     <!-- ============================
+     SYS_UPDATES — ANNOUNCEMENT TICKER
+     ============================ -->
+    <div class="relative border-y border-[#00f3ff]/20 bg-black/60 backdrop-blur-sm overflow-hidden py-0" id="sys-updates">
+        <!-- Left label -->
+        <div class="absolute left-0 top-0 h-full flex items-center z-20 pointer-events-none">
+            <div class="bg-[#00f3ff] text-black text-[9px] font-black uppercase tracking-widest px-3 h-full flex items-center gap-1.5 shadow-[2px_0_12px_rgba(0,243,255,0.4)]">
+                <span class="w-1.5 h-1.5 rounded-full bg-black animate-pulse inline-block"></span>
+                SYS_UPDATES
+            </div>
+        </div>
+        <!-- Right label -->
+        <div class="absolute right-0 top-0 h-full flex items-center z-20 pointer-events-none">
+            <div class="bg-[#ff00c1] text-black text-[9px] font-black uppercase tracking-widest px-3 h-full flex items-center shadow-[-2px_0_12px_rgba(255,0,193,0.4)]">
+                LIVE
+            </div>
+        </div>
+        <!-- Scrolling ticker -->
+        <div class="ticker-wrap py-3 pl-32 pr-20 overflow-hidden">
+            <div class="ticker-content flex gap-16 font-mono text-[11px] whitespace-nowrap animate-ticker">
+                <!-- Repeated twice for seamless loop -->
+                <span class="text-[#00f3ff] font-bold">[ NEW ]</span>
+                <span class="text-white/80">✎ SQUAD MANAGEMENT PORTAL IS LIVE — update your team members, class, section &amp; events anytime via email OTP verification.</span>
+                <span class="text-white/20">///</span>
+                <span class="text-[#ff00c1] font-bold">[ NEW ]</span>
+                <span class="text-white/80">You can now <strong class="text-white">withdraw your registration</strong> from CRYPTS'26 directly through the Manage Squad portal — confirmation emails sent to all parties.</span>
+                <span class="text-white/20">///</span>
+                <span class="text-[#00f3ff] font-bold">[ REMINDER ]</span>
+                <span class="text-white/80">Registrations are first-come, first-served — slots are strictly limited per school and module.</span>
+                <span class="text-white/20">///</span>
+                <!-- Duplicate for seamless loop -->
+                <span class="text-[#00f3ff] font-bold">[ NEW ]</span>
+                <span class="text-white/80">✎ SQUAD MANAGEMENT PORTAL IS LIVE — update your team members, class, section &amp; events anytime via email OTP verification.</span>
+                <span class="text-white/20">///</span>
+                <span class="text-[#ff00c1] font-bold">[ NEW ]</span>
+                <span class="text-white/80">You can now <strong class="text-white">withdraw your registration</strong> from CRYPTS'26 directly through the Manage Squad portal — confirmation emails sent to all parties.</span>
+                <span class="text-white/20">///</span>
+                <span class="text-[#00f3ff] font-bold">[ REMINDER ]</span>
+                <span class="text-white/80">Registrations are first-come, first-served — slots are strictly limited per school and module.</span>
+                <span class="text-white/20">///</span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================
      02 — EVENT MODULES
      ============================ -->
     <section id="modules" class="py-24 px-6 border-t border-white/5">
@@ -710,6 +755,7 @@
                             <li>Select your grade class to auto-filter eligible events.</li>
                             <li>Provide team member details (names, section, and contact email).</li>
                             <li>Submit your transmission packet to receive instant confirmation.</li>
+                            <li><strong class="text-[#00f3ff]">Update or Withdraw:</strong> Need to change members, class, events, or pull out entirely? Use <a href="manage-team.html" class="underline text-[#00f3ff] hover:text-white transition-colors">Manage Squad</a> with email OTP verification — no organizer needed.</li>
                         </ol>
                     </div>
 
@@ -730,6 +776,14 @@
                             (IHE CinePrism, IHE CodeQuest, IHE Kernel) represent house-level competitions. Coordinate
                             with your House Teacher In-Charge or House Captains prior to submitting your entry.
                         </div>
+                    </div>
+
+                    <!-- Squad Management highlight -->
+                    <div class="bg-[#ff00c1]/8 border border-[#ff00c1]/30 p-4 rounded text-[11px] text-white/80 leading-relaxed">
+                        <strong class="text-[#ff00c1] font-bold uppercase tracking-wider block mb-1">✎ MANAGE YOUR SQUAD:</strong>
+                        Already registered? You can <strong class="text-white">edit your team members, class, section, and events</strong> — or <strong class="text-white">withdraw your registration entirely</strong> — at any time through the
+                        <a href="manage-team.html" class="text-[#00f3ff] underline hover:text-white transition-colors font-bold">Manage Squad</a> portal.
+                        Identity verified via email OTP. Update confirmation sent to you and all organizers.
                     </div>
                 </div>
 

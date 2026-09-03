@@ -1950,3 +1950,26 @@ body[data-section="operators"] {
     filter: grayscale(1);
     border-color: rgba(255, 255, 255, 0.04);
 }
+
+/* ============================================================
+   SYS_UPDATES TICKER
+   ============================================================ */
+@keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-wrap {
+    overflow: hidden;
+}
+
+.ticker-content {
+    display: inline-flex;
+    animation: ticker-scroll 40s linear infinite;
+    will-change: transform;
+}
+
+/* Pause on hover so users can read */
+#sys-updates:hover .ticker-content {
+    animation-play-state: paused;
+}
