@@ -167,9 +167,100 @@
             </div>
 
             <!-- ─────────────────────────────────── -->
-            <!-- STEP 3: EDIT TEAM                   -->
+            <!-- STEP 3: EDIT REGISTRATION           -->
             <!-- ─────────────────────────────────── -->
             <div id="step-edit-panel" class="hidden">
+                <div class="text-center mb-8 border-b border-white/10 pb-6">
+                    <h2 class="text-xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">Edit Your Registration</h2>
+                    <p class="text-white/40 text-xs tracking-widest uppercase">All fields are editable — changes overwrite your current entry</p>
+                </div>
+
+                <div class="space-y-4">
+
+                    <!-- Team Members -->
+                    <div>
+                        <label class="reg-field-label" for="tm-members">
+                            Full Name / Team Member Names
+                            <span class="text-white/30 font-normal normal-case text-[10px]">(one per line, or comma-separated)</span>
+                            <span class="text-[#ff00c1]">*</span>
+                        </label>
+                        <textarea
+                            id="tm-members"
+                            class="reg-field-input"
+                            rows="4"
+                            placeholder="Aarav Sharma&#10;Riya Mehta&#10;Kabir Singh"
+                            style="resize: vertical; margin-bottom: 4px;"
+                            required
+                        ></textarea>
+                        <p class="field-error-msg" id="tm-err-members">⚠ Enter at least one team member name.</p>
+                    </div>
+
+                    <!-- Class & Section -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="reg-field-label" for="tm-class">Class <span class="text-[#ff00c1]">*</span></label>
+                            <select id="tm-class" class="reg-field-input" required>
+                                <option value="" disabled selected>Select Class</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
+                            </select>
+                            <p class="field-error-msg" id="tm-err-class">⚠ Select your class.</p>
+                        </div>
+                        <div>
+                            <label class="reg-field-label" for="tm-section">Section <span class="text-[#ff00c1]">*</span></label>
+                            <input type="text" id="tm-section" class="reg-field-input" placeholder="A / Agni / Jal…" required>
+                            <p class="field-error-msg" id="tm-err-section">⚠ Enter your section.</p>
+                        </div>
+                    </div>
+
+                    <!-- Event Selection Chips -->
+                    <div>
+                        <label class="reg-field-label">Select Event Modules <span class="text-white/30">(tap to select · filtered by class)</span> <span class="text-[#ff00c1]">*</span></label>
+                        <div class="event-tag-grid" id="tm-event-tag-grid">
+                            <button type="button" class="event-tag-chip" data-event="glitchverse"     data-min="6"  data-max="10">GLITCHVERSE</button>
+                            <button type="button" class="event-tag-chip" data-event="pixelpulse"     data-min="8"  data-max="12">PIXELPULSE</button>
+                            <button type="button" class="event-tag-chip" data-event="byte_the_site"  data-min="6"  data-max="12">BYTE THE SITE</button>
+                            <button type="button" class="event-tag-chip" data-event="scratch_xplorers" data-min="4" data-max="6">SCRATCH XPLORERS</button>
+                            <button type="button" class="event-tag-chip" data-event="prompt_paradox" data-min="8"  data-max="12">PROMPT PARADOX</button>
+                            <button type="button" class="event-tag-chip" data-event="qwerty_4"       data-min="6"  data-max="12">QWERTY 4.0</button>
+                            <button type="button" class="event-tag-chip" data-event="jailbreak"      data-min="6"  data-max="12">JAILBREAK</button>
+                            <button type="button" class="event-tag-chip" data-event="game_makers"    data-min="10" data-max="12">GAME MAKERS</button>
+                            <button type="button" class="event-tag-chip" data-event="larene_esports" data-min="9"  data-max="12">L'ARÈNE ESPORTS</button>
+                            <button type="button" class="event-tag-chip" data-event="biztech_nexus"  data-min="10" data-max="12">BIZTECH NEXUS</button>
+                        </div>
+                        <p class="field-error-msg" id="tm-err-events">⚠ Select at least one event module.</p>
+
+                        <!-- IHE Note -->
+                        <div class="mt-3 p-3 bg-[#00f3ff]/5 border border-[#00f3ff]/20 rounded text-[11px] text-white/70 font-mono flex items-start gap-2.5">
+                            <span class="text-[#00f3ff] text-sm leading-none mt-0.5">ℹ</span>
+                            <div>
+                                <span class="text-[#00f3ff] font-bold">NOTE FOR IHE EVENTS:</span> In case you wish to participate in Inter-House Events (IHE), kindly contact your respective House Wardens.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation notice -->
+                    <div class="bg-[#ff0055]/10 border border-[#ff0055]/30 rounded p-4 text-[11px] font-mono text-white/70 leading-relaxed">
+                        <strong class="text-[#ff0055] block mb-1 uppercase tracking-wider">⚠ Confirmation Notice</strong>
+                        Saving will overwrite your current registration and send an update to your email and all organizers.
+                    </div>
+
+                    <!-- Console readout -->
+                    <div id="tm-console-3" class="hidden p-4 bg-black/60 border border-[#00f3ff]/30 text-[10px] font-mono space-y-1 text-white/80 rounded"></div>
+
+                    <button id="tm-save-btn" class="transmit-btn mt-2">
+                        SAVE CHANGES
+                    </button>
+                </div>
+            </div>
+
                 <div class="text-center mb-8 border-b border-white/10 pb-6">
                     <h2 class="text-xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">Edit Your Squad</h2>
                     <p class="text-white/40 text-xs tracking-widest uppercase">Update team member names below</p>

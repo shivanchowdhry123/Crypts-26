@@ -1578,14 +1578,45 @@ function initTeamManagement() {
         appendConsole('tm-console-1', '> SCANNING OPERATOR REGISTRY...');
 
         try {
-            const res = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: 'sendOtp', email }),
-            });
-            // no-cors → opaque response; we treat any non-throw as optimistic success
+            // Use CORS mode so we can read the response and detect EMAIL_NOT_FOUND
+            let data = null;
+            try {
+                const res = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'sendOtp', email }),
+                });
+                data = await res.json();
+            } catch (_) {
+                // CORS blocked — fall back to no-cors optimistic mode
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'sendOtp', email }),
+                });
+                data = { success: true }; // optimistic
+            }
+
+            if (data && !data.success) {
+                if (data.error === 'EMAIL_NOT_FOUND') {
+                    appendConsole('tm-console-1', '> ERROR: EMAIL NOT FOUND IN REGISTRY.', 'text-red-400');
+                    // Show friendly inline error under the email input
+                    if (errEmail) {
+                        errEmail.textContent = "⚠ Email not found. It seems you haven't registered yet — go to the Registration page and register first.";
+                        errEmail.classList.add('visible');
+                    }
+                    if (emailInput) emailInput.classList.add('error');
+                } else {
+                    appendConsole('tm-console-1', '> ERROR: ' + (data.error || 'UNKNOWN'), 'text-red-400');
+                }
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE';
+                return;
+            }
+
             appendConsole('tm-console-1', '> OTP_DISPATCHED: CHECK YOUR INBOX.', 'text-[#00f3ff]');
             verifiedEmail = email;
             if (otpEmailDisplay) otpEmailDisplay.textContent = email;
@@ -1769,6 +1800,8 @@ function initTeamManagement() {
     // Live validation
     if (emailInput) {
         emailInput.addEventListener('input', () => {
+            // Reset error text back to default (may have been changed to "not found" message)
+            if (errEmail) errEmail.textContent = '⚠ Enter a valid registered email address.';
             if (errEmail) errEmail.classList.toggle('visible', !isValidEmail(emailInput.value));
             emailInput.classList.toggle('error', !isValidEmail(emailInput.value));
         });
