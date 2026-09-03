@@ -24,6 +24,49 @@ var FROM_NAME         = "Shivan Chowdhry & The CRYPTS'26 Team (via Admin Console
 // ROUTER
 // ──────────────────────────────────────────────────────────────────────────────
 function doGet(e) {
+  var action = (e && e.parameter && e.parameter.action) || "";
+
+  if (action === "debugAdmin") {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheets = [];
+    try {
+      var all = ss.getSheets();
+      for (var i = 0; i < all.length; i++) sheets.push(all[i].getName());
+    } catch (e) {}
+
+    var adminEmails = getAdminEmails(ss);
+    var auditLog = [];
+    try {
+      var auditSheet = ss.getSheetByName("MAIL_AUDIT_LOG");
+      if (auditSheet) {
+        var aData = auditSheet.getDataRange().getValues();
+        var start = Math.max(0, aData.length - 15);
+        for (var j = start; j < aData.length; j++) {
+          auditLog.push(aData[j]);
+        }
+      }
+    } catch (e) {}
+
+    // Test send to primary organizer
+    var testResult = "Not attempted";
+    try {
+      var ok = sendSafeEmail("chowdhryshivan@gmail.com", "DEBUG TEST: Organizer Delivery", "Direct diagnostic test.", "<p>Diagnostic test</p>");
+      testResult = ok ? "SUCCESS (Email sent to chowdhryshivan@gmail.com)" : "FAILED (sendSafeEmail returned false)";
+    } catch (err) {
+      testResult = "ERROR: " + err.message;
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        status: "debugAdmin",
+        sheetsFound: sheets,
+        organizersFound: adminEmails,
+        testSendResult: testResult,
+        recentAuditLogs: auditLog
+      }, null, 2))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   return ContentService
     .createTextOutput(JSON.stringify({
       status: "online",
@@ -164,62 +207,20 @@ function sendAdminAlert(ss, subject, plainText, htmlBody) {
     adminEmails = ["chowdhryshivan@gmail.com", "shivan.cryptsopg@gmail.com"];
   }
 
-  logMailAudit(ss, "ADMIN_DISPATCH_START", "Found " + adminEmails.length + " organizers: " + adminEmails.join(", "));
+  logMailAudit(ss, "ADMIN_DISPATCH_START", "Dispatching to " + adminEmails.length + " organizers: " + adminEmails.join(", "));
 
-  // Primary organizers guaranteed in 'To' field
-  var primary = "chowdhryshivan@gmail.com,shivan.cryptsopg@gmail.com";
-  var bccList = [];
+  // Dispatch directly to each organizer. One bad address can NEVER block the others!
   for (var i = 0; i < adminEmails.length; i++) {
-    var em = adminEmails[i];
-    if (em !== "chowdhryshivan@gmail.com" && em !== "shivan.cryptsopg@gmail.com") {
-      bccList.push(em);
-    }
-  }
-
-  var options = {
-    name: FROM_NAME,
-    htmlBody: htmlBody,
-    replyTo: FROM_ADDRESS
-  };
-
-  if (bccList.length > 0) {
-    options.bcc = bccList.join(",");
-  }
-
-  try {
-    var aliases = GmailApp.getAliases() || [];
-    if (aliases.indexOf(FROM_ADDRESS) !== -1) {
-      options.from = FROM_ADDRESS;
-    }
-  } catch (e) {}
-
-  // Attempt 1: Broadcast via GmailApp (Primary + BCC)
-  try {
-    GmailApp.sendEmail(primary, subject, plainText, options);
-    logMailAudit(ss, "ADMIN_ALERT_SUCCESS", "Broadcast sent via GmailApp to " + primary + " (BCC: " + bccList.length + ")");
-    return;
-  } catch (err1) {
-    logMailAudit(ss, "ADMIN_ALERT_WARN", "GmailApp broadcast failed: " + err1.message + ". Trying without 'from'...");
-  }
-
-  // Attempt 2: Try without 'from' alias
-  try {
-    delete options.from;
-    GmailApp.sendEmail(primary, subject, plainText, options);
-    logMailAudit(ss, "ADMIN_ALERT_SUCCESS", "Broadcast sent via GmailApp (no-from) to " + primary + " (BCC: " + bccList.length + ")");
-    return;
-  } catch (err2) {
-    logMailAudit(ss, "ADMIN_ALERT_WARN", "GmailApp no-from failed: " + err2.message + ". Falling back to individual dispatch...");
-  }
-
-  // Attempt 3: Fallback to individual dispatch for each organizer
-  for (var k = 0; k < adminEmails.length; k++) {
-    var rec = adminEmails[k];
+    var targetEmail = adminEmails[i];
     try {
-      sendSafeEmail(rec, subject, plainText, htmlBody);
-      logMailAudit(ss, "ADMIN_ALERT_INDIVIDUAL", "Delivered to: " + rec);
-    } catch (indErr) {
-      logMailAudit(ss, "ADMIN_ALERT_INDIVIDUAL_FAIL", "Failed for " + rec + ": " + indErr.message);
+      var success = sendSafeEmail(targetEmail, subject, plainText, htmlBody);
+      if (success) {
+        logMailAudit(ss, "ADMIN_ALERT_SENT", "Delivered to: " + targetEmail);
+      } else {
+        logMailAudit(ss, "ADMIN_ALERT_FAIL", "sendSafeEmail returned false for: " + targetEmail);
+      }
+    } catch (err) {
+      logMailAudit(ss, "ADMIN_ALERT_ERROR", "Exception for " + targetEmail + ": " + err.message);
     }
   }
 }
