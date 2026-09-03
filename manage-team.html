@@ -261,64 +261,6 @@
                 </div>
             </div>
 
-                <div class="text-center mb-8 border-b border-white/10 pb-6">
-                    <h2 class="text-xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">Edit Your Squad</h2>
-                    <p class="text-white/40 text-xs tracking-widest uppercase">Update team member names below</p>
-                    <div class="mt-3 flex flex-wrap items-center justify-center gap-2">
-                        <div class="inline-flex items-center gap-2 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded px-3 py-1.5">
-                            <span class="text-[9px] text-[#00f3ff] tracking-widest">CLASS:</span>
-                            <span class="text-[11px] text-white font-bold" id="tm-display-class"></span>
-                        </div>
-                        <div class="inline-flex items-center gap-2 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded px-3 py-1.5">
-                            <span class="text-[9px] text-[#00f3ff] tracking-widest">SECTION:</span>
-                            <span class="text-[11px] text-white font-bold" id="tm-display-section"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="space-y-6">
-                    <!-- Registered Events (read-only) -->
-                    <div>
-                        <label class="reg-field-label">Registered Event Modules <span class="text-white/30">(read-only)</span></label>
-                        <div id="tm-events-display" class="flex flex-wrap gap-2 mb-1"></div>
-                        <p class="text-[10px] text-white/30 font-mono mt-2">To change events, contact the organizers directly.</p>
-                    </div>
-
-                    <!-- Team Members edit -->
-                    <div>
-                        <label class="reg-field-label" for="tm-members">
-                            Team Member Names
-                            <span class="text-white/30 font-normal normal-case text-[10px]">(one per line, or comma-separated)</span>
-                            <span class="text-[#ff00c1]">*</span>
-                        </label>
-                        <textarea
-                            id="tm-members"
-                            class="reg-field-input"
-                            rows="5"
-                            placeholder="Aarav Sharma&#10;Riya Mehta&#10;Kabir Singh"
-                            style="resize: vertical; margin-bottom: 4px;"
-                            required
-                        ></textarea>
-                        <p class="text-[10px] text-white/30 font-mono mb-4">List all current team members — this replaces the existing entry.</p>
-                        <p class="field-error-msg" id="tm-err-members">⚠ Enter at least one team member name.</p>
-                    </div>
-
-                    <!-- Confirmation notice -->
-                    <div class="bg-[#ff0055]/10 border border-[#ff0055]/30 rounded p-4 text-[11px] font-mono text-white/70 leading-relaxed">
-                        <strong class="text-[#ff0055] block mb-1 uppercase tracking-wider">⚠ Confirmation Notice</strong>
-                        Saving will send an update notification to your registered email and to the CRYPTS'26 organizers.
-                        Previous team data will be overwritten.
-                    </div>
-
-                    <!-- Console readout -->
-                    <div id="tm-console-3" class="hidden p-4 bg-black/60 border border-[#00f3ff]/30 text-[10px] font-mono space-y-1 text-white/80 rounded"></div>
-
-                    <button id="tm-save-btn" class="transmit-btn mt-2">
-                        SAVE SQUAD CHANGES
-                    </button>
-                </div>
-            </div>
-
             <!-- ─────────────────────────────────── -->
             <!-- SUCCESS STATE                        -->
             <!-- ─────────────────────────────────── -->

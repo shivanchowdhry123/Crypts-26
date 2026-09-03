@@ -217,9 +217,12 @@ function handleUpdateTeam(data) {
   var email        = (data.email        || "").trim().toLowerCase();
   var sessionToken = (data.sessionToken || "").trim();
   var newName      = (data.name         || "").trim();
+  var newClass     = (data.class        || "").toString().trim();
+  var newSection   = (data.section      || "").trim();
+  var newEvents    = (data.events       || "").trim();
   if (!email || !newName) return jsonResponse({ success: false, error: "MISSING_PARAMS" });
 
-  // Validate session token (skip validation for no-cors fallback sessions)
+  // Validate session token (skip for no-cors fallback)
   if (sessionToken !== "no-cors-session") {
     var stored = PropertiesService.getScriptProperties().getProperty("SESSION_" + email);
     if (!stored) return jsonResponse({ success: false, error: "SESSION_EXPIRED" });
@@ -232,39 +235,46 @@ function handleUpdateTeam(data) {
     }
   }
 
-  // Update the sheet row
+  // Find the row
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE");
   if (!sheet) return jsonResponse({ success: false, error: "SHEET_NOT_FOUND" });
 
   var rows = sheet.getDataRange().getValues();
   var rowIndex = -1;
-  var oldName  = "";
-  var rowClass = ""; var rowSection = ""; var rowEvents = "";
+  var oldName = "", oldClass = "", oldSection = "", oldEvents = "";
   for (var i = 1; i < rows.length; i++) {
     if ((rows[i][2] || "").toString().trim().toLowerCase() === email) {
-      rowIndex   = i + 1; // 1-indexed for Sheets
+      rowIndex   = i + 1;
       oldName    = rows[i][1] || "";
-      rowClass   = rows[i][3] || "";
-      rowSection = rows[i][4] || "";
-      rowEvents  = rows[i][5] || "";
+      oldClass   = rows[i][3] || "";
+      oldSection = rows[i][4] || "";
+      oldEvents  = rows[i][5] || "";
       break;
     }
   }
   if (rowIndex < 0) return jsonResponse({ success: false, error: "EMAIL_NOT_FOUND" });
 
-  // Write updated name to column B (index 2)
+  // Write updated values (keep old if not provided)
   sheet.getRange(rowIndex, 2).setValue(newName);
+  if (newClass)   sheet.getRange(rowIndex, 4).setValue(newClass);
+  if (newSection) sheet.getRange(rowIndex, 5).setValue(newSection);
+  if (newEvents)  sheet.getRange(rowIndex, 6).setValue(newEvents);
 
-  // Append a timestamp note in a new log sheet
+  // Resolve final values for emails (use new if provided, else keep old)
+  var finalClass   = newClass   || oldClass;
+  var finalSection = newSection || oldSection;
+  var finalEvents  = newEvents  || oldEvents;
+
+  // Audit log
   var logSheet = ss.getSheetByName("TEAM_UPDATE_LOG") || ss.insertSheet("TEAM_UPDATE_LOG");
   if (logSheet.getLastRow() === 0) {
-    logSheet.appendRow(["Timestamp", "Email", "Old Members", "New Members"]);
+    logSheet.appendRow(["Timestamp", "Email", "Old Name", "New Name", "Old Class", "New Class", "Old Section", "New Section", "Old Events", "New Events"]);
     logSheet.getRange("1:1").setFontWeight("bold").setBackground("#00f3ff").setFontColor("#000");
   }
-  logSheet.appendRow([new Date().toLocaleString(), email, oldName, newName]);
+  logSheet.appendRow([new Date().toLocaleString(), email, oldName, newName, oldClass, newClass, oldSection, newSection, oldEvents, newEvents]);
 
-  // Clear session after successful update
+  // Clear session
   PropertiesService.getScriptProperties().deleteProperty("SESSION_" + email);
 
   // ── Email: team confirmation ──────────────────────────────────────────────
@@ -275,22 +285,22 @@ function handleUpdateTeam(data) {
   <div class="card">
     <div class="header">
       <h1 class="glitch-title">CRYPTS'26</h1>
-      <div class="header-sub">[ SQUAD ROSTER — UPDATE CONFIRMED ]</div>
+      <div class="header-sub">[ REGISTRATION — UPDATE CONFIRMED ]</div>
     </div>
     <div class="body-content">
-      <div class="greeting">Squad Update Synchronised</div>
+      <div class="greeting">Registration Updated</div>
       <div class="text">
-        Your team roster has been updated in the CRYPTS'26 central database.
+        Your registration details have been updated in the CRYPTS'26 central database.
         Review the changes below.
       </div>
       <div class="details-box">
         <div class="detail-item">
           <span class="detail-label">CLASS / SECTION</span>
-          <span class="detail-value" style="color:#ffffff;">Class ${rowClass} — ${rowSection}</span>
+          <span class="detail-value" style="color:#ffffff;">Class ${finalClass} — ${finalSection}</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">EVENTS</span>
-          <span class="detail-value" style="color:#00f3ff;">${rowEvents}</span>
+          <span class="detail-value" style="color:#00f3ff;">${finalEvents}</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">UPDATED SQUAD ROSTER</span>
@@ -314,21 +324,20 @@ function handleUpdateTeam(data) {
   </div>
 </body></html>`;
 
-  var teamPlain = "CRYPTS'26 — Squad Update Confirmed\n\n" +
-    "Your team roster has been updated.\n" +
-    "Class/Section: " + rowClass + "-" + rowSection + "\n" +
-    "Events: " + rowEvents + "\n" +
+  var teamPlain = "CRYPTS'26 — Registration Update Confirmed\n\n" +
+    "Your registration has been updated.\n" +
+    "Class/Section: " + finalClass + "-" + finalSection + "\n" +
+    "Events: " + finalEvents + "\n" +
     "Updated Roster: " + newName + "\n\n" +
     "Portal: https://crypts26.vercel.app/\n\n" +
     "If you did not make this change, contact the organizers immediately.";
 
-  GmailApp.sendEmail(email, "CRYPTS'26 | Squad Roster Updated", teamPlain, {
+  GmailApp.sendEmail(email, "CRYPTS'26 | Registration Updated", teamPlain, {
     from: FROM_ADDRESS,
     name: FROM_NAME,
     htmlBody: teamHtml
   });
 
-  // ── Email: admin alert ────────────────────────────────────────────────────
   var adminEmails = getAdminEmails(ss);
   var adminHtml = `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${styles}
@@ -345,11 +354,11 @@ function handleUpdateTeam(data) {
   <div class="card admin-card">
     <div class="header admin-header">
       <h1 class="glitch-title">CRYPTS'26</h1>
-      <div class="header-sub">[ ADMIN ALERT &bull; TEAM ROSTER MODIFIED ]</div>
+      <div class="header-sub">[ ADMIN ALERT &bull; REGISTRATION MODIFIED ]</div>
     </div>
     <div class="body-content">
       <div class="admin-badge">SYSTEM ALERT</div>
-      <div class="text">A registered operator has updated their team roster via the self-service portal.</div>
+      <div class="text">A registered operator has updated their registration via the self-service portal.</div>
       <div class="details-box admin-box">
         <div class="detail-item">
           <span class="detail-label">EMAIL</span>
@@ -357,18 +366,20 @@ function handleUpdateTeam(data) {
         </div>
         <div class="detail-item">
           <span class="detail-label">CLASS / SECTION</span>
-          <span class="detail-value" style="color:#ffffff;">Class ${rowClass} — ${rowSection}</span>
+          <span class="diff-old">${oldClass}-${oldSection}</span>
+          <span style="color:#484f58; font-size:11px;"> → </span>
+          <span class="diff-new">${finalClass}-${finalSection}</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">EVENTS</span>
-          <span class="detail-value" style="color:#ff0055;">${rowEvents}</span>
+          <span class="diff-old">${oldEvents || "(empty)"}</span>
+          <span style="color:#484f58; font-size:11px;"> → </span>
+          <span class="diff-new">${finalEvents}</span>
         </div>
         <div class="detail-item">
-          <span class="detail-label">PREVIOUS ROSTER</span>
+          <span class="detail-label">SQUAD ROSTER</span>
           <span class="diff-old">${oldName || "(empty)"}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">UPDATED ROSTER</span>
+          <span style="color:#484f58; font-size:11px;"> → </span>
           <span class="diff-new">${newName}</span>
         </div>
         <div class="detail-item">
@@ -388,12 +399,11 @@ function handleUpdateTeam(data) {
   </div>
 </body></html>`;
 
-  var adminPlain = "ALERT: TEAM ROSTER UPDATED\n\n" +
+  var adminPlain = "ALERT: REGISTRATION UPDATED\n\n" +
     "Email: " + email + "\n" +
-    "Class/Section: " + rowClass + "-" + rowSection + "\n" +
-    "Events: " + rowEvents + "\n" +
-    "Old Roster: " + (oldName || "(empty)") + "\n" +
-    "New Roster: " + newName + "\n" +
+    "Class/Section: " + oldClass + "-" + oldSection + " → " + finalClass + "-" + finalSection + "\n" +
+    "Events: " + (oldEvents || "(empty)") + " → " + finalEvents + "\n" +
+    "Roster: " + (oldName || "(empty)") + " → " + newName + "\n" +
     "Timestamp: " + new Date().toLocaleString() + "\n\n" +
     "Live DB: " + ss.getUrl();
 

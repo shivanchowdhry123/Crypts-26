@@ -1480,6 +1480,8 @@ function initTeamManagement() {
     const emailInput   = document.getElementById('tm-email');
     const otpInput     = document.getElementById('tm-otp');
     const membersArea  = document.getElementById('tm-members');
+    const classSelect  = document.getElementById('tm-class');
+    const sectionInput = document.getElementById('tm-section');
 
     const sendOtpBtn   = document.getElementById('tm-send-otp-btn');
     const verifyBtn    = document.getElementById('tm-verify-btn');
@@ -1490,14 +1492,20 @@ function initTeamManagement() {
     const errEmail     = document.getElementById('tm-err-email');
     const errOtp       = document.getElementById('tm-err-otp');
     const errMembers   = document.getElementById('tm-err-members');
+    const errClass     = document.getElementById('tm-err-class');
+    const errSection   = document.getElementById('tm-err-section');
+    const errEvents    = document.getElementById('tm-err-events');
 
-    const otpEmailDisplay  = document.getElementById('tm-otp-email-display');
-    const resendCountdown  = document.getElementById('tm-resend-countdown');
-    const displayClass     = document.getElementById('tm-display-class');
-    const displaySection   = document.getElementById('tm-display-section');
-    const eventsDisplay    = document.getElementById('tm-events-display');
-    const summaryEmail     = document.getElementById('tm-summary-email');
-    const summaryMembers   = document.getElementById('tm-summary-members');
+    const otpEmailDisplay = document.getElementById('tm-otp-email-display');
+    const resendCountdown = document.getElementById('tm-resend-countdown');
+    const summaryEmail   = document.getElementById('tm-summary-email');
+    const summaryMembers = document.getElementById('tm-summary-members');
+    const summaryClass   = document.getElementById('tm-summary-class');
+    const summaryEvents  = document.getElementById('tm-summary-events');
+
+    // Event chip selection set (mirrors the registration form)
+    const tmSelectedEvents = new Set();
+    const tmEventGrid = document.getElementById('tm-event-tag-grid');
 
     // ── State ─────────────────────────────────────────────────
     let verifiedEmail   = '';
@@ -1678,27 +1686,40 @@ function initTeamManagement() {
             // Populate edit step
             if (data) {
                 sessionToken = data.sessionToken || '';
-                if (displayClass)   displayClass.textContent   = data.class + ' — ' + (data.section || '');
-                if (displaySection) displaySection.textContent = data.section || '';
-                // Populate team members textarea (convert comma list to line-per-name)
+
+                // Members textarea — one per line
                 if (membersArea && data.name) {
                     membersArea.value = data.name.split(',').map(s => s.trim()).filter(Boolean).join('\n');
                 }
-                // Populate event chips
-                if (eventsDisplay && data.events) {
-                    eventsDisplay.innerHTML = '';
-                    data.events.split(',').map(s => s.trim()).filter(Boolean).forEach(ev => {
-                        const chip = document.createElement('span');
-                        chip.className = 'tm-event-chip';
-                        chip.textContent = ev;
-                        eventsDisplay.appendChild(chip);
+
+                // Class dropdown
+                if (classSelect && data.class) {
+                    classSelect.value = String(data.class).trim();
+                    filterTmEventChipsByClass(Number(data.class));
+                }
+
+                // Section input
+                if (sectionInput && data.section) {
+                    sectionInput.value = String(data.section).trim();
+                }
+
+                // Pre-select event chips
+                tmSelectedEvents.clear();
+                if (data.events) {
+                    const savedEvents = data.events.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+                    document.querySelectorAll('#tm-event-tag-grid .event-tag-chip').forEach(chip => {
+                        const ev = chip.dataset.event || chip.textContent.trim().toLowerCase();
+                        if (savedEvents.some(se => se === ev || chip.textContent.trim().toLowerCase().includes(se) || se.includes(chip.textContent.trim().toLowerCase()))) {
+                            chip.classList.add('selected');
+                            tmSelectedEvents.add(chip.textContent.trim());
+                        } else {
+                            chip.classList.remove('selected');
+                        }
                     });
                 }
             } else {
-                // No-cors fallback: we can't read data but OTP was sent so trust it
+                // No-cors fallback: trust it, let user fill fields manually
                 sessionToken = 'no-cors-session';
-                if (displayClass)   displayClass.textContent   = 'Check your sheet';
-                if (displaySection) displaySection.textContent = '—';
             }
 
             appendConsole('tm-console-2', '> ACCESS_GRANTED: IDENTITY CONFIRMED.', 'text-[#00f3ff]');
@@ -1712,17 +1733,54 @@ function initTeamManagement() {
 
     // ── STEP 3: Save changes ──────────────────────────────────
     async function handleSave() {
+        let valid = true;
+
+        // Validate members
         const raw = membersArea ? membersArea.value.trim() : '';
         if (!raw) {
             if (errMembers) errMembers.classList.add('visible');
             if (membersArea) membersArea.classList.add('error');
-            return;
+            valid = false;
+        } else {
+            if (errMembers) errMembers.classList.remove('visible');
+            if (membersArea) membersArea.classList.remove('error');
         }
-        if (errMembers)  errMembers.classList.remove('visible');
-        if (membersArea) membersArea.classList.remove('error');
 
-        // Normalise: split by newline or comma, join as comma-separated
+        // Validate class
+        const selClass = classSelect ? classSelect.value : '';
+        if (!selClass) {
+            if (errClass) errClass.classList.add('visible');
+            if (classSelect) classSelect.classList.add('error');
+            valid = false;
+        } else {
+            if (errClass) errClass.classList.remove('visible');
+            if (classSelect) classSelect.classList.remove('error');
+        }
+
+        // Validate section
+        const selSection = sectionInput ? sectionInput.value.trim() : '';
+        if (!selSection) {
+            if (errSection) errSection.classList.add('visible');
+            if (sectionInput) sectionInput.classList.add('error');
+            valid = false;
+        } else {
+            if (errSection) errSection.classList.remove('visible');
+            if (sectionInput) sectionInput.classList.remove('error');
+        }
+
+        // Validate events
+        if (tmSelectedEvents.size === 0) {
+            if (errEvents) errEvents.classList.add('visible');
+            valid = false;
+        } else {
+            if (errEvents) errEvents.classList.remove('visible');
+        }
+
+        if (!valid) return;
+
+        // Normalise members: split by newline or comma, join as comma-separated
         const normalised = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).join(', ');
+        const eventsStr  = [...tmSelectedEvents].join(', ');
 
         saveBtn.disabled = true;
         saveBtn.textContent = 'SYNCHRONIZING...';
@@ -1740,11 +1798,14 @@ function initTeamManagement() {
                     action: 'updateTeam',
                     email: verifiedEmail,
                     sessionToken,
-                    name: normalised,
+                    name:    normalised,
+                    class:   selClass,
+                    section: selSection,
+                    events:  eventsStr,
                 }),
             });
 
-            appendConsole('tm-console-3', '> SUCCESS: SQUAD SYNCHRONIZED.', 'text-[#00f3ff]');
+            appendConsole('tm-console-3', '> SUCCESS: REGISTRATION SYNCHRONIZED.', 'text-[#00f3ff]');
 
             // Show success card
             emailPanel.classList.add('hidden');
@@ -1752,7 +1813,6 @@ function initTeamManagement() {
             editPanel.classList.add('hidden');
             successPanel.classList.remove('hidden');
 
-            // Update step dots to all done
             ['step-dot-1','step-dot-2','step-dot-3'].forEach(id => {
                 const d = document.getElementById(id);
                 if (d) { d.classList.remove('active'); d.classList.add('done'); }
@@ -1764,12 +1824,54 @@ function initTeamManagement() {
 
             if (summaryEmail)   summaryEmail.textContent   = verifiedEmail;
             if (summaryMembers) summaryMembers.textContent = normalised;
+            if (summaryClass)   summaryClass.textContent   = 'Class ' + selClass + ' — ' + selSection;
+            if (summaryEvents)  summaryEvents.textContent  = eventsStr;
 
         } catch (err) {
             appendConsole('tm-console-3', '> ERROR: TRANSMISSION FAILED. RETRY.', 'text-red-400');
             saveBtn.disabled = false;
-            saveBtn.textContent = 'SAVE SQUAD CHANGES';
+            saveBtn.textContent = 'SAVE CHANGES';
         }
+    }
+
+    // ── Event chip helpers (mirrors registration form) ────────
+    function filterTmEventChipsByClass(classNum) {
+        if (!tmEventGrid) return;
+        tmEventGrid.querySelectorAll('.event-tag-chip').forEach(chip => {
+            const min = parseInt(chip.dataset.min, 10) || 0;
+            const max = parseInt(chip.dataset.max, 10) || 99;
+            const eligible = !classNum || (classNum >= min && classNum <= max);
+            chip.classList.toggle('chip-disabled', !eligible);
+            chip.disabled = !eligible;
+            if (!eligible && tmSelectedEvents.has(chip.textContent.trim())) {
+                tmSelectedEvents.delete(chip.textContent.trim());
+                chip.classList.remove('selected');
+            }
+        });
+    }
+
+    // Class dropdown → re-filter chips
+    if (classSelect) {
+        classSelect.addEventListener('change', () => {
+            filterTmEventChipsByClass(Number(classSelect.value));
+        });
+    }
+
+    // Event chip click toggle
+    if (tmEventGrid) {
+        tmEventGrid.addEventListener('click', e => {
+            const chip = e.target.closest('.event-tag-chip');
+            if (!chip || chip.disabled) return;
+            const label = chip.textContent.trim();
+            if (tmSelectedEvents.has(label)) {
+                tmSelectedEvents.delete(label);
+                chip.classList.remove('selected');
+            } else {
+                tmSelectedEvents.add(label);
+                chip.classList.add('selected');
+            }
+            if (errEvents) errEvents.classList.toggle('visible', tmSelectedEvents.size === 0);
+        });
     }
 
     // ── Wire up events ────────────────────────────────────────
