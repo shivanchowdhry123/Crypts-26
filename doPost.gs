@@ -39,62 +39,193 @@ function doPost(e) {
 // ──────────────────────────────────────────────────────────────────────────────
 // SHARED HELPERS
 // ──────────────────────────────────────────────────────────────────────────────
+function getSafeSheetUrl(ss) {
+  try {
+    if (ss && typeof ss.getUrl === "function") {
+      return ss.getUrl();
+    }
+  } catch (e) {}
+  return "https://docs.google.com/spreadsheets";
+}
+
+function logMailAudit(ss, action, details) {
+  try {
+    if (!ss) return;
+    var sheet = ss.getSheetByName("MAIL_AUDIT_LOG");
+    if (!sheet) {
+      sheet = ss.insertSheet("MAIL_AUDIT_LOG");
+      sheet.appendRow(["Timestamp", "Action", "Details"]);
+      sheet.getRange("1:1").setFontWeight("bold").setBackground("#ff00c1").setFontColor("#ffffff");
+    }
+    sheet.appendRow([new Date().toLocaleString(), action, details]);
+  } catch (e) {
+    console.error("logMailAudit error: " + e);
+  }
+}
+
 function getAdminEmails(ss) {
   var adminEmails = [];
-  var candidateSheets = ["ORGANISERS", "ORGANIZERS", "Organisers", "Organizers", "ADMINS", "Admins"];
+  var candidateNames = ["ORGANISERS", "ORGANIZERS", "ADMINS", "ORGANISER", "ORGANIZER"];
   var adminSheet = null;
-  for (var s = 0; s < candidateSheets.length; s++) {
-    adminSheet = ss.getSheetByName(candidateSheets[s]);
-    if (adminSheet) break;
-  }
 
-  if (adminSheet) {
-    var adminData = adminSheet.getDataRange().getValues();
-    for (var i = 0; i < adminData.length; i++) {
-      for (var col = 0; col < adminData[i].length; col++) {
-        var val = (adminData[i][col] || "").toString().trim().toLowerCase();
-        if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val)) {
-          if (adminEmails.indexOf(val) === -1) {
-            adminEmails.push(val);
+  try {
+    var allSheets = ss.getSheets();
+    for (var i = 0; i < allSheets.length; i++) {
+      var sName = allSheets[i].getName().trim().toUpperCase();
+      if (candidateNames.indexOf(sName) !== -1) {
+        adminSheet = allSheets[i];
+        break;
+      }
+    }
+
+    if (adminSheet) {
+      var data = adminSheet.getDataRange().getValues();
+      for (var r = 0; r < data.length; r++) {
+        for (var c = 0; c < data[r].length; c++) {
+          var val = (data[r][c] || "").toString().trim().toLowerCase();
+          val = val.replace(/[\s\u00A0\u200B]+/g, "");
+          if (/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(val)) {
+            if (adminEmails.indexOf(val) === -1) {
+              adminEmails.push(val);
+            }
           }
         }
       }
     }
+  } catch (sheetErr) {
+    console.error("Error reading admin sheet: " + sheetErr);
   }
 
   // Guaranteed fallback organizer addresses
-  var defaultEmails = ["chowdhryshivan@gmail.com", "shivan.cryptsopg@gmail.com"];
-  for (var d = 0; d < defaultEmails.length; d++) {
-    if (adminEmails.indexOf(defaultEmails[d]) === -1) {
-      adminEmails.push(defaultEmails[d]);
+  var defaults = ["chowdhryshivan@gmail.com", "shivan.cryptsopg@gmail.com"];
+  for (var d = 0; d < defaults.length; d++) {
+    if (adminEmails.indexOf(defaults[d]) === -1) {
+      adminEmails.push(defaults[d]);
     }
   }
 
   return adminEmails;
 }
 
-function sendSafeEmail(to, subject, plainText, htmlBody) {
+function sendSafeEmail(to, subject, plainText, htmlBody, replyTo) {
   var options = {
     name: FROM_NAME,
-    htmlBody: htmlBody
+    htmlBody: htmlBody,
+    replyTo: replyTo || FROM_ADDRESS
   };
+
   try {
-    options.from = FROM_ADDRESS;
+    var aliases = GmailApp.getAliases() || [];
+    if (aliases.indexOf(FROM_ADDRESS) !== -1) {
+      options.from = FROM_ADDRESS;
+    }
+  } catch (e) {}
+
+  // 1. Try GmailApp with alias if set
+  try {
     GmailApp.sendEmail(to, subject, plainText, options);
-  } catch (aliasErr) {
-    delete options.from;
-    GmailApp.sendEmail(to, subject, plainText, options);
+    return true;
+  } catch (err1) {
+    // 2. Try GmailApp without 'from'
+    try {
+      delete options.from;
+      GmailApp.sendEmail(to, subject, plainText, options);
+      return true;
+    } catch (err2) {
+      // 3. Try MailApp fallback
+      MailApp.sendEmail({
+        to: to,
+        subject: subject,
+        body: plainText,
+        htmlBody: htmlBody,
+        name: FROM_NAME,
+        replyTo: replyTo || FROM_ADDRESS
+      });
+      return true;
+    }
   }
 }
 
 function sendAdminAlert(ss, subject, plainText, htmlBody) {
   var adminEmails = getAdminEmails(ss);
+  if (!adminEmails || adminEmails.length === 0) {
+    adminEmails = ["chowdhryshivan@gmail.com", "shivan.cryptsopg@gmail.com"];
+  }
+
+  logMailAudit(ss, "ADMIN_DISPATCH_START", "Found " + adminEmails.length + " organizers: " + adminEmails.join(", "));
+
+  // Primary organizers guaranteed in 'To' field
+  var primary = "chowdhryshivan@gmail.com,shivan.cryptsopg@gmail.com";
+  var bccList = [];
   for (var i = 0; i < adminEmails.length; i++) {
-    var recipient = adminEmails[i];
+    var em = adminEmails[i];
+    if (em !== "chowdhryshivan@gmail.com" && em !== "shivan.cryptsopg@gmail.com") {
+      bccList.push(em);
+    }
+  }
+
+  var options = {
+    name: FROM_NAME,
+    htmlBody: htmlBody,
+    replyTo: FROM_ADDRESS
+  };
+
+  if (bccList.length > 0) {
+    options.bcc = bccList.join(",");
+  }
+
+  try {
+    var aliases = GmailApp.getAliases() || [];
+    if (aliases.indexOf(FROM_ADDRESS) !== -1) {
+      options.from = FROM_ADDRESS;
+    }
+  } catch (e) {}
+
+  // Attempt 1: Broadcast via GmailApp (Primary + BCC)
+  try {
+    GmailApp.sendEmail(primary, subject, plainText, options);
+    logMailAudit(ss, "ADMIN_ALERT_SUCCESS", "Broadcast sent via GmailApp to " + primary + " (BCC: " + bccList.length + ")");
+    return;
+  } catch (err1) {
+    logMailAudit(ss, "ADMIN_ALERT_WARN", "GmailApp broadcast failed: " + err1.message + ". Trying without 'from'...");
+  }
+
+  // Attempt 2: Try without 'from' alias
+  try {
+    delete options.from;
+    GmailApp.sendEmail(primary, subject, plainText, options);
+    logMailAudit(ss, "ADMIN_ALERT_SUCCESS", "Broadcast sent via GmailApp (no-from) to " + primary + " (BCC: " + bccList.length + ")");
+    return;
+  } catch (err2) {
+    logMailAudit(ss, "ADMIN_ALERT_WARN", "GmailApp no-from failed: " + err2.message + ". Trying MailApp...");
+  }
+
+  // Attempt 3: Try MailApp broadcast
+  try {
+    var mailOpts = {
+      to: primary,
+      subject: subject,
+      body: plainText,
+      htmlBody: htmlBody,
+      name: FROM_NAME,
+      replyTo: FROM_ADDRESS
+    };
+    if (bccList.length > 0) mailOpts.bcc = bccList.join(",");
+    MailApp.sendEmail(mailOpts);
+    logMailAudit(ss, "ADMIN_ALERT_SUCCESS", "Broadcast sent via MailApp to " + primary + " (BCC: " + bccList.length + ")");
+    return;
+  } catch (err3) {
+    logMailAudit(ss, "ADMIN_ALERT_WARN", "MailApp broadcast failed: " + err3.message + ". Falling back to individual dispatch...");
+  }
+
+  // Attempt 4: Fallback to individual dispatch for each organizer
+  for (var k = 0; k < adminEmails.length; k++) {
+    var rec = adminEmails[k];
     try {
-      sendSafeEmail(recipient, subject, plainText, htmlBody);
-    } catch (err) {
-      console.error("Failed to send admin alert to " + recipient + ": " + err);
+      sendSafeEmail(rec, subject, plainText, htmlBody);
+      logMailAudit(ss, "ADMIN_ALERT_INDIVIDUAL", "Delivered to: " + rec);
+    } catch (indErr) {
+      logMailAudit(ss, "ADMIN_ALERT_INDIVIDUAL_FAIL", "Failed for " + rec + ": " + indErr.message);
     }
   }
 }
@@ -282,6 +413,7 @@ function handleUpdateTeam(data) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE");
   if (!sheet) return jsonResponse({ success: false, error: "SHEET_NOT_FOUND" });
+  var sheetUrl = getSafeSheetUrl(ss);
 
   var rows = sheet.getDataRange().getValues();
   var rowIndex = -1;
@@ -426,7 +558,7 @@ function handleUpdateTeam(data) {
         </div>
       </div>
       <div style="text-align:center; margin-bottom:20px;">
-        <a href="${ss.getUrl()}" class="cta-button" style="background:transparent; color:#ff0055; border:1px solid #ff0055;">
+        <a href="${sheetUrl}" class="cta-button" style="background:transparent; color:#ff0055; border:1px solid #ff0055;">
           Open Live Database
         </a>
       </div>
@@ -443,8 +575,9 @@ function handleUpdateTeam(data) {
     "Events: " + (oldEvents || "(empty)") + " → " + finalEvents + "\n" +
     "Roster: " + (oldName || "(empty)") + " → " + newName + "\n" +
     "Timestamp: " + new Date().toLocaleString() + "\n\n" +
-    "Live DB: " + ss.getUrl();
+    "Live DB: " + sheetUrl;
 
+  logMailAudit(ss, "UPDATE_START", "Participant updated squad: " + email);
   sendAdminAlert(ss, "ALERT: REGISTRATION UPDATED — " + email, adminPlain, adminHtml);
 
   return jsonResponse({ success: true });
@@ -475,6 +608,7 @@ function handleDeleteRegistration(data) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE");
   if (!sheet) return jsonResponse({ success: false, error: "SHEET_NOT_FOUND" });
+  var sheetUrl = getSafeSheetUrl(ss);
 
   // Find and capture the row before deleting
   var rows = sheet.getDataRange().getValues();
@@ -619,7 +753,7 @@ function handleDeleteRegistration(data) {
         </div>
       </div>
       <div style="text-align:center; margin-bottom:20px;">
-        <a href="${ss.getUrl()}" class="cta-button" style="background:transparent; color:#ff0055; border:1px solid #ff0055;">
+        <a href="${sheetUrl}" class="cta-button" style="background:transparent; color:#ff0055; border:1px solid #ff0055;">
           Open Live Database
         </a>
       </div>
@@ -636,8 +770,9 @@ function handleDeleteRegistration(data) {
     "Class/Section: Class " + rowClass + "-" + rowSection + "\n" +
     "Events: " + (rowEvents || "All Events") + "\n" +
     "Timestamp: " + new Date().toLocaleString() + "\n\n" +
-    "Live DB: " + ss.getUrl();
+    "Live DB: " + sheetUrl;
 
+  logMailAudit(ss, "WITHDRAWAL_START", "Participant withdrew registration: " + email);
   sendAdminAlert(ss, "ALERT: REGISTRATION WITHDRAWN — " + email, adminPlain, adminHtml);
 
   return jsonResponse({ success: true });
@@ -649,6 +784,7 @@ function handleDeleteRegistration(data) {
 // ──────────────────────────────────────────────────────────────────────────────
 function handleRegistration(data) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetUrl = getSafeSheetUrl(ss);
 
   // 1. DATABASE SETUP
   var databaseSheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE") || ss.getSheets()[0];
@@ -777,7 +913,7 @@ function handleRegistration(data) {
           </div>
 
           <div style="text-align: center; margin-bottom: 20px;">
-            <a href="${ss.getUrl()}" class="cta-button admin-btn">Open Live Database</a>
+            <a href="${sheetUrl}" class="cta-button admin-btn">Open Live Database</a>
           </div>
         </div>
         <div class="footer">
@@ -794,8 +930,9 @@ function handleRegistration(data) {
                        "Sector: Class " + data.class + "-" + data.section + "\n" +
                        "Modules: " + data.events + "\n" +
                        "Timestamp: " + data.timestamp + "\n\n" +
-                       "Live DB: " + ss.getUrl();
+                       "Live DB: " + sheetUrl;
 
+  logMailAudit(ss, "REGISTRATION_START", "New registration: " + data.email + " (" + (data.name || "") + ")");
   sendAdminAlert(ss, "ALERT: NEW OPERATOR REGISTERED - " + (data.name || "Operator"), adminBodyPlain, adminHtmlTemplate);
 
   return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
