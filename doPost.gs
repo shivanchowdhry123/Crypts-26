@@ -40,17 +40,63 @@ function doPost(e) {
 // SHARED HELPERS
 // ──────────────────────────────────────────────────────────────────────────────
 function getAdminEmails(ss) {
-  var adminSheet = ss.getSheetByName("ORGANISERS");
   var adminEmails = [];
+  var candidateSheets = ["ORGANISERS", "ORGANIZERS", "Organisers", "Organizers", "ADMINS", "Admins"];
+  var adminSheet = null;
+  for (var s = 0; s < candidateSheets.length; s++) {
+    adminSheet = ss.getSheetByName(candidateSheets[s]);
+    if (adminSheet) break;
+  }
+
   if (adminSheet) {
     var adminData = adminSheet.getDataRange().getValues();
-    for (var i = 1; i < adminData.length; i++) {
-      if (adminData[i][1]) adminEmails.push(adminData[i][1]);
+    for (var i = 0; i < adminData.length; i++) {
+      for (var col = 0; col < adminData[i].length; col++) {
+        var val = (adminData[i][col] || "").toString().trim().toLowerCase();
+        if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val)) {
+          if (adminEmails.indexOf(val) === -1) {
+            adminEmails.push(val);
+          }
+        }
+      }
     }
-  } else {
-    adminEmails = ["chowdhryshivan@gmail.com"];
   }
+
+  // Guaranteed fallback organizer addresses
+  var defaultEmails = ["chowdhryshivan@gmail.com", "shivan.cryptsopg@gmail.com"];
+  for (var d = 0; d < defaultEmails.length; d++) {
+    if (adminEmails.indexOf(defaultEmails[d]) === -1) {
+      adminEmails.push(defaultEmails[d]);
+    }
+  }
+
   return adminEmails;
+}
+
+function sendSafeEmail(to, subject, plainText, htmlBody) {
+  var options = {
+    name: FROM_NAME,
+    htmlBody: htmlBody
+  };
+  try {
+    options.from = FROM_ADDRESS;
+    GmailApp.sendEmail(to, subject, plainText, options);
+  } catch (aliasErr) {
+    delete options.from;
+    GmailApp.sendEmail(to, subject, plainText, options);
+  }
+}
+
+function sendAdminAlert(ss, subject, plainText, htmlBody) {
+  var adminEmails = getAdminEmails(ss);
+  for (var i = 0; i < adminEmails.length; i++) {
+    var recipient = adminEmails[i];
+    try {
+      sendSafeEmail(recipient, subject, plainText, htmlBody);
+    } catch (err) {
+      console.error("Failed to send admin alert to " + recipient + ": " + err);
+    }
+  }
 }
 
 function getCommonStyles() {
@@ -146,11 +192,7 @@ function handleSendOtp(data) {
   var plain = "CRYPTS'26 — Team Management OTP\n\nYour one-time passcode is: " + otp +
               "\n\nThis code expires in 10 minutes.\nIf you did not request this, ignore this email.";
 
-  GmailApp.sendEmail(email, "CRYPTS'26 | Team Management — Your OTP", plain, {
-    from: FROM_ADDRESS,
-    name: FROM_NAME,
-    htmlBody: html
-  });
+  sendSafeEmail(email, "CRYPTS'26 | Team Management — Your OTP", plain, html);
 
   return jsonResponse({ success: true });
 }
@@ -333,13 +375,8 @@ function handleUpdateTeam(data) {
     "Portal: https://crypts26.vercel.app/\n\n" +
     "If you did not make this change, contact the organizers immediately.";
 
-  GmailApp.sendEmail(email, "CRYPTS'26 | Registration Updated", teamPlain, {
-    from: FROM_ADDRESS,
-    name: FROM_NAME,
-    htmlBody: teamHtml
-  });
+  sendSafeEmail(email, "CRYPTS'26 | Registration Updated", teamPlain, teamHtml);
 
-  var adminEmails = getAdminEmails(ss);
   var adminHtml = `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${styles}
 .admin-card { border-color: #ff0055; box-shadow: 0 0 25px rgba(255,0,85,0.15); }
@@ -408,13 +445,7 @@ function handleUpdateTeam(data) {
     "Timestamp: " + new Date().toLocaleString() + "\n\n" +
     "Live DB: " + ss.getUrl();
 
-  if (adminEmails.length > 0) {
-    GmailApp.sendEmail(adminEmails.join(","), "ALERT: SQUAD UPDATED — " + email, adminPlain, {
-      from: FROM_ADDRESS,
-      name: FROM_NAME,
-      htmlBody: adminHtml
-    });
-  }
+  sendAdminAlert(ss, "ALERT: REGISTRATION UPDATED — " + email, adminPlain, adminHtml);
 
   return jsonResponse({ success: true });
 }
@@ -539,14 +570,9 @@ function handleDeleteRegistration(data) {
     "To re-register: https://crypts26.vercel.app/register.html\n\n" +
     "If you did not request this, contact the organizers immediately.";
 
-  GmailApp.sendEmail(email, "CRYPTS'26 | Registration Withdrawn", participantPlain, {
-    from: FROM_ADDRESS,
-    name: FROM_NAME,
-    htmlBody: participantHtml
-  });
+  sendSafeEmail(email, "CRYPTS'26 | Registration Withdrawn", participantPlain, participantHtml);
 
   // ── Email: admin alert ────────────────────────────────────────────────────
-  var adminEmails = getAdminEmails(ss);
   var adminHtml = `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${styles}
 .admin-card { border-color: #ff0055; box-shadow: 0 0 25px rgba(255,0,85,0.25); }
@@ -612,13 +638,7 @@ function handleDeleteRegistration(data) {
     "Timestamp: " + new Date().toLocaleString() + "\n\n" +
     "Live DB: " + ss.getUrl();
 
-  if (adminEmails.length > 0) {
-    GmailApp.sendEmail(adminEmails.join(","), "ALERT: REGISTRATION WITHDRAWN — " + email, adminPlain, {
-      from: FROM_ADDRESS,
-      name: FROM_NAME,
-      htmlBody: adminHtml
-    });
-  }
+  sendAdminAlert(ss, "ALERT: REGISTRATION WITHDRAWN — " + email, adminPlain, adminHtml);
 
   return jsonResponse({ success: true });
 }
@@ -642,7 +662,6 @@ function handleRegistration(data) {
   databaseSheet.appendRow([data.timestamp, data.name, data.email, data.class, data.section, data.events]);
 
   var firstName = data.name ? data.name.split(' ')[0] : "Operator";
-  var adminEmails = getAdminEmails(ss);
   var commonStyles = getCommonStyles();
 
   // 4. REGISTRANT HTML TEMPLATE
@@ -705,11 +724,7 @@ function handleRegistration(data) {
                       "- Portal: https://crypts26.vercel.app/\n\n" +
                       "Best regards,\nShivan Chowdhry & Team CRYPTS'26";
 
-  GmailApp.sendEmail(data.email, "Welcome to CRYPTS'26 | Registration Synchronized", userBodyPlain, {
-    from: FROM_ADDRESS,
-    name: FROM_NAME,
-    htmlBody: userHtmlTemplate
-  });
+  sendSafeEmail(data.email, "Welcome to CRYPTS'26 | Registration Synchronized", userBodyPlain, userHtmlTemplate);
 
   // 5. ADMIN HTML TEMPLATE
   var adminHtmlTemplate = `
@@ -781,13 +796,7 @@ function handleRegistration(data) {
                        "Timestamp: " + data.timestamp + "\n\n" +
                        "Live DB: " + ss.getUrl();
 
-  if (adminEmails.length > 0) {
-    GmailApp.sendEmail(adminEmails.join(","), "ALERT: NEW OPERATOR REGISTERED - " + data.name, adminBodyPlain, {
-      from: FROM_ADDRESS,
-      name: FROM_NAME,
-      htmlBody: adminHtmlTemplate
-    });
-  }
+  sendAdminAlert(ss, "ALERT: NEW OPERATOR REGISTERED - " + (data.name || "Operator"), adminBodyPlain, adminHtmlTemplate);
 
   return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
 }

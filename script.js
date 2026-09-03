@@ -57,14 +57,15 @@ const cliLines = [
             </h3>
             <span style="border: 1px solid #ff00c1; padding: 0.1rem 0.25rem; font-size: 0.6rem; border-radius: 0.125rem; color: #ff00c1; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 0 8px rgba(255,0,193,0.15);">LIVE FEED</span>
         </div>
-        <div style="color: rgba(255,255,255,0.9); font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.15rem;">
-            <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• 🎮 L'Arène Esports Update:</span> Registrations are now <strong style="color: #00f3ff;">OPEN for Class 9</strong> as well (Eligibility: Class 9–12)! Squad up for FC 26, Valorant & Minecraft.</p>
+        <div style="color: rgba(255,255,255,0.9); font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.2rem;">
+            <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• ✎ Squad Management &amp; Withdrawal Portal:</span> Registered operators can now edit team members, class, section, events or withdraw registration anytime via <a href="manage-team.html" style="color: #00f3ff; text-decoration: underline; font-weight: bold; cursor: pointer;">Manage Squad</a> (verified via Email OTP).</p>
+            <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• 🎮 L'Arène Esports Update:</span> Registrations are now <strong style="color: #00f3ff;">OPEN for Class 9</strong> as well (Eligibility: Class 9–12)! Squad up for FC 26, Valorant &amp; Minecraft.</p>
             <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Next Up (Sept 16):</span> GLITCHVERSE</p>
-            <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>
+            <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design &amp; gaming events.</p>
         </div>
     </div>` },
     { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
-        <p style="color: #ff00c1; font-size: 0.75rem; margin: 0;"><span style="font-weight: bold;">Team Registration:</span> <span style="color: rgba(255,255,255,0.9);">If you are registering for a team event, kindly mail the team list to <a href="mailto:bhavyas.cryptsopg@gmail.com" style="color: #ff00c1; text-decoration: underline; cursor: pointer; position: relative; z-index: 50; pointer-events: auto;">bhavyas.cryptsopg@gmail.com</a></span></p>
+        <p style="color: #ff00c1; font-size: 0.75rem; margin: 0;"><span style="font-weight: bold;">Squad Updates &amp; Withdrawal:</span> <span style="color: rgba(255,255,255,0.9);">Need to modify your team roster, update events, or withdraw from CRYPTS'26? Access the self-service <a href="manage-team.html" style="color: #00f3ff; text-decoration: underline; font-weight: bold; cursor: pointer;">Manage Squad portal</a>.</span></p>
     </div>` }
 ];
 
@@ -165,17 +166,19 @@ function getTodayHighlights() {
         badge: "LIVE FEED",
         badgeClass: "bg-[#00f3ff]/20 text-[#00f3ff]",
         lines: [
+            `<p><span class="text-[#00f3ff] font-bold">• ✎ Manage Squad:</span> Update roster, change events, or withdraw via Manage Squad portal.</p>`,
             `<p><span class="text-[#00f3ff] font-bold">• 🎮 L'Arène Esports:</span> Registrations are now open for Class 9 as well (Class 9–12 eligible)!</p>`,
             `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong></p>`,
             `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`
         ],
         logLines: [
             `=== 📢 LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS ===`,
+            `• ✎ Squad Management & Withdrawal: Self-service portal live at /manage-team.html (or type 'manage')`,
             `• 🎮 L'Arène Esports Update: Registrations are now OPEN for Class 9 (Class 9–12 eligible)!`,
             `• Next Up: ${upcoming.dateStr} — ${upcoming.name}`,
             `• Registrations Open: Enroll now for all 12+ competitive events.`,
             `• Rules & Dossier: View details under Section 02 EVENT MODULES.`,
-            `• Type 'enroll' to register or 'team' for organizing committee contacts.`
+            `• Type 'enroll' to register, 'manage' to edit squad/withdraw, or 'team' for contacts.`
         ]
     };
 }
@@ -201,7 +204,7 @@ function handleCommand(cmd) {
 
     const cmds = {
         clear: () => { if (terminalOutput) terminalOutput.innerHTML = ''; },
-        help: () => addLog("COMMANDS: help · clear · enroll · modules · status · about · matrix · schedule · team · highlights · news · log", "text-[#00f3ff]"),
+        help: () => addLog("COMMANDS: help · clear · enroll · manage · modules · status · about · matrix · schedule · team · highlights · news · log", "text-[#00f3ff]"),
         log: () => {
             addLog(`--- COMMAND LOG HISTORY ---`, "text-[#00f3ff]", true);
             commandLogHistory.forEach(item => {
@@ -213,6 +216,11 @@ function handleCommand(cmd) {
             addLog("> REDIRECTING TO REGISTRATION PORTAL...", "text-[#ff00c1]");
             setTimeout(() => { window.location.href = "register.html"; }, 400);
         },
+        manage: () => {
+            addLog("> REDIRECTING TO SQUAD MANAGEMENT & WITHDRAWAL PORTAL...", "text-[#00f3ff]");
+            setTimeout(() => { window.location.href = "manage-team.html"; }, 400);
+        },
+        squad: () => cmds.manage(),
         modules: () => {
             addLog("> NAVIGATING TO EVENT MODULES...", "text-[#00f3ff]");
             setTimeout(() => { window.location.hash = "modules"; }, 400);
@@ -1530,6 +1538,10 @@ function initTeamManagement() {
         otpPanel.classList.toggle('hidden',   step !== 2);
         editPanel.classList.toggle('hidden',  step !== 3);
         successPanel.classList.add('hidden');
+
+        if (step === 3 && classSelect) {
+            filterTmEventChipsByClass(classSelect.value);
+        }
     }
 
     // ── Console log helper ────────────────────────────────────
@@ -1692,11 +1704,10 @@ function initTeamManagement() {
                     membersArea.value = data.name.split(',').map(s => s.trim()).filter(Boolean).join('\n');
                 }
 
-                // Class dropdown — set value then re-filter chips
+                // Class dropdown — set value then filter chips
                 if (classSelect && data.class) {
                     classSelect.value = String(data.class).trim();
-                    // Trigger a real change event so any other listeners fire
-                    classSelect.dispatchEvent(new Event('change'));
+                    filterTmEventChipsByClass(classSelect.value);
                 }
 
                 // Section input
@@ -1705,15 +1716,17 @@ function initTeamManagement() {
                 }
 
                 // Pre-select event chips
-                // Normalise: compare against BOTH data-event attribute AND chip label
-                // (sheet may store label text like "BYTE THE SITE" or key like "byte_the_site")
+                // Only select eligible chips matching data.events
                 tmSelectedEvents.clear();
                 if (data.events) {
-                    // Build a set of normalised tokens from the saved string
                     const normalize = s => s.trim().toLowerCase().replace(/[\s''\u2019]+/g, '_').replace(/[^a-z0-9_]/g, '');
                     const savedTokens = data.events.split(',').map(normalize).filter(Boolean);
 
                     document.querySelectorAll('#tm-event-tag-grid .event-tag-chip').forEach(chip => {
+                        if (chip.disabled || chip.classList.contains('disabled')) {
+                            chip.classList.remove('selected');
+                            return;
+                        }
                         const byAttr  = normalize(chip.dataset.event || '');
                         const byLabel = normalize(chip.textContent || '');
                         const match   = savedTokens.some(t => t === byAttr || t === byLabel);
@@ -1848,23 +1861,25 @@ function initTeamManagement() {
     // ── Event chip helpers (mirrors registration form) ────────
     function filterTmEventChipsByClass(classNum) {
         if (!tmEventGrid) return;
+        const classVal = parseInt(classNum, 10);
         tmEventGrid.querySelectorAll('.event-tag-chip').forEach(chip => {
             const min = parseInt(chip.dataset.min, 10) || 0;
             const max = parseInt(chip.dataset.max, 10) || 99;
-            const eligible = !classNum || (classNum >= min && classNum <= max);
-            chip.classList.toggle('chip-disabled', !eligible);
+            const eligible = !isNaN(classVal) && classVal >= min && classVal <= max;
+            chip.classList.toggle('disabled', !eligible);
             chip.disabled = !eligible;
-            if (!eligible && tmSelectedEvents.has(chip.textContent.trim())) {
-                tmSelectedEvents.delete(chip.textContent.trim());
+            if (!eligible) {
                 chip.classList.remove('selected');
+                tmSelectedEvents.delete(chip.textContent.trim());
             }
         });
+        if (errEvents && tmSelectedEvents.size > 0) errEvents.classList.remove('visible');
     }
 
     // Class dropdown → re-filter chips
     if (classSelect) {
         classSelect.addEventListener('change', () => {
-            filterTmEventChipsByClass(Number(classSelect.value));
+            filterTmEventChipsByClass(classSelect.value);
         });
     }
 
@@ -1872,7 +1887,7 @@ function initTeamManagement() {
     if (tmEventGrid) {
         tmEventGrid.addEventListener('click', e => {
             const chip = e.target.closest('.event-tag-chip');
-            if (!chip || chip.disabled) return;
+            if (!chip || chip.disabled || chip.classList.contains('disabled')) return;
             const label = chip.textContent.trim();
             if (tmSelectedEvents.has(label)) {
                 tmSelectedEvents.delete(label);

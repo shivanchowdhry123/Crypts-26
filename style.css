@@ -1943,33 +1943,14 @@ body[data-section="operators"] {
 /* ============================================================
    DISABLED EVENT CHIPS (Registration Smart Filtering)
    ============================================================ */
-.event-tag-chip.disabled {
-    opacity: 0.25;
-    cursor: none !important;
-    pointer-events: none;
-    filter: grayscale(1);
-    border-color: rgba(255, 255, 255, 0.04);
-}
-
-/* ============================================================
-   SYS_UPDATES TICKER
-   ============================================================ */
-@keyframes ticker-scroll {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-.ticker-wrap {
-    overflow: hidden;
-}
-
-.ticker-content {
-    display: inline-flex;
-    animation: ticker-scroll 40s linear infinite;
-    will-change: transform;
-}
-
-/* Pause on hover so users can read */
-#sys-updates:hover .ticker-content {
-    animation-play-state: paused;
+.event-tag-chip.disabled,
+.event-tag-chip:disabled {
+    opacity: 0.18 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    filter: grayscale(1) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: none !important;
 }
