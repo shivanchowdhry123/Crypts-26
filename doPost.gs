@@ -26,9 +26,10 @@ var FROM_NAME         = "Shivan Chowdhry & The CRYPTS'26 Team (via Admin Console
 function doPost(e) {
   var data = JSON.parse(e.postData.contents);
 
-  if (data.action === "sendOtp")           return handleSendOtp(data);
-  if (data.action === "verifyOtpAndFetch") return handleVerifyOtpAndFetch(data);
-  if (data.action === "updateTeam")        return handleUpdateTeam(data);
+  if (data.action === "sendOtp")             return handleSendOtp(data);
+  if (data.action === "verifyOtpAndFetch")   return handleVerifyOtpAndFetch(data);
+  if (data.action === "updateTeam")          return handleUpdateTeam(data);
+  if (data.action === "deleteRegistration")  return handleDeleteRegistration(data);
 
   // Default: original registration flow
   return handleRegistration(data, e);
@@ -409,6 +410,210 @@ function handleUpdateTeam(data) {
 
   if (adminEmails.length > 0) {
     GmailApp.sendEmail(adminEmails.join(","), "ALERT: SQUAD UPDATED — " + email, adminPlain, {
+      from: FROM_ADDRESS,
+      name: FROM_NAME,
+      htmlBody: adminHtml
+    });
+  }
+
+  return jsonResponse({ success: true });
+}
+
+
+// ──────────────────────────────────────────────────────────────────────────────
+// ACTION: deleteRegistration
+// ──────────────────────────────────────────────────────────────────────────────
+function handleDeleteRegistration(data) {
+  var email        = (data.email        || "").trim().toLowerCase();
+  var sessionToken = (data.sessionToken || "").trim();
+  if (!email) return jsonResponse({ success: false, error: "MISSING_PARAMS" });
+
+  // Validate session (skip for no-cors fallback)
+  if (sessionToken !== "no-cors-session") {
+    var stored = PropertiesService.getScriptProperties().getProperty("SESSION_" + email);
+    if (!stored) return jsonResponse({ success: false, error: "SESSION_EXPIRED" });
+    var session;
+    try { session = JSON.parse(stored); } catch(ex) { return jsonResponse({ success: false, error: "SESSION_INVALID" }); }
+    if (session.token !== sessionToken) return jsonResponse({ success: false, error: "SESSION_INVALID" });
+    if (new Date().getTime() > session.expiry) {
+      PropertiesService.getScriptProperties().deleteProperty("SESSION_" + email);
+      return jsonResponse({ success: false, error: "SESSION_EXPIRED" });
+    }
+  }
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("CRYPTS_26_FORMS_DATABASE");
+  if (!sheet) return jsonResponse({ success: false, error: "SHEET_NOT_FOUND" });
+
+  // Find and capture the row before deleting
+  var rows = sheet.getDataRange().getValues();
+  var rowIndex  = -1;
+  var rowName   = "", rowClass = "", rowSection = "", rowEvents = "";
+  for (var i = 1; i < rows.length; i++) {
+    if ((rows[i][2] || "").toString().trim().toLowerCase() === email) {
+      rowIndex   = i + 1;
+      rowName    = rows[i][1] || "";
+      rowClass   = rows[i][3] || "";
+      rowSection = rows[i][4] || "";
+      rowEvents  = rows[i][5] || "";
+      break;
+    }
+  }
+  if (rowIndex < 0) return jsonResponse({ success: false, error: "EMAIL_NOT_FOUND" });
+
+  // Delete the row from the sheet
+  sheet.deleteRow(rowIndex);
+
+  // Clear session
+  PropertiesService.getScriptProperties().deleteProperty("SESSION_" + email);
+
+  // Audit log
+  var logSheet = ss.getSheetByName("TEAM_UPDATE_LOG") || ss.insertSheet("TEAM_UPDATE_LOG");
+  if (logSheet.getLastRow() === 0) {
+    logSheet.appendRow(["Timestamp", "Email", "Old Name", "New Name", "Old Class", "New Class", "Old Section", "New Section", "Old Events", "New Events"]);
+    logSheet.getRange("1:1").setFontWeight("bold").setBackground("#00f3ff").setFontColor("#000");
+  }
+  logSheet.appendRow([new Date().toLocaleString(), email, rowName, "DELETED", rowClass, "", rowSection, "", rowEvents, ""]);
+
+  // ── Email: participant withdrawal confirmation ─────────────────────────────
+  var styles = getCommonStyles();
+  var participantHtml = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>${styles}
+.withdrawn-header { border-bottom-color: #ff0055; }
+.withdrawn-title { color: #ff0055; text-shadow: -2px 0 #ff0055, 2px 0 #ff0055; }
+.withdrawn-box { border-left-color: #ff0055; }
+.status-pill { display:inline-block; background:#ff0055; color:#fff; font-size:10px; font-weight:bold;
+               padding:4px 10px; border-radius:3px; letter-spacing:1.5px; text-transform:uppercase; }
+</style></head>
+<body>
+  <div class="card">
+    <div class="header withdrawn-header">
+      <h1 class="glitch-title withdrawn-title">CRYPTS'26</h1>
+      <div class="header-sub" style="color:#ff0055;">[ REGISTRATION WITHDRAWAL CONFIRMED ]</div>
+    </div>
+    <div class="body-content">
+      <div class="greeting">Withdrawal Processed</div>
+      <div class="text">
+        Your registration for CRYPTS'26 has been <strong style="color:#ff0055;">permanently removed</strong>
+        from our central database. We are sorry to see you go.
+      </div>
+      <div class="details-box withdrawn-box">
+        <div class="detail-item">
+          <span class="detail-label">EMAIL</span>
+          <span class="detail-value" style="color:#00f3ff;">${email}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">WITHDRAWN FROM</span>
+          <span class="detail-value" style="color:#ff0055;">${rowEvents || "All Events"}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">STATUS</span>
+          <span class="status-pill">REGISTRATION DELETED</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">TIMESTAMP</span>
+          <span class="detail-value" style="color:#8b949e;">${new Date().toLocaleString()}</span>
+        </div>
+      </div>
+      <div style="text-align:center; margin-bottom:25px;">
+        <a href="https://crypts26.vercel.app/register.html" class="cta-button"
+           style="background:transparent; color:#00f3ff; border:1px solid #00f3ff;">
+          Re-Register
+        </a>
+      </div>
+      <div class="text" style="font-size:11px; color:#484f58; text-align:center;">
+        If you did not request this withdrawal, contact the organizers immediately.
+      </div>
+    </div>
+    <div class="footer">
+      &copy; CRYPTS'26 TEAM &bull; ALL SYSTEMS OPERATIONAL
+    </div>
+  </div>
+</body></html>`;
+
+  var participantPlain = "CRYPTS'26 — Registration Withdrawal Confirmed\n\n" +
+    "Your registration has been permanently removed.\n" +
+    "Email: " + email + "\n" +
+    "Events: " + (rowEvents || "All Events") + "\n" +
+    "Timestamp: " + new Date().toLocaleString() + "\n\n" +
+    "To re-register: https://crypts26.vercel.app/register.html\n\n" +
+    "If you did not request this, contact the organizers immediately.";
+
+  GmailApp.sendEmail(email, "CRYPTS'26 | Registration Withdrawn", participantPlain, {
+    from: FROM_ADDRESS,
+    name: FROM_NAME,
+    htmlBody: participantHtml
+  });
+
+  // ── Email: admin alert ────────────────────────────────────────────────────
+  var adminEmails = getAdminEmails(ss);
+  var adminHtml = `<!DOCTYPE html>
+<html><head><meta charset="utf-8"><style>${styles}
+.admin-card { border-color: #ff0055; box-shadow: 0 0 25px rgba(255,0,85,0.25); }
+.admin-header { border-bottom-color: #ff0055; }
+.admin-badge { display:inline-block; background-color:#ff0055; color:#fff; font-size:10px; font-weight:bold;
+               padding:4px 8px; border-radius:3px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:15px; }
+.admin-box { border-left-color: #ff0055; }
+.deleted-tag { display:inline-block; background:#ff0055; color:#fff; font-size:10px; font-weight:bold;
+               padding:3px 8px; border-radius:2px; letter-spacing:1px; }
+</style></head>
+<body>
+  <div class="card admin-card">
+    <div class="header admin-header">
+      <h1 class="glitch-title">CRYPTS'26</h1>
+      <div class="header-sub">[ ADMIN ALERT &bull; REGISTRATION WITHDRAWN ]</div>
+    </div>
+    <div class="body-content">
+      <div class="admin-badge">⚠ WITHDRAWAL ALERT</div>
+      <div class="text">A registered operator has withdrawn their participation via the self-service portal.</div>
+      <div class="details-box admin-box">
+        <div class="detail-item">
+          <span class="detail-label">EMAIL</span>
+          <span class="detail-value" style="color:#00f3ff;">${email}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">NAME / SQUAD</span>
+          <span class="detail-value" style="color:#ffffff;">${rowName || "(unknown)"}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">CLASS / SECTION</span>
+          <span class="detail-value" style="color:#ffffff;">Class ${rowClass} — ${rowSection}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">EVENTS WITHDRAWN FROM</span>
+          <span class="detail-value" style="color:#ff0055;">${rowEvents || "All Events"}</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">STATUS</span>
+          <span class="deleted-tag">ROW DELETED FROM SHEET</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">TIMESTAMP</span>
+          <span class="detail-value" style="color:#8b949e;">${new Date().toLocaleString()}</span>
+        </div>
+      </div>
+      <div style="text-align:center; margin-bottom:20px;">
+        <a href="${ss.getUrl()}" class="cta-button" style="background:transparent; color:#ff0055; border:1px solid #ff0055;">
+          Open Live Database
+        </a>
+      </div>
+    </div>
+    <div class="footer">
+      CRYPTS'26 INTERNAL CONSOLE &bull; AUTOMATED SYSTEM NOTIFICATION
+    </div>
+  </div>
+</body></html>`;
+
+  var adminPlain = "ALERT: REGISTRATION WITHDRAWN\n\n" +
+    "Email: " + email + "\n" +
+    "Name/Squad: " + (rowName || "(unknown)") + "\n" +
+    "Class/Section: Class " + rowClass + "-" + rowSection + "\n" +
+    "Events: " + (rowEvents || "All Events") + "\n" +
+    "Timestamp: " + new Date().toLocaleString() + "\n\n" +
+    "Live DB: " + ss.getUrl();
+
+  if (adminEmails.length > 0) {
+    GmailApp.sendEmail(adminEmails.join(","), "ALERT: REGISTRATION WITHDRAWN — " + email, adminPlain, {
       from: FROM_ADDRESS,
       name: FROM_NAME,
       htmlBody: adminHtml

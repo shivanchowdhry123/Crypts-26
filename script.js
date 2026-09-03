@@ -1919,6 +1919,96 @@ function initTeamManagement() {
 
     // Init: show step 1
     setStepActive(1);
+
+    // ── Delete / Withdrawal flow ──────────────────────────────
+    const deleteBtn        = document.getElementById('tm-delete-btn');
+    const deleteConfirm    = document.getElementById('tm-delete-confirm');
+    const deleteCheck      = document.getElementById('tm-delete-confirm-check');
+    const deleteConfirmBtn = document.getElementById('tm-delete-confirm-btn');
+    const deleteCancelBtn  = document.getElementById('tm-delete-cancel-btn');
+    const withdrawnScreen  = document.getElementById('tm-withdrawn-screen');
+    const withdrawnEmail   = document.getElementById('tm-withdrawn-email');
+
+    // Show inline confirm panel
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+            deleteConfirm.classList.remove('hidden');
+            deleteBtn.classList.add('hidden');
+            deleteConfirm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    }
+
+    // Checkbox enables the confirm button
+    if (deleteCheck) {
+        deleteCheck.addEventListener('change', () => {
+            if (deleteConfirmBtn) deleteConfirmBtn.disabled = !deleteCheck.checked;
+        });
+    }
+
+    // Cancel collapses the panel
+    if (deleteCancelBtn) {
+        deleteCancelBtn.addEventListener('click', () => {
+            deleteConfirm.classList.add('hidden');
+            if (deleteBtn) deleteBtn.classList.remove('hidden');
+            if (deleteCheck) deleteCheck.checked = false;
+            if (deleteConfirmBtn) deleteConfirmBtn.disabled = true;
+            clearConsole('tm-console-delete');
+        });
+    }
+
+    // Confirm → call backend
+    if (deleteConfirmBtn) {
+        deleteConfirmBtn.addEventListener('click', handleDelete);
+    }
+
+    async function handleDelete() {
+        deleteConfirmBtn.disabled = true;
+        deleteConfirmBtn.textContent = 'PROCESSING...';
+        clearConsole('tm-console-delete');
+        appendConsole('tm-console-delete', '> INITIATING WITHDRAWAL SEQUENCE...');
+        appendConsole('tm-console-delete', '> PURGING REGISTRY ENTRY...');
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                    action: 'deleteRegistration',
+                    email: verifiedEmail,
+                    sessionToken,
+                }),
+            });
+
+            appendConsole('tm-console-delete', '> ENTRY PURGED. WITHDRAWAL COMPLETE.', 'text-[#ff0055]');
+
+            // Show withdrawn screen
+            emailPanel.classList.add('hidden');
+            otpPanel.classList.add('hidden');
+            editPanel.classList.add('hidden');
+            successPanel.classList.add('hidden');
+            if (withdrawnScreen) {
+                withdrawnScreen.classList.remove('hidden');
+                if (withdrawnEmail) withdrawnEmail.textContent = verifiedEmail;
+            }
+
+            // Mark all dots done
+            ['step-dot-1','step-dot-2','step-dot-3'].forEach(id => {
+                const d = document.getElementById(id);
+                if (d) { d.classList.remove('active'); d.classList.add('done'); }
+            });
+            ['connector-1-2','connector-2-3'].forEach(id => {
+                const c = document.getElementById(id);
+                if (c) c.classList.add('done');
+            });
+
+        } catch (err) {
+            appendConsole('tm-console-delete', '> ERROR: WITHDRAWAL FAILED. RETRY.', 'text-red-400');
+            deleteConfirmBtn.disabled = false;
+            deleteConfirmBtn.textContent = 'CONFIRM WITHDRAWAL';
+        }
+    }
 }
 
 

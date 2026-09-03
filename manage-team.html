@@ -258,29 +258,102 @@
                     <button id="tm-save-btn" class="transmit-btn mt-2">
                         SAVE CHANGES
                     </button>
+
+                    <!-- ─── Danger Zone ─── -->
+                    <div class="mt-6 border-t border-[#ff0055]/20 pt-6">
+                        <div id="tm-delete-zone-initial">
+                            <div class="flex items-center justify-between">
+                                <div class="text-[10px] font-mono text-white/30 uppercase tracking-widest">Danger Zone</div>
+                                <button id="tm-delete-btn"
+                                    class="px-4 py-2 text-[10px] font-mono font-bold uppercase tracking-widest text-[#ff0055] border border-[#ff0055]/40 bg-[#ff0055]/5 hover:bg-[#ff0055]/15 hover:border-[#ff0055] hover:shadow-[0_0_12px_rgba(255,0,85,0.3)] rounded transition-all">
+                                    ✕ WITHDRAW REGISTRATION
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Inline confirm panel (hidden by default) -->
+                        <div id="tm-delete-confirm" class="hidden mt-4 p-4 bg-[#ff0055]/10 border border-[#ff0055]/50 rounded space-y-4">
+                            <div>
+                                <div class="text-[#ff0055] font-bold font-mono text-sm uppercase tracking-widest mb-1">⚠ Confirm Withdrawal</div>
+                                <p class="text-white/60 text-[11px] font-mono leading-relaxed">
+                                    This will <strong class="text-white">permanently delete</strong> your registration from the CRYPTS'26 database.
+                                    You will be removed from all selected events. A confirmation will be sent to your email and all organizers.
+                                </p>
+                            </div>
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" id="tm-delete-confirm-check"
+                                    class="mt-0.5 accent-[#ff0055] w-4 h-4 flex-shrink-0">
+                                <span class="text-[11px] font-mono text-white/70">
+                                    I understand this action is irreversible and I want to withdraw my team from CRYPTS'26.
+                                </span>
+                            </label>
+                            <div id="tm-console-delete" class="hidden p-3 bg-black/60 border border-[#ff0055]/30 text-[10px] font-mono space-y-1 text-white/80 rounded"></div>
+                            <div class="flex gap-3">
+                                <button id="tm-delete-confirm-btn"
+                                    class="flex-1 py-2.5 text-[10px] font-mono font-bold uppercase tracking-widest text-white bg-[#ff0055] hover:bg-[#cc0044] rounded transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                    disabled>
+                                    CONFIRM WITHDRAWAL
+                                </button>
+                                <button id="tm-delete-cancel-btn"
+                                    class="px-6 py-2.5 text-[10px] font-mono font-bold uppercase tracking-widest text-white/50 border border-white/20 hover:border-white/40 rounded transition-all">
+                                    CANCEL
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
             <!-- ─────────────────────────────────── -->
-            <!-- SUCCESS STATE                        -->
+            <!-- SUCCESS STATE (update)              -->
             <!-- ─────────────────────────────────── -->
             <div id="tm-success-screen" class="hidden text-center py-8 space-y-6">
                 <div class="w-16 h-16 bg-[#00f3ff]/10 border-2 border-[#00f3ff] rounded-full flex items-center justify-center mx-auto text-2xl shadow-[0_0_25px_rgba(0,243,255,0.4)]">
                     ✓
                 </div>
                 <div>
-                    <h3 class="text-2xl font-bold text-[#00f3ff] uppercase tracking-wide">SQUAD UPDATED</h3>
-                    <p class="text-white/60 text-xs mt-2 max-w-md mx-auto">Team roster has been synchronized to the central matrix. Notification dispatched to all operators and organizers.</p>
+                    <h3 class="text-2xl font-bold text-[#00f3ff] uppercase tracking-wide">REGISTRATION UPDATED</h3>
+                    <p class="text-white/60 text-xs mt-2 max-w-md mx-auto">Your registration has been synchronized to the central matrix. Notifications dispatched to all operators and organizers.</p>
                 </div>
                 <div class="p-4 bg-black/50 border border-white/10 text-[10px] font-mono text-left max-w-sm mx-auto space-y-1">
                     <div class="text-[#ff00c1] font-bold">// UPDATE_SUMMARY</div>
                     <div>STATUS: <span class="text-[#00f3ff]">SYNCHRONIZED</span></div>
                     <div>EMAIL: <span id="tm-summary-email" class="text-white"></span></div>
                     <div>SQUAD: <span id="tm-summary-members" class="text-white"></span></div>
+                    <div>CLASS: <span id="tm-summary-class" class="text-white"></span></div>
+                    <div>EVENTS: <span id="tm-summary-events" class="text-[#00f3ff]"></span></div>
                 </div>
                 <a href="index.html" class="inline-block bg-[#00f3ff] text-black font-bold px-8 py-3 rounded uppercase tracking-widest text-xs hover:shadow-[0_0_20px_rgba(0,243,255,0.5)] transition-all">
                     RETURN TO MAIN SITE →
                 </a>
+            </div>
+
+            <!-- ─────────────────────────────────── -->
+            <!-- WITHDRAWN STATE                      -->
+            <!-- ─────────────────────────────────── -->
+            <div id="tm-withdrawn-screen" class="hidden text-center py-8 space-y-6">
+                <div class="w-16 h-16 bg-[#ff0055]/10 border-2 border-[#ff0055] rounded-full flex items-center justify-center mx-auto text-2xl shadow-[0_0_25px_rgba(255,0,85,0.4)]">
+                    ✕
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-[#ff0055] uppercase tracking-wide">REGISTRATION WITHDRAWN</h3>
+                    <p class="text-white/60 text-xs mt-2 max-w-md mx-auto">Your registration has been removed from the CRYPTS'26 database. A confirmation has been sent to your email and the organizers.</p>
+                </div>
+                <div class="p-4 bg-black/50 border border-white/10 text-[10px] font-mono text-left max-w-sm mx-auto space-y-1">
+                    <div class="text-[#ff0055] font-bold">// WITHDRAWAL_SUMMARY</div>
+                    <div>STATUS: <span class="text-[#ff0055]">REGISTRATION DELETED</span></div>
+                    <div>EMAIL: <span id="tm-withdrawn-email" class="text-white"></span></div>
+                </div>
+                <p class="text-white/30 text-[10px] font-mono">If you change your mind, you can re-register via the portal.</p>
+                <div class="flex flex-col sm:flex-row gap-3 items-center justify-center">
+                    <a href="register.html" class="inline-block bg-white/10 text-white font-bold px-8 py-3 rounded uppercase tracking-widest text-xs hover:bg-white/20 transition-all border border-white/20">
+                        RE-REGISTER
+                    </a>
+                    <a href="index.html" class="inline-block text-white/40 font-bold px-8 py-3 rounded uppercase tracking-widest text-xs hover:text-white/70 transition-all">
+                        MAIN SITE →
+                    </a>
+                </div>
             </div>
 
         </div><!-- /registration-container -->
