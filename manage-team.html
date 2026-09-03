@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Team | CRYPTS'26 — OPG World School</title>
+    <meta name="description" content="Securely update your CRYPTS'26 team members. Verify your registered email, authenticate with OTP, and edit your squad.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between relative overflow-x-hidden">
+
+<!-- Custom Neon Blue Pointer -->
+<div id="custom-cursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+</div>
+
+<!-- Scanline Overlay -->
+<div class="scanline"></div>
+
+<!-- Background Canvas & Blobs -->
+<canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+<div class="ambient-blob blob-1"></div>
+<div class="ambient-blob blob-2"></div>
+
+<!-- NAVIGATION HEADER -->
+<nav class="fixed top-0 w-full z-50 bg-black/90 border-b border-white/5 backdrop-blur-sm">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="index.html" class="flex items-center group">
+            <div class="logo-image-frame logo-nav-size mr-3">
+                <img src="logo/logo.png" alt="CRYPTS'26 Logo">
+            </div>
+            <span class="glitch glitch-header text-white" data-text="CRYPTS'26">CRYPTS'<span class="highlight-v">26</span></span>
+        </a>
+
+        <div class="flex items-center space-x-6">
+            <span class="hidden md:inline-block text-[9px] tracking-[0.2em] text-[#00f3ff] opacity-70">NODE_STATUS: ONLINE</span>
+            <a href="register.html" class="nav-link text-white/70 hover:text-[#ff00c1] flex items-center text-[11px]">
+                <span class="mr-1">+</span> ENROLL
+            </a>
+            <a href="index.html" class="nav-link text-white/70 hover:text-[#00f3ff] flex items-center text-[11px]">
+                <span class="mr-1">←</span> MAIN_TERMINAL
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="pt-28 pb-20 px-6 flex-1 flex items-center justify-center relative z-10">
+    <div class="w-full max-w-2xl">
+
+        <!-- Header -->
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <span class="section-tag">// TEAM_MANAGEMENT_PROTOCOL</span>
+                <h1 class="glitch text-[#00f3ff] text-2xl md:text-3xl mt-1" data-text="08_MANAGE_SQUAD">08_MANAGE_SQUAD</h1>
+            </div>
+            <a href="index.html" class="text-[9px] tracking-widest text-white/40 hover:text-[#00f3ff] uppercase transition-colors">
+                [EXIT PORTAL]
+            </a>
+        </div>
+
+        <!-- Main Card -->
+        <div class="registration-container p-8 md:p-12 relative overflow-hidden">
+
+            <!-- Step Indicators -->
+            <div class="flex items-center justify-center gap-0 mb-8 font-mono text-[10px]" id="step-indicators">
+                <div class="step-indicator active" id="step-dot-1">
+                    <span class="step-num">01</span>
+                    <span class="step-label">VERIFY_EMAIL</span>
+                </div>
+                <div class="step-connector" id="connector-1-2"></div>
+                <div class="step-indicator" id="step-dot-2">
+                    <span class="step-num">02</span>
+                    <span class="step-label">AUTH_OTP</span>
+                </div>
+                <div class="step-connector" id="connector-2-3"></div>
+                <div class="step-indicator" id="step-dot-3">
+                    <span class="step-num">03</span>
+                    <span class="step-label">EDIT_SQUAD</span>
+                </div>
+            </div>
+
+            <!-- ─────────────────────────────────── -->
+            <!-- STEP 1: EMAIL INPUT                 -->
+            <!-- ─────────────────────────────────── -->
+            <div id="step-email-panel">
+                <div class="text-center mb-8 border-b border-white/10 pb-6">
+                    <h2 class="text-xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">Identify Your Operator</h2>
+                    <p class="text-white/40 text-xs tracking-widest uppercase">Enter your registered email to begin</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="reg-field-label" for="tm-email">Registered Email Address <span class="text-[#ff00c1]">*</span></label>
+                        <input type="email" id="tm-email" class="reg-field-input" placeholder="operator@domain.edu" autocomplete="email" required>
+                        <p class="field-error-msg" id="tm-err-email">⚠ Enter a valid registered email address.</p>
+                    </div>
+
+                    <!-- Console readout -->
+                    <div id="tm-console-1" class="hidden p-4 bg-black/60 border border-[#00f3ff]/30 text-[10px] font-mono space-y-1 text-white/80 rounded"></div>
+
+                    <button id="tm-send-otp-btn" class="transmit-btn mt-2" style="background: linear-gradient(135deg, #00889d 0%, #005f6b 100%); border-color: #00f3ff;">
+                        TRANSMIT VERIFICATION CODE
+                    </button>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-white/10 text-[10px] font-mono text-white/30 text-center leading-relaxed">
+                    A 6-digit one-time passcode will be dispatched to your registered email.<br>
+                    Code expires in <span class="text-[#00f3ff]">10 minutes</span>.
+                </div>
+            </div>
+
+            <!-- ─────────────────────────────────── -->
+            <!-- STEP 2: OTP VERIFICATION            -->
+            <!-- ─────────────────────────────────── -->
+            <div id="step-otp-panel" class="hidden">
+                <div class="text-center mb-8 border-b border-white/10 pb-6">
+                    <h2 class="text-xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">Enter Verification Code</h2>
+                    <p class="text-white/40 text-xs tracking-widest uppercase">Check your inbox for the 6-digit OTP</p>
+                    <div class="mt-3 inline-flex items-center gap-2 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded px-3 py-1.5">
+                        <span class="text-[9px] text-[#00f3ff] tracking-widest">SENDING TO:</span>
+                        <span class="text-[11px] text-white font-bold" id="tm-otp-email-display"></span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- OTP digit input -->
+                    <div>
+                        <label class="reg-field-label" for="tm-otp">One-Time Passcode <span class="text-[#ff00c1]">*</span></label>
+                        <input
+                            type="text"
+                            id="tm-otp"
+                            class="reg-field-input text-center text-2xl tracking-[0.6em] font-bold"
+                            placeholder="— — — — — —"
+                            maxlength="6"
+                            autocomplete="one-time-code"
+                            inputmode="numeric"
+                            required
+                        >
+                        <p class="field-error-msg" id="tm-err-otp">⚠ Invalid or expired code. Request a new one.</p>
+                    </div>
+
+                    <!-- Console readout -->
+                    <div id="tm-console-2" class="hidden p-4 bg-black/60 border border-[#00f3ff]/30 text-[10px] font-mono space-y-1 text-white/80 rounded"></div>
+
+                    <button id="tm-verify-btn" class="transmit-btn mt-2" style="background: linear-gradient(135deg, #00889d 0%, #005f6b 100%); border-color: #00f3ff;">
+                        AUTHENTICATE & ACCESS
+                    </button>
+
+                    <div class="text-center mt-4 font-mono text-[10px] text-white/40">
+                        Didn't receive it?
+                        <button id="tm-resend-btn" class="text-[#00f3ff] hover:underline ml-1 disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+                            RESEND CODE
+                        </button>
+                        <span id="tm-resend-countdown" class="text-white/30 ml-1"></span>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="tm-back-to-email" class="text-[10px] text-white/30 hover:text-white/60 uppercase tracking-widest transition-colors">
+                            ← Change Email
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ─────────────────────────────────── -->
+            <!-- STEP 3: EDIT TEAM                   -->
+            <!-- ─────────────────────────────────── -->
+            <div id="step-edit-panel" class="hidden">
+                <div class="text-center mb-8 border-b border-white/10 pb-6">
+                    <h2 class="text-xl font-bold tracking-tight text-[#00f3ff] uppercase mb-2">Edit Your Squad</h2>
+                    <p class="text-white/40 text-xs tracking-widest uppercase">Update team member names below</p>
+                    <div class="mt-3 flex flex-wrap items-center justify-center gap-2">
+                        <div class="inline-flex items-center gap-2 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded px-3 py-1.5">
+                            <span class="text-[9px] text-[#00f3ff] tracking-widest">CLASS:</span>
+                            <span class="text-[11px] text-white font-bold" id="tm-display-class"></span>
+                        </div>
+                        <div class="inline-flex items-center gap-2 bg-[#00f3ff]/10 border border-[#00f3ff]/30 rounded px-3 py-1.5">
+                            <span class="text-[9px] text-[#00f3ff] tracking-widest">SECTION:</span>
+                            <span class="text-[11px] text-white font-bold" id="tm-display-section"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Registered Events (read-only) -->
+                    <div>
+                        <label class="reg-field-label">Registered Event Modules <span class="text-white/30">(read-only)</span></label>
+                        <div id="tm-events-display" class="flex flex-wrap gap-2 mb-1"></div>
+                        <p class="text-[10px] text-white/30 font-mono mt-2">To change events, contact the organizers directly.</p>
+                    </div>
+
+                    <!-- Team Members edit -->
+                    <div>
+                        <label class="reg-field-label" for="tm-members">
+                            Team Member Names
+                            <span class="text-white/30 font-normal normal-case text-[10px]">(one per line, or comma-separated)</span>
+                            <span class="text-[#ff00c1]">*</span>
+                        </label>
+                        <textarea
+                            id="tm-members"
+                            class="reg-field-input"
+                            rows="5"
+                            placeholder="Aarav Sharma&#10;Riya Mehta&#10;Kabir Singh"
+                            style="resize: vertical; margin-bottom: 4px;"
+                            required
+                        ></textarea>
+                        <p class="text-[10px] text-white/30 font-mono mb-4">List all current team members — this replaces the existing entry.</p>
+                        <p class="field-error-msg" id="tm-err-members">⚠ Enter at least one team member name.</p>
+                    </div>
+
+                    <!-- Confirmation notice -->
+                    <div class="bg-[#ff0055]/10 border border-[#ff0055]/30 rounded p-4 text-[11px] font-mono text-white/70 leading-relaxed">
+                        <strong class="text-[#ff0055] block mb-1 uppercase tracking-wider">⚠ Confirmation Notice</strong>
+                        Saving will send an update notification to your registered email and to the CRYPTS'26 organizers.
+                        Previous team data will be overwritten.
+                    </div>
+
+                    <!-- Console readout -->
+                    <div id="tm-console-3" class="hidden p-4 bg-black/60 border border-[#00f3ff]/30 text-[10px] font-mono space-y-1 text-white/80 rounded"></div>
+
+                    <button id="tm-save-btn" class="transmit-btn mt-2">
+                        SAVE SQUAD CHANGES
+                    </button>
+                </div>
+            </div>
+
+            <!-- ─────────────────────────────────── -->
+            <!-- SUCCESS STATE                        -->
+            <!-- ─────────────────────────────────── -->
+            <div id="tm-success-screen" class="hidden text-center py-8 space-y-6">
+                <div class="w-16 h-16 bg-[#00f3ff]/10 border-2 border-[#00f3ff] rounded-full flex items-center justify-center mx-auto text-2xl shadow-[0_0_25px_rgba(0,243,255,0.4)]">
+                    ✓
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-[#00f3ff] uppercase tracking-wide">SQUAD UPDATED</h3>
+                    <p class="text-white/60 text-xs mt-2 max-w-md mx-auto">Team roster has been synchronized to the central matrix. Notification dispatched to all operators and organizers.</p>
+                </div>
+                <div class="p-4 bg-black/50 border border-white/10 text-[10px] font-mono text-left max-w-sm mx-auto space-y-1">
+                    <div class="text-[#ff00c1] font-bold">// UPDATE_SUMMARY</div>
+                    <div>STATUS: <span class="text-[#00f3ff]">SYNCHRONIZED</span></div>
+                    <div>EMAIL: <span id="tm-summary-email" class="text-white"></span></div>
+                    <div>SQUAD: <span id="tm-summary-members" class="text-white"></span></div>
+                </div>
+                <a href="index.html" class="inline-block bg-[#00f3ff] text-black font-bold px-8 py-3 rounded uppercase tracking-widest text-xs hover:shadow-[0_0_20px_rgba(0,243,255,0.5)] transition-all">
+                    RETURN TO MAIN SITE →
+                </a>
+            </div>
+
+        </div><!-- /registration-container -->
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer relative z-10">
+    <p>CRYPTS'26 &nbsp;•&nbsp; OPG World School &nbsp;•&nbsp; TechFest &nbsp;•&nbsp; <span id="footer-year">2026</span></p>
+    <p class="mt-2">Built with precision. Encrypted by design.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

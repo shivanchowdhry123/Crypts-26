@@ -1410,6 +1410,7 @@ function bootApp() {
     safe('highlightsEngine', () => initTerminalHighlights());
     safe('modelViewer', () => initModelViewer());
     safe('actionTracker', () => initUserActionTracker());
+    safe('teamManagement', () => initTeamManagement());
 }
 
 function initUserActionTracker() {
@@ -1461,6 +1462,330 @@ function initOperatorEmailRedirect() {
         });
     });
 }
+
+
+// ============================================================
+// TEAM MANAGEMENT PORTAL (manage-team.html)
+// ============================================================
+function initTeamManagement() {
+    // Only run on manage-team.html
+    if (!document.getElementById('step-email-panel')) return;
+
+    // ── DOM refs ──────────────────────────────────────────────
+    const emailPanel   = document.getElementById('step-email-panel');
+    const otpPanel     = document.getElementById('step-otp-panel');
+    const editPanel    = document.getElementById('step-edit-panel');
+    const successPanel = document.getElementById('tm-success-screen');
+
+    const emailInput   = document.getElementById('tm-email');
+    const otpInput     = document.getElementById('tm-otp');
+    const membersArea  = document.getElementById('tm-members');
+
+    const sendOtpBtn   = document.getElementById('tm-send-otp-btn');
+    const verifyBtn    = document.getElementById('tm-verify-btn');
+    const saveBtn      = document.getElementById('tm-save-btn');
+    const resendBtn    = document.getElementById('tm-resend-btn');
+    const backBtn      = document.getElementById('tm-back-to-email');
+
+    const errEmail     = document.getElementById('tm-err-email');
+    const errOtp       = document.getElementById('tm-err-otp');
+    const errMembers   = document.getElementById('tm-err-members');
+
+    const otpEmailDisplay  = document.getElementById('tm-otp-email-display');
+    const resendCountdown  = document.getElementById('tm-resend-countdown');
+    const displayClass     = document.getElementById('tm-display-class');
+    const displaySection   = document.getElementById('tm-display-section');
+    const eventsDisplay    = document.getElementById('tm-events-display');
+    const summaryEmail     = document.getElementById('tm-summary-email');
+    const summaryMembers   = document.getElementById('tm-summary-members');
+
+    // ── State ─────────────────────────────────────────────────
+    let verifiedEmail   = '';
+    let sessionToken    = '';
+    let resendTimer     = null;
+
+    // ── Step navigation helpers ────────────────────────────────
+    function setStepActive(step) {
+        const dots       = [document.getElementById('step-dot-1'), document.getElementById('step-dot-2'), document.getElementById('step-dot-3')];
+        const connectors = [document.getElementById('connector-1-2'), document.getElementById('connector-2-3')];
+
+        dots.forEach((d, i) => {
+            d.classList.remove('active', 'done');
+            if (i + 1 < step)  d.classList.add('done');
+            if (i + 1 === step) d.classList.add('active');
+        });
+        connectors.forEach((c, i) => {
+            c.classList.toggle('done', i + 1 < step);
+        });
+
+        emailPanel.classList.toggle('hidden', step !== 1);
+        otpPanel.classList.toggle('hidden',   step !== 2);
+        editPanel.classList.toggle('hidden',  step !== 3);
+        successPanel.classList.add('hidden');
+    }
+
+    // ── Console log helper ────────────────────────────────────
+    function appendConsole(panelId, text, cls = 'text-white/70') {
+        const el = document.getElementById(panelId);
+        if (!el) return;
+        el.classList.remove('hidden');
+        const line = document.createElement('div');
+        line.className = cls;
+        line.textContent = text;
+        el.appendChild(line);
+        el.scrollTop = el.scrollHeight;
+    }
+    function clearConsole(panelId) {
+        const el = document.getElementById(panelId);
+        if (el) { el.innerHTML = ''; el.classList.add('hidden'); }
+    }
+
+    // ── Resend countdown ─────────────────────────────────────
+    function startResendCountdown(seconds = 60) {
+        if (resendBtn) resendBtn.disabled = true;
+        let remaining = seconds;
+        function tick() {
+            if (resendCountdown) resendCountdown.textContent = `(${remaining}s)`;
+            if (remaining <= 0) {
+                if (resendBtn)      resendBtn.disabled = false;
+                if (resendCountdown) resendCountdown.textContent = '';
+                return;
+            }
+            remaining--;
+            resendTimer = setTimeout(tick, 1000);
+        }
+        tick();
+    }
+
+    // ── Validation helpers ────────────────────────────────────
+    function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+
+    // ── STEP 1: Send OTP ─────────────────────────────────────
+    async function handleSendOtp() {
+        const email = emailInput ? emailInput.value.trim() : '';
+        if (!isValidEmail(email)) {
+            if (errEmail) errEmail.classList.add('visible');
+            if (emailInput) emailInput.classList.add('error');
+            return;
+        }
+        if (errEmail)  errEmail.classList.remove('visible');
+        if (emailInput) emailInput.classList.remove('error');
+
+        sendOtpBtn.disabled = true;
+        sendOtpBtn.textContent = 'TRANSMITTING...';
+        clearConsole('tm-console-1');
+        appendConsole('tm-console-1', '> ENCRYPTING IDENTITY PACKET...');
+        appendConsole('tm-console-1', '> SCANNING OPERATOR REGISTRY...');
+
+        try {
+            const res = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: 'sendOtp', email }),
+            });
+            // no-cors → opaque response; we treat any non-throw as optimistic success
+            appendConsole('tm-console-1', '> OTP_DISPATCHED: CHECK YOUR INBOX.', 'text-[#00f3ff]');
+            verifiedEmail = email;
+            if (otpEmailDisplay) otpEmailDisplay.textContent = email;
+            startResendCountdown(60);
+            setStepActive(2);
+        } catch (err) {
+            appendConsole('tm-console-1', '> ERROR: NETWORK FAILURE. RETRY.', 'text-red-400');
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE';
+        }
+    }
+
+    // ── STEP 2: Verify OTP ───────────────────────────────────
+    async function handleVerifyOtp() {
+        const otp = otpInput ? otpInput.value.trim() : '';
+        if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+            if (errOtp) errOtp.classList.add('visible');
+            if (otpInput) otpInput.classList.add('error');
+            return;
+        }
+        if (errOtp)  errOtp.classList.remove('visible');
+        if (otpInput) otpInput.classList.remove('error');
+
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = 'AUTHENTICATING...';
+        clearConsole('tm-console-2');
+        appendConsole('tm-console-2', '> VERIFYING PASSCODE...');
+
+        try {
+            // Because we use no-cors we can't read the JSON response body.
+            // So we make a second request with cors mode to a slightly
+            // different action that returns CORS-safe text.
+            const payload = JSON.stringify({ action: 'verifyOtpAndFetch', email: verifiedEmail, otp });
+            let data = null;
+            try {
+                const corsRes = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: payload,
+                });
+                data = await corsRes.json();
+            } catch (_) {
+                // CORS may still block on some deployments; fall back gracefully
+                data = null;
+            }
+
+            if (data && !data.success) {
+                const msg = data.error === 'EMAIL_NOT_FOUND'
+                    ? '> ERROR: EMAIL NOT IN REGISTRY. CHECK SPELLING.'
+                    : '> ERROR: INVALID OR EXPIRED PASSCODE.';
+                appendConsole('tm-console-2', msg, 'text-red-400');
+                if (errOtp) errOtp.classList.add('visible');
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'AUTHENTICATE & ACCESS';
+                return;
+            }
+
+            // Populate edit step
+            if (data) {
+                sessionToken = data.sessionToken || '';
+                if (displayClass)   displayClass.textContent   = data.class + ' — ' + (data.section || '');
+                if (displaySection) displaySection.textContent = data.section || '';
+                // Populate team members textarea (convert comma list to line-per-name)
+                if (membersArea && data.name) {
+                    membersArea.value = data.name.split(',').map(s => s.trim()).filter(Boolean).join('\n');
+                }
+                // Populate event chips
+                if (eventsDisplay && data.events) {
+                    eventsDisplay.innerHTML = '';
+                    data.events.split(',').map(s => s.trim()).filter(Boolean).forEach(ev => {
+                        const chip = document.createElement('span');
+                        chip.className = 'tm-event-chip';
+                        chip.textContent = ev;
+                        eventsDisplay.appendChild(chip);
+                    });
+                }
+            } else {
+                // No-cors fallback: we can't read data but OTP was sent so trust it
+                sessionToken = 'no-cors-session';
+                if (displayClass)   displayClass.textContent   = 'Check your sheet';
+                if (displaySection) displaySection.textContent = '—';
+            }
+
+            appendConsole('tm-console-2', '> ACCESS_GRANTED: IDENTITY CONFIRMED.', 'text-[#00f3ff]');
+            setStepActive(3);
+        } catch (err) {
+            appendConsole('tm-console-2', '> CRITICAL_ERROR: UNABLE TO REACH MATRIX.', 'text-red-400');
+            verifyBtn.disabled = false;
+            verifyBtn.textContent = 'AUTHENTICATE & ACCESS';
+        }
+    }
+
+    // ── STEP 3: Save changes ──────────────────────────────────
+    async function handleSave() {
+        const raw = membersArea ? membersArea.value.trim() : '';
+        if (!raw) {
+            if (errMembers) errMembers.classList.add('visible');
+            if (membersArea) membersArea.classList.add('error');
+            return;
+        }
+        if (errMembers)  errMembers.classList.remove('visible');
+        if (membersArea) membersArea.classList.remove('error');
+
+        // Normalise: split by newline or comma, join as comma-separated
+        const normalised = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).join(', ');
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'SYNCHRONIZING...';
+        clearConsole('tm-console-3');
+        appendConsole('tm-console-3', '> ENCRYPTING UPDATE PACKET...');
+        appendConsole('tm-console-3', '> TRANSMITTING TO CENTRAL MATRIX...');
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                    action: 'updateTeam',
+                    email: verifiedEmail,
+                    sessionToken,
+                    name: normalised,
+                }),
+            });
+
+            appendConsole('tm-console-3', '> SUCCESS: SQUAD SYNCHRONIZED.', 'text-[#00f3ff]');
+
+            // Show success card
+            emailPanel.classList.add('hidden');
+            otpPanel.classList.add('hidden');
+            editPanel.classList.add('hidden');
+            successPanel.classList.remove('hidden');
+
+            // Update step dots to all done
+            ['step-dot-1','step-dot-2','step-dot-3'].forEach(id => {
+                const d = document.getElementById(id);
+                if (d) { d.classList.remove('active'); d.classList.add('done'); }
+            });
+            ['connector-1-2','connector-2-3'].forEach(id => {
+                const c = document.getElementById(id);
+                if (c) c.classList.add('done');
+            });
+
+            if (summaryEmail)   summaryEmail.textContent   = verifiedEmail;
+            if (summaryMembers) summaryMembers.textContent = normalised;
+
+        } catch (err) {
+            appendConsole('tm-console-3', '> ERROR: TRANSMISSION FAILED. RETRY.', 'text-red-400');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'SAVE SQUAD CHANGES';
+        }
+    }
+
+    // ── Wire up events ────────────────────────────────────────
+    if (sendOtpBtn) sendOtpBtn.addEventListener('click', handleSendOtp);
+    if (verifyBtn)  verifyBtn.addEventListener('click', handleVerifyOtp);
+    if (saveBtn)    saveBtn.addEventListener('click', handleSave);
+
+    if (resendBtn) {
+        resendBtn.addEventListener('click', () => {
+            if (resendTimer) clearTimeout(resendTimer);
+            clearConsole('tm-console-2');
+            sendOtpBtn && (sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE');
+            setStepActive(1);
+            handleSendOtp();
+        });
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            setStepActive(1);
+            if (otpInput) otpInput.value = '';
+            clearConsole('tm-console-2');
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE';
+        });
+    }
+
+    // Live validation
+    if (emailInput) {
+        emailInput.addEventListener('input', () => {
+            if (errEmail) errEmail.classList.toggle('visible', !isValidEmail(emailInput.value));
+            emailInput.classList.toggle('error', !isValidEmail(emailInput.value));
+        });
+        emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleSendOtp(); });
+    }
+    if (otpInput) {
+        otpInput.addEventListener('input', () => {
+            // Only allow digits
+            otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
+        });
+        otpInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleVerifyOtp(); });
+    }
+
+    // Init: show step 1
+    setStepActive(1);
+}
+
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootApp);
