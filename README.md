@@ -56,8 +56,8 @@ Themed around *"Born From Chaos, Built for Innovation"*, the platform emphasizes
 │   └── logo.png         # Official CRYPTS'26 transparent PNG emblem
 ├── For AI/
 │   ├── AGENT_CONTEXT_PROMPT.md   # Developer guide for AI agents
-│   ├── DESIGN_REVAMP_PLAN.md     # Design benchmark & roadmap reference
-│   └── CRYPTS 5.0.pdf            # Official 31-page event brochure
+│   └── DAILY_ITINERARY_TEMPLATE.html  # Daily schedule template
+├── CRYPTS 5.0.pdf            # Official 31-page event brochure
 └── README.md            # This document
 ```
 

@@ -1182,7 +1182,7 @@ const EVENTS_DATA = {
         cat: "security",
         mode: "offline",
         eligibility: "Class 6–12",
-        date: "September 23, 2026",
+        date: "September 17, 2026",
         classRange: [6, 12],
         desc: "Escape room meets tech — solve interconnected logic puzzles, decode sequences, and break free before the timer runs out.",
         rules: ["Teams of 3–4 members", "Time limit per room", "No external devices", "Hints available with penalty"],
