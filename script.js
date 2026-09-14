@@ -58,6 +58,7 @@ const cliLines = [
             <span style="border: 1px solid #ff00c1; padding: 0.1rem 0.25rem; font-size: 0.6rem; border-radius: 0.125rem; color: #ff00c1; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 0 8px rgba(255,0,193,0.15);">LIVE FEED</span>
         </div>
         <div style="color: rgba(255,255,255,0.9); font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.2rem;">
+            <p style="margin: 0;"><span style="color: #ff0055; font-weight: bold; font-size: 0.8rem;">⏰ REGISTRATION DEADLINE:</span> <strong style="color: #ffffff;">Registration closes Tuesday, 15 Sept at 11:59 PM IST.</strong> Enroll now before the portal locks!</p>
             <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• ✎ Squad Management &amp; Withdrawal Portal:</span> Registered operators can now edit team members, class, section, events or withdraw registration anytime via <a href="manage-team.html" style="color: #00f3ff; text-decoration: underline; font-weight: bold; cursor: pointer;">Manage Squad</a> (verified via Email OTP).</p>
             <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• 🎮 L'Arène Esports Update:</span> Registrations are now <strong style="color: #00f3ff;">OPEN for Class 9</strong> as well (Eligibility: Class 9–12)! Squad up for FC 26, Valorant &amp; Minecraft.</p>
             <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Next Up (Sept 16):</span> GLITCHVERSE</p>
@@ -144,11 +145,14 @@ function getTodayHighlights() {
             badge: "TODAY'S EVENT",
             badgeClass: "bg-[#ff00c1]/20 text-[#ff00c1]",
             lines: [
+                `<p><span class="text-[#ff0055] font-bold">⏰ LAST DAY TO REGISTER:</span> <strong class="text-white">Registration closes Tuesday, 15 Sept at 11:59 PM IST.</strong> Enroll before the portal locks!</p>`,
                 `<p><span class="text-[#00f3ff] font-bold">• 🎮 L'Arène Esports:</span> Registrations are now open for Class 9 as well (Class 9–12 eligible)!</p>`,
                 `<p><span class="text-[#ff00c1] font-bold">🔥 TODAY'S LIVE EVENT:</span> <strong class="text-white">${todayEvent.name}</strong> is happening today!</p>`,
                 `<p><span class="text-[#00f3ff] font-semibold">• Details:</span> ${todayEvent.desc} [${todayEvent.type}]</p>`
             ],
             logLines: [
+                `=== ⏰ REGISTRATION DEADLINE: TUESDAY 15 SEPT · 23:59 IST ===`,
+                `• ⚠️  LAST CHANCE: Register before midnight Tuesday or the portal locks!`,
                 `=== 🔥 TODAY'S LIVE MISSION: ${todayEvent.name} IS LIVE TODAY! ===`,
                 `• 🎮 L'Arène Esports Update: Registrations are now OPEN for Class 9 (Class 9–12 eligible)!`,
                 `• Event: ${todayEvent.name} (${todayEvent.type})`,
@@ -166,12 +170,15 @@ function getTodayHighlights() {
         badge: "LIVE FEED",
         badgeClass: "bg-[#00f3ff]/20 text-[#00f3ff]",
         lines: [
+            `<p><span class="text-[#ff0055] font-bold">⏰ LAST DAY TO REGISTER:</span> <strong class="text-white">Registration closes Tuesday, 15 Sept at 11:59 PM IST.</strong> Enroll before the portal locks!</p>`,
             `<p><span class="text-[#00f3ff] font-bold">• ✎ Manage Squad:</span> Update roster, change events, or withdraw via Manage Squad portal.</p>`,
             `<p><span class="text-[#00f3ff] font-bold">• 🎮 L'Arène Esports:</span> Registrations are now open for Class 9 as well (Class 9–12 eligible)!</p>`,
             `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong></p>`,
             `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`
         ],
         logLines: [
+            `=== ⏰ REGISTRATION DEADLINE: TUESDAY 15 SEPT · 23:59 IST ===`,
+            `• ⚠️  LAST CHANCE: Register before midnight Tuesday or the portal locks!`,
             `=== 📢 LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS ===`,
             `• ✎ Squad Management & Withdrawal: Self-service portal live at /manage-team.html (or type 'manage')`,
             `• 🎮 L'Arène Esports Update: Registrations are now OPEN for Class 9 (Class 9–12 eligible)!`,

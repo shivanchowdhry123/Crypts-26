@@ -671,7 +671,8 @@
             </div>
 
             <div class="registration-container mt-4 p-8 md:p-12 reveal relative overflow-hidden">
-                <div class="text-center">
+                <!-- Open State -->
+                <div class="text-center" id="enroll-open-state">
                     <div
                         class="inline-block text-[9px] tracking-[0.3em] text-[#00f3ff] border border-[#00f3ff]/30 bg-[#00f3ff]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
                         STANDALONE TRANSMISSION NODE
@@ -691,6 +692,30 @@
                             class="transmit-btn sm:w-auto px-10 py-4 inline-flex items-center justify-center shadow-[0_0_30px_rgba(217,0,188,0.4)]">
                             INITIALIZE REGISTRATION →
                         </a>
+                        <a href="manage-team.html"
+                            class="sm:w-auto px-10 py-4 inline-flex items-center justify-center font-bold tracking-widest text-xs uppercase border border-[#00f3ff]/40 text-[#00f3ff] bg-[#00f3ff]/5 hover:bg-[#00f3ff]/15 hover:shadow-[0_0_20px_rgba(0,243,255,0.3)] rounded transition-all font-mono"
+                            style="border-radius:4px;">
+                            ✎ MANAGE SQUAD
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Closed State (hidden until deadline passes) -->
+                <div class="text-center hidden" id="enroll-closed-state">
+                    <div class="inline-block text-[9px] tracking-[0.3em] text-[#ff0055] border border-[#ff0055]/40 bg-[#ff0055]/10 px-4 py-1.5 rounded uppercase mb-6 font-bold">
+                        REGISTRATION_STATUS: CLOSED
+                    </div>
+                    <div class="w-16 h-16 bg-[#ff0055]/10 border-2 border-[#ff0055] rounded-full flex items-center justify-center mx-auto text-2xl shadow-[0_0_25px_rgba(255,0,85,0.4)] mb-6 animate-pulse">
+                        🔒
+                    </div>
+                    <h3 class="text-3xl font-bold tracking-tight text-[#ff0055] uppercase mb-4">
+                        Registration Closed
+                    </h3>
+                    <p class="text-white/60 text-sm max-w-xl mx-auto leading-relaxed mb-8">
+                        The registration window has officially closed. The deadline was <strong class="text-white">Tuesday, 15 September 2026 at 11:59 PM IST</strong>.
+                        Already registered? Access your squad details below.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
                         <a href="manage-team.html"
                             class="sm:w-auto px-10 py-4 inline-flex items-center justify-center font-bold tracking-widest text-xs uppercase border border-[#00f3ff]/40 text-[#00f3ff] bg-[#00f3ff]/5 hover:bg-[#00f3ff]/15 hover:shadow-[0_0_20px_rgba(0,243,255,0.3)] rounded transition-all font-mono"
                             style="border-radius:4px;">
@@ -1335,6 +1360,25 @@
 
 
     <script src="script.js"></script>
+    <script>
+    // ============================================================
+    // REGISTRATION DEADLINE GATE — 11:59 PM IST, Tuesday 15 Sept 2026
+    // ============================================================
+    (function checkEnrollmentDeadline() {
+        // Deadline: Tuesday 15 Sept 2026, 23:59:59 IST (UTC+5:30)
+        // In UTC that is: 2026-09-15T18:29:59Z
+        var DEADLINE_UTC = new Date('2026-09-15T18:29:59Z');
+        var now = new Date();
+
+        var openState = document.getElementById('enroll-open-state');
+        var closedState = document.getElementById('enroll-closed-state');
+
+        if (now > DEADLINE_UTC) {
+            if (openState) openState.classList.add('hidden');
+            if (closedState) closedState.classList.remove('hidden');
+        }
+    })();
+    </script>
 </body>
 
 </html>

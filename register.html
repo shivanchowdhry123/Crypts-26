@@ -73,6 +73,43 @@
                 </div>
             </div>
 
+            <!-- Registration Closed Screen (shown after deadline) -->
+            <div id="reg-closed-screen" class="hidden text-center py-8 space-y-6">
+                <div class="w-20 h-20 bg-[#ff0055]/10 border-2 border-[#ff0055] rounded-full flex items-center justify-center mx-auto text-4xl shadow-[0_0_30px_rgba(255,0,85,0.4)] animate-pulse">
+                    🔒
+                </div>
+                <div>
+                    <div class="inline-block text-[9px] tracking-[0.3em] text-[#ff0055] border border-[#ff0055]/40 bg-[#ff0055]/10 px-4 py-1.5 rounded uppercase mb-4 font-bold">
+                        REGISTRATION_STATUS: CLOSED
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#ff0055] uppercase tracking-wide">Registration Closed</h3>
+                    <p class="text-white/60 text-sm mt-3 max-w-md mx-auto leading-relaxed">
+                        The registration window has officially closed. The deadline was <strong class="text-white">Tuesday, 15 September 2026 at 11:59 PM IST</strong>.
+                    </p>
+                    <p class="text-white/40 text-xs mt-2 max-w-md mx-auto font-mono">
+                        If you have already registered, please check your confirmation email or visit the Manage Squad portal.
+                    </p>
+                </div>
+                <div class="p-4 bg-black/50 border border-[#ff0055]/20 text-[10px] font-mono text-left max-w-sm mx-auto space-y-1.5">
+                    <div class="text-[#ff0055] font-bold">// SYSTEM_STATUS</div>
+                    <div class="text-white/60">PORTAL: LOCKED</div>
+                    <div class="text-white/60">DEADLINE: SEPT 15 · 23:59 IST</div>
+                    <div class="text-white/60">STATUS: ENROLLMENT TERMINATED</div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center mt-4">
+                    <a href="manage-team.html"
+                        class="inline-flex items-center justify-center font-bold tracking-widest text-xs uppercase border border-[#00f3ff]/40 text-[#00f3ff] bg-[#00f3ff]/5 hover:bg-[#00f3ff]/15 hover:shadow-[0_0_20px_rgba(0,243,255,0.3)] rounded px-8 py-3 transition-all font-mono"
+                        style="border-radius:4px;">
+                        ✎ MANAGE SQUAD
+                    </a>
+                    <a href="index.html"
+                        class="inline-flex items-center justify-center font-bold tracking-widest text-xs uppercase border border-white/20 text-white/60 bg-white/5 hover:bg-white/10 rounded px-8 py-3 transition-all font-mono"
+                        style="border-radius:4px;">
+                        ← MAIN TERMINAL
+                    </a>
+                </div>
+            </div>
+
             <!-- Registration Form -->
             <form id="registration-form" class="space-y-4" novalidate>
                 
@@ -182,5 +219,28 @@
 </footer>
 
 <script src="script.js"></script>
+<script>
+// ============================================================
+// REGISTRATION DEADLINE GATE — 11:59 PM IST, Tuesday 15 Sept 2026
+// ============================================================
+(function checkRegistrationDeadline() {
+    // Deadline: Tuesday 15 Sept 2026, 23:59:59 IST (UTC+5:30)
+    // In UTC that is: 2026-09-15T18:29:59Z
+    var DEADLINE_UTC = new Date('2026-09-15T18:29:59Z');
+
+    var now = new Date();
+
+    var form = document.getElementById('registration-form');
+    var closedScreen = document.getElementById('reg-closed-screen');
+    var successScreen = document.getElementById('success-screen');
+
+    if (now > DEADLINE_UTC) {
+        // Past deadline — hide form, show closed screen
+        if (form) form.style.display = 'none';
+        if (closedScreen) closedScreen.classList.remove('hidden');
+    }
+    // If deadline not yet passed, form stays visible (default state)
+})();
+</script>
 </body>
 </html>
