@@ -104,7 +104,16 @@ const cliLines = [
         <span style="color: #ff00c1; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem;">&gt; Welcome to CRYPTS'26</span>
     </div>` },
     { type: 'text', content: " ██████╗██████╗ ██╗   ██╗██████╗ ████████╗███████╗ ██╗██████╗ ██████╗ \n██╔════╝██╔══██╗╚██╗ ██╔╝██╔══██╗╚══██╔══╝██╔════╝██╔╝╚════██╗██╔════╝\n██║     ██████╔╝ ╚████╔╝ ██████╔╝   ██║   ███████╗╚═╝  █████╔╝███████╗\n██║     ██╔══██╗  ╚██╔╝  ██╔═══╝    ██║   ╚════██║    ██╔═══╝ ██╔═══██╗\n╚██████╗██║  ██║   ██║   ██║        ██║   ███████║    ███████╗╚██████╔╝\n ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝        ╚═╝   ╚══════╝    ╚══════╝ ╚═════╝\n" },
-    { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; margin-bottom: 0.35rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
+    { type: 'html', content: (function () {
+        // Deadline: 15 Sept 2026 23:59:59 IST — matches register.html DEADLINE_UTC
+        var DEADLINE_UTC = new Date('2026-09-15T18:29:59Z');
+        var registrationClosed = new Date() > DEADLINE_UTC;
+
+        var deadlineBanner = registrationClosed
+            ? `<p style="margin: 0;"><span style="color: #ff0055; font-weight: bold; font-size: 0.85rem;">🔒 REGISTRATION CLOSED</span> <strong style="color: #ffffff;">The portal locked at 11:59 PM IST on 15 Sept.</strong> No further enrollments are accepted.</p>`
+            : `<p style="margin: 0;"><span style="color: #ff0055; font-weight: bold; font-size: 0.85rem;">🚨 TODAY IS THE LAST DAY OF SUBMISSION!</span> <strong style="color: #ffffff;">Registration closes TONIGHT at 11:59 PM IST.</strong> Enroll now before the portal locks — no extensions!</p>`;
+
+        return `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; margin-bottom: 0.35rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
             <h3 style="color: #ff00c1; font-weight: bold; font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem; margin: 0;">
                 <span style="font-size: 0.85rem;">📢</span> LATEST ANNOUNCEMENTS & HIGHLIGHTS
@@ -118,7 +127,8 @@ const cliLines = [
             <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Next Up (Sept 16):</span> GLITCHVERSE</p>
             ${getRegistrationCliCtaHtml()}
         </div>
-    </div>` },
+    </div>`;
+    })() },
     { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
         <p style="color: #ff00c1; font-size: 0.75rem; margin: 0;"><span style="font-weight: bold;">Squad Updates &amp; Withdrawal:</span> <span style="color: rgba(255,255,255,0.9);">Need to modify your team roster, update events, or withdraw from CRYPTS'26? Access the self-service <a href="manage-team.html" style="color: #00f3ff; text-decoration: underline; font-weight: bold; cursor: pointer;">Manage Squad portal</a>.</span></p>
     </div>` }
