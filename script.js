@@ -71,17 +71,17 @@ function getRegistrationLogLines() {
             `• ⚠️  Registration closes TONIGHT at 11:59 PM IST. No extensions.`
         ];
     }
-
-    function getRegistrationActionLogLine() {
-        if (isRegistrationOpen()) {
-            return `• Action: Type 'enroll' to register or 'team' to contact event in-charges.`;
-        }
-        return `• Action: Type 'team' to contact event in-charges or view event updates in Section 02 EVENT MODULES.`;
-    }
     return [
         `=== ✅ SUBMISSIONS CLOSED ===`,
         `• Registration closed on Tuesday, 15 Sept at 11:59 PM IST.`
     ];
+}
+
+function getRegistrationActionLogLine() {
+    if (isRegistrationOpen()) {
+        return `• Action: Type 'enroll' to register or 'team' to contact event in-charges.`;
+    }
+    return `• Action: Type 'team' to contact event in-charges or view event updates in Section 02 EVENT MODULES.`;
 }
 
 function addLog(text, color = "text-white/80", skipHistory = false) {
