@@ -37,7 +37,7 @@
 
         <div class="flex items-center space-x-6">
             <span class="hidden md:inline-block text-[9px] tracking-[0.2em] text-[#00f3ff] opacity-70">NODE_STATUS: ONLINE</span>
-            <a href="register.html" class="nav-link text-white/70 hover:text-[#ff00c1] flex items-center text-[11px]">
+            <a href="register.html" id="nav-enroll-link" class="nav-link text-white/70 hover:text-[#ff00c1] flex items-center text-[11px]">
                 <span class="mr-1">+</span> ENROLL
             </a>
             <a href="index.html" class="nav-link text-white/70 hover:text-[#00f3ff] flex items-center text-[11px]">
@@ -64,6 +64,34 @@
 
         <!-- Main Card -->
         <div class="registration-container p-8 md:p-12 relative overflow-hidden">
+
+            <!-- Portal Closed Screen (shown after deadline) -->
+            <div id="tm-closed-screen" class="hidden text-center py-8 space-y-6">
+                <div class="w-20 h-20 bg-[#ff0055]/10 border-2 border-[#ff0055] rounded-full flex items-center justify-center mx-auto text-4xl shadow-[0_0_30px_rgba(255,0,85,0.4)] animate-pulse">
+                    🔒
+                </div>
+                <div>
+                    <div class="inline-block text-[9px] tracking-[0.3em] text-[#ff0055] border border-[#ff0055]/40 bg-[#ff0055]/10 px-4 py-1.5 rounded uppercase mb-4 font-bold">
+                        PORTAL_STATUS: LOCKED
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#ff0055] uppercase tracking-wide">Portal Closed</h3>
+                    <p class="text-white/60 text-sm mt-3 max-w-md mx-auto leading-relaxed">
+                        The registration and squad management portal has officially closed. The deadline was <strong class="text-white">Tuesday, 15 September 2026 at 11:59 PM IST</strong>.
+                    </p>
+                    <p class="text-white/40 text-xs mt-2 max-w-md mx-auto font-mono">
+                        No changes to registrations are permitted after the deadline.
+                    </p>
+                </div>
+                <div class="p-4 bg-black/50 border border-[#ff0055]/20 text-[10px] font-mono text-left max-w-sm mx-auto space-y-1.5">
+                    <div class="text-[#ff0055] font-bold">// SYSTEM_STATUS</div>
+                    <div class="text-white/60">PORTAL: LOCKED</div>
+                    <div class="text-white/60">DEADLINE: SEPT 15 · 23:59 IST</div>
+                    <div class="text-white/60">STATUS: MODIFICATIONS TERMINATED</div>
+                </div>
+                <a href="index.html" class="inline-flex items-center justify-center font-bold tracking-widest text-xs uppercase border border-white/20 text-white/60 bg-white/5 hover:bg-white/10 rounded px-8 py-3 transition-all font-mono" style="border-radius:4px;">
+                    ← MAIN TERMINAL
+                </a>
+            </div>
 
             <!-- Step Indicators -->
             <div class="flex items-center justify-center gap-0 mb-8 font-mono text-[10px]" id="step-indicators">
@@ -367,5 +395,28 @@
 </footer>
 
 <script src="script.js"></script>
+<script>
+// ============================================================
+// PORTAL DEADLINE GATE — 11:59 PM IST, Tuesday 15 Sept 2026
+// ============================================================
+(function checkManageTeamDeadline() {
+    var DEADLINE_UTC = new Date('2026-09-15T18:29:59Z');
+    var now = new Date();
+
+    if (now > DEADLINE_UTC) {
+        // Hide step indicators and all step panels
+        ['step-indicators', 'step-email-panel', 'step-otp-panel', 'step-edit-panel'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        // Show the closed screen
+        var closed = document.getElementById('tm-closed-screen');
+        if (closed) closed.classList.remove('hidden');
+        // Hide the nav ENROLL link
+        var enrollLink = document.getElementById('nav-enroll-link');
+        if (enrollLink) enrollLink.style.display = 'none';
+    }
+})();
+</script>
 </body>
 </html>
