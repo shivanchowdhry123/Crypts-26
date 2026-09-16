@@ -56,7 +56,7 @@ async function runInitialLogs() {
 // DYNAMIC HIGHLIGHTS & EVENT SCHEDULE ENGINE
 // ============================================================
 const EVENT_SCHEDULE = [
-    { dateStr: "Sept 17", month: 8, day: 17, name: "GLITCHVERSE", type: "OFFLINE", desc: "Offline Decryption & Cryptography Arena (Class 6–10)", cat: "Cryptic Hunt" },
+    { dateStr: "Sept 23", month: 8, day: 23, name: "GLITCHVERSE", type: "OFFLINE", desc: "Offline Decryption & Cryptography Arena (Class 6–10)", cat: "Cryptic Hunt" },
     { dateStr: "Sept 18", month: 8, day: 18, name: "SCRATCH XPLORERS", type: "OFFLINE", desc: "Scratch Block Programming Challenge (Class 4–6)", cat: "Junior Coding" },
     { dateStr: "Sept 19", month: 8, day: 19, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Kicks Off — FC 26, Valorant & Minecraft", cat: "Gaming" },
     { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 10–12)", cat: "Gaming" },
@@ -1014,7 +1014,7 @@ const EVENTS_DATA = {
         cat: "security",
         mode: "offline",
         eligibility: "Class 6–10",
-        date: "September 17, 2026",
+        date: "September 23, 2026",
         classRange: [6, 10],
         desc: "Decode ciphers, crack enigmatic puzzles, and navigate multi-layered cryptographic challenges in this offline decryption arena.",
         rules: ["Teams of 2 participants", "Multiple rounds of increasing difficulty", "Internet & AI tools permitted: ChatGPT, Perplexity, Canva, Pixlr, PhotoMosh allowed for research and asset generation", "Time-limited per round"],
