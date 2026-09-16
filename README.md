@@ -28,18 +28,18 @@ Themed around *"Born From Chaos, Built for Innovation"*, the platform emphasizes
 
 | # | Event | Mode | Eligibility | Date |
 |---|-------|------|-------------|------|
-| 1 | **Glitchverse** | Offline | Class 6–10 | Sept 17 |
+| 1 | **Glitchverse** | Offline | Class 6–10 | Sept 16 |
 | 2 | **PixelPulse** | Online | Class 8–12 | Sept 25 |
 | 3 | **Byte the Site** | Online | Class 6–12 | Sept 25 |
 | 4 | **Scratch Xplorers** | Offline | Class 4–6 | Sept 18 |
 | 5 | **IHE CinePrism** | Online | Class 6–12 | Sept 25 |
 | 6 | **Prompt Paradox** | Offline | Class 8–12 | Sept 21 |
 | 7 | **QWERTY 4.0** | Offline | Class 6–12 | Sept 22 |
-| 8 | **Jailbreak** | Offline | Class 6–12 | Sept 23 |
+| 8 | **Jailbreak** | Offline | Class 6–12 | Sept 17 |
 | 9 | **IHE CodeQuest** | Offline | Class 11–12 | Sept 28 |
 | 10 | **IHE Kernel** | Offline | Class 9–12 | Sept 24 |
 | 11 | **Game Makers** | Offline | Class 10–12 | Sept 25 |
-| 12 | **L'Arène Esports** | Online | Class 10–12 | Sept 19–26 |
+| 12 | **L'Arène Esports** | Online | Class 9–12 | Sept 19–26 |
 | 13 | **BizTech Nexus** | Offline | Class 10–12 | Sept 30 |
 
 ---
@@ -56,8 +56,8 @@ Themed around *"Born From Chaos, Built for Innovation"*, the platform emphasizes
 │   └── logo.png         # Official CRYPTS'26 transparent PNG emblem
 ├── For AI/
 │   ├── AGENT_CONTEXT_PROMPT.md   # Developer guide for AI agents
-│   ├── DESIGN_REVAMP_PLAN.md     # Design benchmark & roadmap reference
-│   └── CRYPTS 5.0.pdf            # Official 31-page event brochure
+│   └── DAILY_ITINERARY_TEMPLATE.html  # Daily schedule template
+├── CRYPTS 5.0.pdf            # Official 31-page event brochure
 └── README.md            # This document
 ```
 

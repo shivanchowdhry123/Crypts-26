@@ -11,27 +11,83 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUt5jwpOGtOksKnoFBx
 // TERMINAL ENGINE
 // ============================================================
 const terminalOutput = document.getElementById('terminal-output');
-const terminalBody   = document.getElementById('terminal-body');
-const inputLine      = document.getElementById('input-line');
-const terminalInput  = document.getElementById('terminal-input');
-const timestampEl    = document.getElementById('timestamp');
-
-const initialLogs = [
-    { text: "> RELAYING STRUCTURE UPDATE...",              color: "text-[#00f3ff] font-bold" },
-    { text: "> INDEXING 01_BRIEFING THROUGH 07_OPERATORS", color: "text-white/60" },
-    { text: "> PARTICLE_GRID INITIALIZED.",                color: "text-white/40" },
-    { text: "> ENCRYPTION_LAYER: ACTIVE.",                 color: "text-white/40" },
-    { text: "------------------------------------------------", color: "text-white/10" },
-    { text: "CRYPTS'26 Terminal  [AUTHORIZED_SESSION]",   color: "text-[#ff00c1]" },
-    { text: "Type 'help' for available commands.",          color: "text-white/30" },
-];
+const terminalBody = document.getElementById('terminal-body');
+const inputLine = document.getElementById('input-line');
+const terminalInput = document.getElementById('terminal-input');
+const timestampEl = document.getElementById('timestamp');
 
 function updateTimestamp() {
     if (!timestampEl) return;
-    timestampEl.innerText = new Date().toISOString().replace('T', ' ').split('.')[0] + " UTC";
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+    });
+    timestampEl.innerText = formatter.format(now).replace(', ', ' ') + " IST";
 }
 
-function addLog(text, color = "text-white/80") {
+let commandLogHistory = [];
+
+const REGISTRATION_DEADLINE_UTC = new Date('2026-09-15T18:29:59Z');
+
+function isRegistrationOpen(now = new Date()) {
+    return now <= REGISTRATION_DEADLINE_UTC;
+}
+
+function getRegistrationAnnouncementHtml() {
+    if (isRegistrationOpen()) {
+        return `<p style="margin: 0;"><span style="color: #ff0055; font-weight: bold; font-size: 0.85rem;">🚨 TODAY IS THE LAST DAY OF SUBMISSION!</span> <strong style="color: #ffffff;">Registration closes TONIGHT at 11:59 PM IST.</strong> Enroll now before the portal locks — no extensions!</p>`;
+    }
+    return `<p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold; font-size: 0.85rem;">✅ SUBMISSIONS CLOSED:</span> <strong style="color: #ffffff;">Registration closed on Tuesday, 15 Sept at 11:59 PM IST.</strong> Thank you for your participation.</p>`;
+}
+
+function getRegistrationHighlightHtml() {
+    if (isRegistrationOpen()) {
+        return `<p><span class="text-[#ff0055] font-bold">🚨 TODAY IS THE LAST DAY OF SUBMISSION!</span> <strong class="text-white">Registration closes TONIGHT at 11:59 PM IST.</strong> Enroll now before the portal locks — no extensions!</p>`;
+    }
+    return `<p><span class="text-[#00f3ff] font-bold">✅ SUBMISSIONS CLOSED:</span> <strong class="text-white">Registration closed on Tuesday, 15 Sept at 11:59 PM IST.</strong> Thank you for your participation.</p>`;
+}
+
+function getRegistrationCliCtaHtml() {
+    if (isRegistrationOpen()) {
+        return `<p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design &amp; gaming events.</p>`;
+    }
+    return `<p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• Registration Closed:</span> Portal is now locked. Follow updates for event-day schedules and results.</p>`;
+}
+
+function getRegistrationHighlightCtaHtml() {
+    if (isRegistrationOpen()) {
+        return `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`;
+    }
+    return `<p><span class="text-[#00f3ff] font-semibold">• Registration Closed:</span> Portal is now locked. Follow updates for event-day schedules and results.</p>`;
+}
+
+function getRegistrationLogLines() {
+    if (isRegistrationOpen()) {
+        return [
+            `=== 🚨 TODAY IS THE LAST DAY OF SUBMISSION ===`,
+            `• ⚠️  Registration closes TONIGHT at 11:59 PM IST. No extensions.`
+        ];
+    }
+    return [
+        `=== ✅ SUBMISSIONS CLOSED ===`,
+        `• Registration closed on Tuesday, 15 Sept at 11:59 PM IST.`
+    ];
+}
+
+function getRegistrationActionLogLine() {
+    if (isRegistrationOpen()) {
+        return `• Action: Type 'enroll' to register or 'team' to contact event in-charges.`;
+    }
+    return `• Action: Type 'team' to contact event in-charges or view event updates in Section 02 EVENT MODULES.`;
+}
+
+function addLog(text, color = "text-white/80", skipHistory = false) {
+    if (!skipHistory) {
+        commandLogHistory.push({ text, color });
+    }
     if (!terminalOutput) return;
     const div = document.createElement('div');
     div.className = color;
@@ -43,27 +99,97 @@ function addLog(text, color = "text-white/80") {
     }
 }
 
+const cliLines = [
+    { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.15rem 0.5rem; border-radius: 0.25rem; margin-bottom: 0.5rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.2);">
+        <span style="color: #ff00c1; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.75rem;">&gt; Welcome to CRYPTS'26</span>
+    </div>` },
+    { type: 'text', content: " ██████╗██████╗ ██╗   ██╗██████╗ ████████╗███████╗ ██╗██████╗ ██████╗ \n██╔════╝██╔══██╗╚██╗ ██╔╝██╔══██╗╚══██╔══╝██╔════╝██╔╝╚════██╗██╔════╝\n██║     ██████╔╝ ╚████╔╝ ██████╔╝   ██║   ███████╗╚═╝  █████╔╝███████╗\n██║     ██╔══██╗  ╚██╔╝  ██╔═══╝    ██║   ╚════██║    ██╔═══╝ ██╔═══██╗\n╚██████╗██║  ██║   ██║   ██║        ██║   ███████║    ███████╗╚██████╔╝\n ╚═════╝╚═╝  ╚═╝   ╚═╝   ╚═╝        ╚═╝   ╚══════╝    ╚══════╝ ╚═════╝\n" },
+    { type: 'html', content: (function () {
+        // Deadline: 15 Sept 2026 23:59:59 IST — matches register.html DEADLINE_UTC
+        var DEADLINE_UTC = new Date('2026-09-15T18:29:59Z');
+        var registrationClosed = new Date() > DEADLINE_UTC;
+
+        var deadlineBanner = registrationClosed
+            ? `<p style="margin: 0;"><span style="color: #ff0055; font-weight: bold; font-size: 0.85rem;">🔒 REGISTRATION CLOSED</span> <strong style="color: #ffffff;">The portal locked at 11:59 PM IST on 15 Sept.</strong> No further enrollments are accepted.</p>`
+            : `<p style="margin: 0;"><span style="color: #ff0055; font-weight: bold; font-size: 0.85rem;">🚨 TODAY IS THE LAST DAY OF SUBMISSION!</span> <strong style="color: #ffffff;">Registration closes TONIGHT at 11:59 PM IST.</strong> Enroll now before the portal locks — no extensions!</p>`;
+
+        return `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; margin-bottom: 0.35rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.2rem;">
+            <h3 style="color: #ff00c1; font-weight: bold; font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem; margin: 0;">
+                <span style="font-size: 0.85rem;">📢</span> LATEST ANNOUNCEMENTS & HIGHLIGHTS
+            </h3>
+            <span style="border: 1px solid #ff00c1; padding: 0.1rem 0.25rem; font-size: 0.6rem; border-radius: 0.125rem; color: #ff00c1; font-weight: bold; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 0 8px rgba(255,0,193,0.15);">LIVE FEED</span>
+        </div>
+        <div style="color: rgba(255,255,255,0.9); font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.2rem;">
+            ${getRegistrationAnnouncementHtml()}
+            <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• ✎ Squad Management &amp; Withdrawal Portal:</span> Registered operators can now edit team members, class, section, events or withdraw registration anytime via <a href="manage-team.html" style="color: #00f3ff; text-decoration: underline; font-weight: bold; cursor: pointer;">Manage Squad</a> (verified via Email OTP).</p>
+            <p style="margin: 0;"><span style="color: #00f3ff; font-weight: bold;">• 🎮 L'Arène Esports Update:</span> Registrations are now <strong style="color: #00f3ff;">OPEN for Class 9</strong> as well (Eligibility: Class 9–12)! Squad up for FC 26, Valorant &amp; Minecraft.</p>
+            <p style="margin: 0;"><span style="color: #ff00c1; font-weight: bold;">• Next Up (Sept 16):</span> GLITCHVERSE</p>
+            ${getRegistrationCliCtaHtml()}
+        </div>
+    </div>`;
+    })() },
+    { type: 'html', content: `<div style="border: 1px solid #ff00c1; padding: 0.35rem 0.75rem; border-radius: 0.25rem; width: 100%; box-shadow: 0 0 10px rgba(255,0,193,0.1); text-align: left;">
+        <p style="color: #ff00c1; font-size: 0.75rem; margin: 0;"><span style="font-weight: bold;">Squad Updates &amp; Withdrawal:</span> <span style="color: rgba(255,255,255,0.9);">Need to modify your team roster, update events, or withdraw from CRYPTS'26? Access the self-service <a href="manage-team.html" style="color: #00f3ff; text-decoration: underline; font-weight: bold; cursor: pointer;">Manage Squad portal</a>.</span></p>
+    </div>` }
+];
+
 async function runInitialLogs() {
-    for (const log of initialLogs) {
-        addLog(log.text, log.color);
-        await new Promise(r => setTimeout(r, 280));
+    const cliOutput = document.getElementById('cli-output');
+    if (!cliOutput) return;
+    cliOutput.innerHTML = '';
+    
+    const delay = (ms) => new Promise(r => setTimeout(r, ms));
+    
+    for (let item of cliLines) {
+        if (item.type === 'text') {
+            const pre = document.createElement('pre');
+            pre.className = "text-[#ff00c1] mb-4 font-bold font-mono self-start sm:self-center drop-shadow-[0_0_8px_rgba(255,0,193,0.8)]";
+            pre.style.fontSize = window.innerWidth < 640 ? "5px" : (window.innerWidth < 1024 ? "9px" : "13px");
+            pre.style.lineHeight = "1.1";
+            cliOutput.appendChild(pre);
+            let lines = item.content.split('\n');
+            for (let line of lines) {
+                if (line.trim() !== '') {
+                    pre.innerHTML += line + '\n';
+                    await delay(60);
+                }
+            }
+        } else if (item.type === 'html') {
+            const wrapper = document.createElement('div');
+            wrapper.style.opacity = 0;
+            wrapper.style.width = '100%';
+            wrapper.innerHTML = item.content;
+            cliOutput.appendChild(wrapper);
+            
+            let op = 0;
+            while(op < 1) {
+                op += 0.15;
+                wrapper.style.opacity = Math.min(op, 1);
+                await delay(30);
+            }
+        }
+        await delay(200);
     }
+
+    // Show the CLI input line after the intro animation finishes
     if (inputLine) inputLine.classList.remove('hidden');
-    if (terminalInput) terminalInput.focus();
+    if (terminalInput) terminalInput.focus({ preventScroll: true });
+    updateTimestamp();
 }
 
 // ============================================================
 // DYNAMIC HIGHLIGHTS & EVENT SCHEDULE ENGINE
 // ============================================================
 const EVENT_SCHEDULE = [
-    { dateStr: "Sept 23", month: 8, day: 23, name: "GLITCHVERSE", type: "OFFLINE", desc: "Offline Decryption & Cryptography Arena (Class 6–10)", cat: "Cryptic Hunt" },
+    { dateStr: "Sept 23", month: 8, day: 23, name: "GLITCHVERSE", type: "OFFLINE", desc: "Digital Art Competition, Create digital art in a given time duration (Class 6–10)", cat: "Digital Art" },
+    { dateStr: "Sept 17", month: 8, day: 17, name: "JAILBREAK", type: "OFFLINE", desc: "Logic Puzzle Escape Room (Class 6–12)", cat: "Security & Puzzles" },
     { dateStr: "Sept 18", month: 8, day: 18, name: "SCRATCH XPLORERS", type: "OFFLINE", desc: "Scratch Block Programming Challenge (Class 4–6)", cat: "Junior Coding" },
     { dateStr: "Sept 19", month: 8, day: 19, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Kicks Off — FC 26, Valorant & Minecraft", cat: "Gaming" },
-    { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 10–12)", cat: "Gaming" },
+    { dateStr: "Sept 20", month: 8, day: 20, name: "L'ARÈNE ESPORTS", type: "ONLINE", desc: "Esports Tournament Qualifiers (Class 9–12)", cat: "Gaming" },
     { dateStr: "Sept 21", month: 8, day: 21, name: "PROMPT PARADOX", type: "OFFLINE", desc: "AI Prompt Engineering Arena (Class 8–12)", cat: "AI & Logic" },
     { dateStr: "Sept 22", month: 8, day: 22, name: "QWERTY 4.0", type: "OFFLINE", desc: "Speed Typing & Keyboard Tournament (Class 6–12)", cat: "Typing" },
-    { dateStr: "Sept 23", month: 8, day: 23, name: "JAILBREAK", type: "OFFLINE", desc: "Logic Puzzle Escape Room (Class 6–12)", cat: "Security & Puzzles" },
-    { dateStr: "Sept 24", month: 8, day: 24, name: "IHE KERNEL", type: "OFFLINE", desc: "Hardware & Systems Challenge (Class 9–12)", cat: "Systems & Hardware" },
+    { dateStr: "Sept 24", month: 8, day: 24, name: "IHE KERNEL", type: "OFFLINE", desc: "Hardware & Systems Challenge Quiz (Class 9–12)", cat: "Quiz" },
     { dateStr: "Sept 25", month: 8, day: 25, name: "PIXELPULSE & BYTE THE SITE & GAME MAKERS", type: "ONLINE & OFFLINE", desc: "Mega Submissions Day: Digital Poster, Web Dev, Short Films & Game Dev", cat: "Design, Coding & AV" },
     { dateStr: "Sept 26", month: 8, day: 26, name: "L'ARÈNE ESPORTS FINALS", type: "ONLINE", desc: "Esports Grand Finals", cat: "Gaming" },
     { dateStr: "Sept 28", month: 8, day: 28, name: "IHE CODEQUEST", type: "OFFLINE", desc: "Competitive Algorithmic Coding (Class 11–12)", cat: "Competitive Coding" },
@@ -73,7 +199,7 @@ const EVENT_SCHEDULE = [
 function getTodayHighlights() {
     const now = new Date();
     const curMonth = now.getMonth(); // 0-indexed (8 = September)
-    const curDay   = now.getDate();
+    const curDay = now.getDate();
 
     // Check if today matches a scheduled event
     const todayEvent = EVENT_SCHEDULE.find(e => e.month === curMonth && e.day === curDay);
@@ -83,16 +209,19 @@ function getTodayHighlights() {
             badge: "TODAY'S EVENT",
             badgeClass: "bg-[#ff00c1]/20 text-[#ff00c1]",
             lines: [
+                getRegistrationHighlightHtml(),
+                `<p><span class="text-[#00f3ff] font-bold">• 🎮 L'Arène Esports:</span> Registrations are now open for Class 9 as well (Class 9–12 eligible)!</p>`,
                 `<p><span class="text-[#ff00c1] font-bold">🔥 TODAY'S LIVE EVENT:</span> <strong class="text-white">${todayEvent.name}</strong> is happening today!</p>`,
-                `<p><span class="text-[#00f3ff] font-semibold">• Details:</span> ${todayEvent.desc} [${todayEvent.type}]</p>`,
-                `<p><span class="text-yellow-400 font-semibold">• Action:</span> Live battle active today at OPG World School! Good luck operators.</p>`
+                `<p><span class="text-[#00f3ff] font-semibold">• Details:</span> ${todayEvent.desc} [${todayEvent.type}]</p>`
             ],
             logLines: [
+                ...getRegistrationLogLines(),
                 `=== 🔥 TODAY'S LIVE MISSION: ${todayEvent.name} IS LIVE TODAY! ===`,
+                `• 🎮 L'Arène Esports Update: Registrations are now OPEN for Class 9 (Class 9–12 eligible)!`,
                 `• Event: ${todayEvent.name} (${todayEvent.type})`,
                 `• Details: ${todayEvent.desc}`,
                 `• Venue: OPG World School Campus / Online Portal`,
-                `• Action: Type 'enroll' to register or 'team' to contact event in-charges.`
+                getRegistrationActionLogLine()
             ]
         };
     }
@@ -104,29 +233,38 @@ function getTodayHighlights() {
         badge: "LIVE FEED",
         badgeClass: "bg-[#00f3ff]/20 text-[#00f3ff]",
         lines: [
-            `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong> (${upcoming.desc})</p>`,
-            `<p><span class="text-[#ff00c1] font-semibold">• Registrations Open:</span> Enroll now for all 12+ competitive coding, cryptography, design & gaming events.</p>`,
-            `<p><span class="text-yellow-400 font-semibold">• Quick Command:</span> Type <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">highlights</code> or <code class="bg-black/50 text-[#00f3ff] px-1 py-0.5 rounded border border-[#00f3ff]/30">help</code> below to explore schedule!</p>`
+            getRegistrationHighlightHtml(),
+            `<p><span class="text-[#00f3ff] font-bold">• ✎ Manage Squad:</span> Update roster, change events, or withdraw via Manage Squad portal.</p>`,
+            `<p><span class="text-[#00f3ff] font-bold">• 🎮 L'Arène Esports:</span> Registrations are now open for Class 9 as well (Class 9–12 eligible)!</p>`,
+            `<p><span class="text-[#00f3ff] font-bold">• Next Up (${upcoming.dateStr}):</span> <strong class="text-white">${upcoming.name}</strong></p>`,
+            getRegistrationHighlightCtaHtml()
         ],
         logLines: [
+            ...getRegistrationLogLines(),
             `=== 📢 LATEST ANNOUNCEMENTS & TODAY'S HIGHLIGHTS ===`,
-            `• Next Up: ${upcoming.dateStr} — ${upcoming.name} (${upcoming.desc})`,
-            `• Registrations Open: Enroll now for all 12+ competitive events.`,
+            `• ✎ Squad Management & Withdrawal: Self-service portal live at /manage-team.html (or type 'manage')`,
+            `• 🎮 L'Arène Esports Update: Registrations are now OPEN for Class 9 (Class 9–12 eligible)!`,
+            `• Next Up: ${upcoming.dateStr} — ${upcoming.name}`,
+            isRegistrationOpen()
+                ? `• Registrations Open: Enroll now for all 12+ competitive events.`
+                : `• Registration Closed: Portal is now locked. Follow event-day updates in the schedule.`,
             `• Rules & Dossier: View details under Section 02 EVENT MODULES.`,
-            `• Type 'enroll' to register or 'team' for organizing committee contacts.`
+            isRegistrationOpen()
+                ? `• Type 'enroll' to register, 'manage' to edit squad/withdraw, or 'team' for contacts.`
+                : `• Type 'manage' for squad support or 'team' for contacts.`
         ]
     };
 }
 
 function initTerminalHighlights() {
-    const bodyEl  = document.getElementById('terminal-highlights-body');
+    const bodyEl = document.getElementById('terminal-highlights-body');
     const badgeEl = document.getElementById('highlights-badge');
     if (!bodyEl) return;
 
     const data = getTodayHighlights();
 
     if (badgeEl) {
-        badgeEl.className = `text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${data.badgeClass}`;
+        badgeEl.className = `text-xs px-2 py-1 rounded font-bold uppercase tracking-wider ${data.badgeClass}`;
         badgeEl.innerText = data.badge;
     }
 
@@ -139,11 +277,23 @@ function handleCommand(cmd) {
 
     const cmds = {
         clear: () => { if (terminalOutput) terminalOutput.innerHTML = ''; },
-        help: () => addLog("COMMANDS: help · clear · enroll · modules · status · about · matrix · schedule · team · highlights · news", "text-[#00f3ff]"),
+        help: () => addLog("COMMANDS: help · clear · enroll · manage · modules · status · about · matrix · schedule · team · highlights · news · log", "text-[#00f3ff]"),
+        log: () => {
+            addLog(`--- COMMAND LOG HISTORY ---`, "text-[#00f3ff]", true);
+            commandLogHistory.forEach(item => {
+                addLog(item.text, item.color, true);
+            });
+            addLog(`--- END OF LOG ---`, "text-[#00f3ff]", true);
+        },
         enroll: () => {
             addLog("> REDIRECTING TO REGISTRATION PORTAL...", "text-[#ff00c1]");
             setTimeout(() => { window.location.href = "register.html"; }, 400);
         },
+        manage: () => {
+            addLog("> REDIRECTING TO SQUAD MANAGEMENT & WITHDRAWAL PORTAL...", "text-[#00f3ff]");
+            setTimeout(() => { window.location.href = "manage-team.html"; }, 400);
+        },
+        squad: () => cmds.manage(),
         modules: () => {
             addLog("> NAVIGATING TO EVENT MODULES...", "text-[#00f3ff]");
             setTimeout(() => { window.location.hash = "modules"; }, 400);
@@ -217,23 +367,23 @@ function initParticleCanvas() {
 
     function resize() {
         const parent = canvas.parentElement;
-        width  = canvas.width  = parent ? parent.offsetWidth  : window.innerWidth;
+        width = canvas.width = parent ? parent.offsetWidth : window.innerWidth;
         height = canvas.height = parent ? parent.offsetHeight : window.innerHeight;
     }
 
     class Particle {
         constructor() { this.reset(); }
         reset() {
-            this.x  = Math.random() * width;
-            this.y  = Math.random() * height;
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
             this.vx = (Math.random() - 0.5) * PARTICLE_SPEED;
             this.vy = (Math.random() - 0.5) * PARTICLE_SPEED;
-            this.r  = Math.random() * 1.8 + 0.6;
+            this.r = Math.random() * 1.8 + 0.6;
         }
         move() {
             this.x += this.vx;
             this.y += this.vy;
-            if (this.x < 0 || this.x > width)  this.vx *= -1;
+            if (this.x < 0 || this.x > width) this.vx *= -1;
             if (this.y < 0 || this.y > height) this.vy *= -1;
         }
         draw() {
@@ -370,19 +520,19 @@ function initCustomCursor() {
 // ============================================================
 function initLoaderScreen() {
     const loaderScreen = document.getElementById('loader-screen');
-    const loaderBar    = document.getElementById('loader-bar');
-    const loaderLog    = document.getElementById('loader-log');
-    const loaderNum    = document.getElementById('loader-percent');
-    const loaderSub    = document.getElementById('loader-sub-status');
+    const loaderBar = document.getElementById('loader-bar');
+    const loaderLog = document.getElementById('loader-log');
+    const loaderNum = document.getElementById('loader-percent');
+    const loaderSub = document.getElementById('loader-sub-status');
 
     if (!loaderScreen || !loaderBar) return;
 
     const stages = [
-        { pct: 15,  msg: '> INITIALIZING KERNEL...',              sub: "CRYPTS'26 // ESTABLISHING SECURE CONNECTION" },
-        { pct: 40,  msg: '> ESTABLISHING SECURE CONNECTION...',   sub: "CRYPTS'26 // LOADING MODULES" },
-        { pct: 70,  msg: '> LOADING MODULES...',                  sub: "CRYPTS'26 // VERIFYING SIGNATURES" },
-        { pct: 90,  msg: '> VERIFYING SECURITY SIGNATURES...',    sub: "CRYPTS'26 // SYSTEM READY" },
-        { pct: 100, msg: '> SYSTEM READY.',                       sub: "CRYPTS'26 // AUTHORIZED SESSION" }
+        { pct: 15, msg: '> INITIALIZING KERNEL...', sub: "CRYPTS'26 // ESTABLISHING SECURE CONNECTION" },
+        { pct: 40, msg: '> ESTABLISHING SECURE CONNECTION...', sub: "CRYPTS'26 // LOADING MODULES" },
+        { pct: 70, msg: '> LOADING MODULES...', sub: "CRYPTS'26 // VERIFYING SIGNATURES" },
+        { pct: 90, msg: '> VERIFYING SECURITY SIGNATURES...', sub: "CRYPTS'26 // SYSTEM READY" },
+        { pct: 100, msg: '> SYSTEM READY.', sub: "CRYPTS'26 // AUTHORIZED SESSION" }
     ];
 
     let currentStage = 0;
@@ -425,7 +575,7 @@ function initEventFilter() {
 
     function applyFilter(filter) {
         cards.forEach((card, i) => {
-            const cat  = card.dataset.category;
+            const cat = card.dataset.category;
             const mode = card.dataset.mode;
             const show = filter === 'all' || cat === filter || mode === filter;
 
@@ -519,12 +669,12 @@ function initEventTagChips() {
 // LIVE FORM VALIDATION + SUBMISSION
 // ============================================================
 function initRegistrationForm(selectedEvents) {
-    const form          = document.getElementById('registration-form');
-    const emailEl       = document.getElementById('reg-email');
-    const nameEl        = document.getElementById('reg-name');
-    const classEl       = document.getElementById('reg-class');
-    const sectionEl     = document.getElementById('reg-section');
-    const submitBtn     = document.getElementById('transmit-btn');
+    const form = document.getElementById('registration-form');
+    const emailEl = document.getElementById('reg-email');
+    const nameEl = document.getElementById('reg-name');
+    const classEl = document.getElementById('reg-class');
+    const sectionEl = document.getElementById('reg-section');
+    const submitBtn = document.getElementById('transmit-btn');
     const consoleOutput = document.getElementById('reg-console-output');
     const successScreen = document.getElementById('success-screen');
 
@@ -533,9 +683,9 @@ function initRegistrationForm(selectedEvents) {
     // Inline validation helpers
     const validators = {
         email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-        name:  (v) => v.trim().length >= 2,
+        name: (v) => v.trim().length >= 2,
         class: (v) => v !== '',
-        section:(v)=> v.trim().length >= 1,
+        section: (v) => v.trim().length >= 1,
     };
 
     function setError(input, errId, valid) {
@@ -550,9 +700,9 @@ function initRegistrationForm(selectedEvents) {
         }
     }
 
-    if (emailEl)   emailEl.addEventListener('input',   () => setError(emailEl,   'err-email',   validators.email(emailEl.value)));
-    if (nameEl)    nameEl.addEventListener('input',    () => setError(nameEl,    'err-name',    validators.name(nameEl.value)));
-    if (classEl)   classEl.addEventListener('change',  () => setError(classEl,   'err-class',   validators.class(classEl.value)));
+    if (emailEl) emailEl.addEventListener('input', () => setError(emailEl, 'err-email', validators.email(emailEl.value)));
+    if (nameEl) nameEl.addEventListener('input', () => setError(nameEl, 'err-name', validators.name(nameEl.value)));
+    if (classEl) classEl.addEventListener('change', () => setError(classEl, 'err-class', validators.class(classEl.value)));
     if (sectionEl) sectionEl.addEventListener('input', () => setError(sectionEl, 'err-section', validators.section(sectionEl.value)));
 
     form.addEventListener('submit', async (e) => {
@@ -560,10 +710,10 @@ function initRegistrationForm(selectedEvents) {
 
         // Validate all fields
         let valid = true;
-        if (emailEl   && !validators.email(emailEl.value))    { setError(emailEl,   'err-email',   false); valid = false; }
-        if (nameEl    && !validators.name(nameEl.value))      { setError(nameEl,    'err-name',    false); valid = false; }
-        if (classEl   && !validators.class(classEl.value))    { setError(classEl,   'err-class',   false); valid = false; }
-        if (sectionEl && !validators.section(sectionEl.value)){ setError(sectionEl, 'err-section', false); valid = false; }
+        if (emailEl && !validators.email(emailEl.value)) { setError(emailEl, 'err-email', false); valid = false; }
+        if (nameEl && !validators.name(nameEl.value)) { setError(nameEl, 'err-name', false); valid = false; }
+        if (classEl && !validators.class(classEl.value)) { setError(classEl, 'err-class', false); valid = false; }
+        if (sectionEl && !validators.section(sectionEl.value)) { setError(sectionEl, 'err-section', false); valid = false; }
 
         const errEventsEl = document.getElementById('err-events');
         if (selectedEvents && selectedEvents.size === 0) {
@@ -583,11 +733,11 @@ function initRegistrationForm(selectedEvents) {
         }
 
         const data = {
-            email:     emailEl ? emailEl.value.trim() : '',
-            name:      nameEl  ? nameEl.value.trim()  : '',
-            class:     classEl ? classEl.value        : '',
-            section:   sectionEl ? sectionEl.value.trim() : '',
-            events:    selectedEvents ? Array.from(selectedEvents).join(', ') : '',
+            email: emailEl ? emailEl.value.trim() : '',
+            name: nameEl ? nameEl.value.trim() : '',
+            class: classEl ? classEl.value : '',
+            section: sectionEl ? sectionEl.value.trim() : '',
+            events: selectedEvents ? Array.from(selectedEvents).join(', ') : '',
             timestamp: new Date().toLocaleString(),
         };
 
@@ -612,9 +762,9 @@ function initRegistrationForm(selectedEvents) {
             // On standalone register.html, render the ticket confirmation card!
             if (successScreen) {
                 form.classList.add('hidden');
-                document.getElementById('summary-email').innerText  = data.email;
-                document.getElementById('summary-name').innerText   = data.name;
-                document.getElementById('summary-class').innerText  = `${data.class} (${data.section})`;
+                document.getElementById('summary-email').innerText = data.email;
+                document.getElementById('summary-name').innerText = data.name;
+                document.getElementById('summary-class').innerText = `${data.class} (${data.section})`;
                 document.getElementById('summary-events').innerText = data.events;
                 successScreen.classList.remove('hidden');
             } else {
@@ -642,21 +792,21 @@ function initRegistrationForm(selectedEvents) {
 // COMMAND PALETTE (Ctrl + K)
 // ============================================================
 function initCommandPalette() {
-    const palette     = document.getElementById('cmd-palette');
-    const input       = document.getElementById('palette-input');
-    const results     = document.getElementById('palette-results');
-    const badgeTrigger= document.getElementById('cmd-badge-trigger');
+    const palette = document.getElementById('cmd-palette');
+    const input = document.getElementById('palette-input');
+    const results = document.getElementById('palette-results');
+    const badgeTrigger = document.getElementById('cmd-badge-trigger');
 
     if (!palette || !input || !results) return;
 
     const navItems = [
-        { label: '01_BRIEFING — Hero & Terminal',      href: '#briefing',   shortcut: 'G B' },
-        { label: '02_EVENT_MODULES — Mission List',    href: '#modules',    shortcut: 'G M' },
-        { label: '03_ENROLLMENT_PORTAL — Register',   href: '#enrollment', shortcut: 'G R' },
-        { label: '04_RESOURCE_MATRIX — Downloads',    href: '#matrix',     shortcut: 'G X' },
-        { label: '05_CHRONOS_SCHEDULE — Timeline',    href: '#chronos',    shortcut: 'G C' },
-        { label: '06_QUERY_RESOLUTION — FAQ',         href: '#resolution', shortcut: 'G Q' },
-        { label: '07_CORE_OPERATORS — Team',          href: '#operators',  shortcut: 'G O' },
+        { label: '01_BRIEFING — Hero & Terminal', href: '#briefing', shortcut: 'G B' },
+        { label: '02_EVENT_MODULES — Mission List', href: '#modules', shortcut: 'G M' },
+        { label: '03_ENROLLMENT_PORTAL — Register', href: '#enrollment', shortcut: 'G R' },
+        { label: '04_RESOURCE_MATRIX — Downloads', href: '#matrix', shortcut: 'G X' },
+        { label: '05_CHRONOS_SCHEDULE — Timeline', href: '#chronos', shortcut: 'G C' },
+        { label: '06_QUERY_RESOLUTION — FAQ', href: '#resolution', shortcut: 'G Q' },
+        { label: '07_CORE_OPERATORS — Team', href: '#operators', shortcut: 'G O' },
     ];
 
     let highlighted = 0;
@@ -736,7 +886,7 @@ function initCommandPalette() {
 // TIMELINE TABS (Chronos Schedule)
 // ============================================================
 function initTimelineTabs() {
-    const tabs   = document.querySelectorAll('.timeline-tab');
+    const tabs = document.querySelectorAll('.timeline-tab');
     const panels = document.querySelectorAll('.timeline-panel');
 
     tabs.forEach(tab => {
@@ -855,13 +1005,13 @@ function initFAQ() {
 function initActiveNav() {
     const sections = document.querySelectorAll('section[id]');
     const navMap = {
-        briefing:   document.getElementById('nav-briefing'),
-        modules:    document.getElementById('nav-modules'),
+        briefing: document.getElementById('nav-briefing'),
+        modules: document.getElementById('nav-modules'),
         enrollment: document.getElementById('nav-enrollment'),
-        matrix:     document.getElementById('nav-matrix'),
-        chronos:    document.getElementById('nav-chronos'),
+        matrix: document.getElementById('nav-matrix'),
+        chronos: document.getElementById('nav-chronos'),
         resolution: document.getElementById('nav-resolution'),
-        operators:  document.getElementById('nav-operators'),
+        operators: document.getElementById('nav-operators'),
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -922,7 +1072,7 @@ function initScrollReveal() {
 // ============================================================
 function initNavigation() {
     const menuToggle = document.getElementById('menu-toggle');
-    const menuClose  = document.getElementById('menu-close');
+    const menuClose = document.getElementById('menu-close');
     const mobileMenu = document.getElementById('mobile-menu');
 
     const hideMenu = () => {
@@ -1029,8 +1179,8 @@ const EVENTS_DATA = {
         eligibility: "Class 8–12",
         date: "September 25, 2026",
         classRange: [8, 12],
-        desc: "Digital poster design & photography competition judged on creativity, visual communication, and technical mastery of design tools.",
-        rules: ["Individual participation or teams of 2", "Topic revealed on Event Day (September 25, 2026 at 09:00 AM)", "Original photographs & artwork only — no templates or AI-generated photos", "Submit image title & concept description before deadline"],
+        desc: "Photography competition judged on creativity, visual communication, and technical mastery of design tools.",
+        rules: ["Individual participation or teams of 2", "Submission Deadline (September 25, 2026 at 09:00 AM)", "Original photographs & artwork only — no templates or AI-generated photos", "Submit image title & concept description before deadline"],
         criteria: ["Creativity and originality", "Visual communication", "Technical skill and tool mastery", "Relevance to theme"],
         contact: "Eeshaan (XII-A): eeshaan.cryptsopg@gmail.com"
     },
@@ -1068,8 +1218,8 @@ const EVENTS_DATA = {
         eligibility: "Class 6–12",
         date: "September 25, 2026",
         classRange: [6, 12],
-        desc: "Short film & video production competition. Theme: 'Between the Headlines / Stories Left Behind' (Time Manipulation theme concept).",
-        rules: ["Team of up to 9 members allowed", "Original films based on the theme 'Time Manipulation'", "Maximum duration & technical standards strictly enforced", "Submit film title & concept description before deadline"],
+        desc: "Short film & video production competition. Theme: 'Between the Headlines / Stories Left Behind'.",
+        rules: ["Team of up to 9 members allowed", "Original films based on the theme", "Maximum duration & technical standards strictly enforced", "Submit film title & concept description before deadline"],
         criteria: ["Narrative and storytelling", "Cinematography and framing", "Editing and post-production", "Audio quality and sound design"],
         contact: "Bhavya Sachdeva (XII-B): bhavyas.cryptsopg@gmail.com"
     },
@@ -1104,9 +1254,9 @@ const EVENTS_DATA = {
         icon: "JB",
         cat: "security",
         mode: "offline",
-        eligibility: "Class 6–10",
-        date: "September 23, 2026",
-        classRange: [6, 10],
+        eligibility: "Class 6–12",
+        date: "September 17, 2026",
+        classRange: [6, 12],
         desc: "Escape room meets tech — solve interconnected logic puzzles, decode sequences, and break free before the timer runs out.",
         rules: ["Teams of 3–4 members", "Time limit per room", "No external devices", "Hints available with penalty"],
         criteria: ["Puzzles solved correctly", "Time taken", "Teamwork and coordination"],
@@ -1156,9 +1306,9 @@ const EVENTS_DATA = {
         icon: "ES",
         cat: "gaming",
         mode: "online",
-        eligibility: "Class 10–12",
+        eligibility: "Class 9–12",
         date: "FC 26: Sept 19 | Valorant: Sept 20 | Minecraft: Sept 26",
-        classRange: [10, 12],
+        classRange: [9, 12],
         desc: "Multi-title esports tournament — FC 26, Valorant, and Minecraft. Strategy, reflexes, and teamwork across elimination rounds.",
         rules: ["Team size per title: Minecraft (3–4 players/team), Valorant (3–4 players/team), EA FC 26 (1 player/solo)", "Online matches via designated platform with mandatory screen sharing", "Single elimination knockout format", "Match schedules shared in advance"],
         criteria: ["Match wins", "Sportsmanship", "Team coordination"],
@@ -1210,7 +1360,7 @@ function initEventModal() {
             <p style="color:rgba(255,255,255,0.6); font-size:12px; line-height:1.7; margin-bottom:18px;">${data.desc}</p>
 
             <div class="sub-panel-box">
-                <div class="sub-panel-label">&gt;&gt; DATE &amp; TIME</div>
+                <div class="sub-panel-label">&gt;&gt; ${data.mode === 'online' ? 'SUBMISSION DEADLINE' : 'DATE &amp; TIME'}</div>
                 <div class="sub-panel-content"><span class="badge-date">${data.date}</span></div>
             </div>
 
@@ -1226,7 +1376,7 @@ function initEventModal() {
 
             <div class="sub-panel-box">
                 <div class="sub-panel-label">&gt;&gt; EVENT IN-CHARGE</div>
-                <div class="sub-panel-content">${data.contact}</div>
+                <div class="sub-panel-content">${data.contact.split(' | ').join('<br>')}</div>
             </div>
         `;
 
@@ -1271,10 +1421,8 @@ function initNavIndicator() {
         if (!link) return;
         const navContainer = link.closest('.hidden.lg\\:flex');
         if (!navContainer) return;
-        const containerRect = navContainer.getBoundingClientRect();
-        const linkRect = link.getBoundingClientRect();
-        indicator.style.left  = (linkRect.left - containerRect.left) + 'px';
-        indicator.style.width = linkRect.width + 'px';
+        indicator.style.left = link.offsetLeft + 'px';
+        indicator.style.width = link.offsetWidth + 'px';
         indicator.classList.add('visible');
     }
 
@@ -1315,33 +1463,56 @@ function bootApp() {
         catch (e) { console.error(`[CRYPTS] ${name} failed:`, e); }
     };
 
-    safe('loaderScreen',   () => initLoaderScreen());
-    safe('customCursor',   () => initCustomCursor());
-    safe('navigation',     () => initNavigation());
-    safe('navIndicator',   () => initNavIndicator());
-    safe('timestamp',      () => {
+    safe('loaderScreen', () => initLoaderScreen());
+    safe('customCursor', () => initCustomCursor());
+    safe('navigation', () => initNavigation());
+    safe('navIndicator', () => initNavIndicator());
+    safe('timestamp', () => {
         setInterval(updateTimestamp, 1000);
         updateTimestamp();
     });
-    safe('terminal',       () => runInitialLogs());
+    safe('terminal', () => runInitialLogs());
     safe('particleCanvas', () => initParticleCanvas());
-    safe('eventFilter',    () => initEventFilter());
+    safe('eventFilter', () => initEventFilter());
     let selectedEvents = new Set();
-    safe('eventTagChips',  () => { selectedEvents = initEventTagChips(); });
-    safe('regForm',        () => initRegistrationForm(selectedEvents));
-    safe('cmdPalette',     () => initCommandPalette());
-    safe('faq',            () => initFAQ());
-    safe('timelineTabs',   () => initTimelineTabs());
+    safe('eventTagChips', () => { selectedEvents = initEventTagChips(); });
+    safe('regForm', () => initRegistrationForm(selectedEvents));
+    safe('cmdPalette', () => initCommandPalette());
+    safe('faq', () => initFAQ());
+    safe('timelineTabs', () => initTimelineTabs());
     safe('timelineStatus', () => updateTimelineStatuses());
-    safe('activeNav',      () => initActiveNav());
-    safe('scrollReveal',   () => initScrollReveal());
-    safe('footerYear',     () => initFooterYear());
-    safe('taglineTyping',  () => initTaglineTyping());
-    safe('sectionObserver',() => initSectionObserver());
-    safe('eventModal',     () => initEventModal());
+    safe('activeNav', () => initActiveNav());
+    safe('scrollReveal', () => initScrollReveal());
+    safe('footerYear', () => initFooterYear());
+    safe('taglineTyping', () => initTaglineTyping());
+    safe('sectionObserver', () => initSectionObserver());
+    safe('eventModal', () => initEventModal());
     safe('operatorEmails', () => initOperatorEmailRedirect());
-    safe('highlightsEngine',() => initTerminalHighlights());
-    safe('modelViewer',    () => initModelViewer());
+    safe('highlightsEngine', () => initTerminalHighlights());
+    safe('modelViewer', () => initModelViewer());
+    safe('actionTracker', () => initUserActionTracker());
+    safe('teamManagement', () => initTeamManagement());
+}
+
+function initUserActionTracker() {
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('a, button, .event-card, .filter-chip, .timeline-tab');
+        if (target) {
+            let label = target.innerText ? target.innerText.trim().replace(/\n/g, ' ') : target.id || target.tagName;
+            if (label.length > 40) label = label.substring(0, 40) + '...';
+            const timestamp = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+            commandLogHistory.push({ text: `[${timestamp}] CLICK: ${label}`, color: "text-white/40" });
+        }
+    });
+
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+        if (scrollTimeout) clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const timestamp = new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+            commandLogHistory.push({ text: `[${timestamp}] SCROLL: YOffset ${Math.floor(window.scrollY)}px`, color: "text-white/40" });
+        }, 800);
+    }, { passive: true });
 }
 
 function initModelViewer() {
@@ -1372,6 +1543,573 @@ function initOperatorEmailRedirect() {
         });
     });
 }
+
+
+// ============================================================
+// TEAM MANAGEMENT PORTAL (manage-team.html)
+// ============================================================
+function initTeamManagement() {
+    // Only run on manage-team.html
+    if (!document.getElementById('step-email-panel')) return;
+
+    // ── DOM refs ──────────────────────────────────────────────
+    const emailPanel   = document.getElementById('step-email-panel');
+    const otpPanel     = document.getElementById('step-otp-panel');
+    const editPanel    = document.getElementById('step-edit-panel');
+    const successPanel = document.getElementById('tm-success-screen');
+
+    const emailInput   = document.getElementById('tm-email');
+    const otpInput     = document.getElementById('tm-otp');
+    const membersArea  = document.getElementById('tm-members');
+    const classSelect  = document.getElementById('tm-class');
+    const sectionInput = document.getElementById('tm-section');
+
+    const sendOtpBtn   = document.getElementById('tm-send-otp-btn');
+    const verifyBtn    = document.getElementById('tm-verify-btn');
+    const saveBtn      = document.getElementById('tm-save-btn');
+    const resendBtn    = document.getElementById('tm-resend-btn');
+    const backBtn      = document.getElementById('tm-back-to-email');
+
+    const errEmail     = document.getElementById('tm-err-email');
+    const errOtp       = document.getElementById('tm-err-otp');
+    const errMembers   = document.getElementById('tm-err-members');
+    const errClass     = document.getElementById('tm-err-class');
+    const errSection   = document.getElementById('tm-err-section');
+    const errEvents    = document.getElementById('tm-err-events');
+
+    const otpEmailDisplay = document.getElementById('tm-otp-email-display');
+    const resendCountdown = document.getElementById('tm-resend-countdown');
+    const summaryEmail   = document.getElementById('tm-summary-email');
+    const summaryMembers = document.getElementById('tm-summary-members');
+    const summaryClass   = document.getElementById('tm-summary-class');
+    const summaryEvents  = document.getElementById('tm-summary-events');
+
+    // Event chip selection set (mirrors the registration form)
+    const tmSelectedEvents = new Set();
+    const tmEventGrid = document.getElementById('tm-event-tag-grid');
+
+    // ── State ─────────────────────────────────────────────────
+    let verifiedEmail   = '';
+    let sessionToken    = '';
+    let resendTimer     = null;
+
+    // ── Step navigation helpers ────────────────────────────────
+    function setStepActive(step) {
+        const dots       = [document.getElementById('step-dot-1'), document.getElementById('step-dot-2'), document.getElementById('step-dot-3')];
+        const connectors = [document.getElementById('connector-1-2'), document.getElementById('connector-2-3')];
+
+        dots.forEach((d, i) => {
+            d.classList.remove('active', 'done');
+            if (i + 1 < step)  d.classList.add('done');
+            if (i + 1 === step) d.classList.add('active');
+        });
+        connectors.forEach((c, i) => {
+            c.classList.toggle('done', i + 1 < step);
+        });
+
+        emailPanel.classList.toggle('hidden', step !== 1);
+        otpPanel.classList.toggle('hidden',   step !== 2);
+        editPanel.classList.toggle('hidden',  step !== 3);
+        successPanel.classList.add('hidden');
+
+        if (step === 3 && classSelect) {
+            filterTmEventChipsByClass(classSelect.value);
+        }
+    }
+
+    // ── Console log helper ────────────────────────────────────
+    function appendConsole(panelId, text, cls = 'text-white/70') {
+        const el = document.getElementById(panelId);
+        if (!el) return;
+        el.classList.remove('hidden');
+        const line = document.createElement('div');
+        line.className = cls;
+        line.textContent = text;
+        el.appendChild(line);
+        el.scrollTop = el.scrollHeight;
+    }
+    function clearConsole(panelId) {
+        const el = document.getElementById(panelId);
+        if (el) { el.innerHTML = ''; el.classList.add('hidden'); }
+    }
+
+    // ── Resend countdown ─────────────────────────────────────
+    function startResendCountdown(seconds = 60) {
+        if (resendBtn) resendBtn.disabled = true;
+        let remaining = seconds;
+        function tick() {
+            if (resendCountdown) resendCountdown.textContent = `(${remaining}s)`;
+            if (remaining <= 0) {
+                if (resendBtn)      resendBtn.disabled = false;
+                if (resendCountdown) resendCountdown.textContent = '';
+                return;
+            }
+            remaining--;
+            resendTimer = setTimeout(tick, 1000);
+        }
+        tick();
+    }
+
+    // ── Validation helpers ────────────────────────────────────
+    function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+
+    // ── STEP 1: Send OTP ─────────────────────────────────────
+    async function handleSendOtp() {
+        const email = emailInput ? emailInput.value.trim() : '';
+        if (!isValidEmail(email)) {
+            if (errEmail) errEmail.classList.add('visible');
+            if (emailInput) emailInput.classList.add('error');
+            return;
+        }
+        if (errEmail)  errEmail.classList.remove('visible');
+        if (emailInput) emailInput.classList.remove('error');
+
+        sendOtpBtn.disabled = true;
+        sendOtpBtn.textContent = 'TRANSMITTING...';
+        clearConsole('tm-console-1');
+        appendConsole('tm-console-1', '> ENCRYPTING IDENTITY PACKET...');
+        appendConsole('tm-console-1', '> SCANNING OPERATOR REGISTRY...');
+
+        try {
+            // Use CORS mode so we can read the response and detect EMAIL_NOT_FOUND
+            let data = null;
+            try {
+                const res = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'sendOtp', email }),
+                });
+                data = await res.json();
+            } catch (_) {
+                // CORS blocked — fall back to no-cors optimistic mode
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'sendOtp', email }),
+                });
+                data = { success: true }; // optimistic
+            }
+
+            if (data && !data.success) {
+                if (data.error === 'EMAIL_NOT_FOUND') {
+                    appendConsole('tm-console-1', '> ERROR: EMAIL NOT FOUND IN REGISTRY.', 'text-red-400');
+                    // Show friendly inline error under the email input
+                    if (errEmail) {
+                        errEmail.textContent = "⚠ Email not found. It seems you haven't registered yet — go to the Registration page and register first.";
+                        errEmail.classList.add('visible');
+                    }
+                    if (emailInput) emailInput.classList.add('error');
+                } else {
+                    appendConsole('tm-console-1', '> ERROR: ' + (data.error || 'UNKNOWN'), 'text-red-400');
+                }
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE';
+                return;
+            }
+
+            appendConsole('tm-console-1', '> OTP_DISPATCHED: CHECK YOUR INBOX.', 'text-[#00f3ff]');
+            verifiedEmail = email;
+            if (otpEmailDisplay) otpEmailDisplay.textContent = email;
+            startResendCountdown(60);
+            setStepActive(2);
+        } catch (err) {
+            appendConsole('tm-console-1', '> ERROR: NETWORK FAILURE. RETRY.', 'text-red-400');
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE';
+        }
+    }
+
+    // ── STEP 2: Verify OTP ───────────────────────────────────
+    async function handleVerifyOtp() {
+        const otp = otpInput ? otpInput.value.trim() : '';
+        if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+            if (errOtp) errOtp.classList.add('visible');
+            if (otpInput) otpInput.classList.add('error');
+            return;
+        }
+        if (errOtp)  errOtp.classList.remove('visible');
+        if (otpInput) otpInput.classList.remove('error');
+
+        verifyBtn.disabled = true;
+        verifyBtn.textContent = 'AUTHENTICATING...';
+        clearConsole('tm-console-2');
+        appendConsole('tm-console-2', '> VERIFYING PASSCODE...');
+
+        try {
+            // Because we use no-cors we can't read the JSON response body.
+            // So we make a second request with cors mode to a slightly
+            // different action that returns CORS-safe text.
+            const payload = JSON.stringify({ action: 'verifyOtpAndFetch', email: verifiedEmail, otp });
+            let data = null;
+            try {
+                const corsRes = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: payload,
+                });
+                data = await corsRes.json();
+            } catch (_) {
+                // CORS may still block on some deployments; fall back gracefully
+                data = null;
+            }
+
+            if (data && !data.success) {
+                const msg = data.error === 'EMAIL_NOT_FOUND'
+                    ? '> ERROR: EMAIL NOT IN REGISTRY. CHECK SPELLING.'
+                    : '> ERROR: INVALID OR EXPIRED PASSCODE.';
+                appendConsole('tm-console-2', msg, 'text-red-400');
+                if (errOtp) errOtp.classList.add('visible');
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'AUTHENTICATE & ACCESS';
+                return;
+            }
+
+            // Populate edit step
+            if (data) {
+                sessionToken = data.sessionToken || '';
+
+                // Members textarea — one per line
+                if (membersArea && data.name) {
+                    membersArea.value = data.name.split(',').map(s => s.trim()).filter(Boolean).join('\n');
+                }
+
+                // Class dropdown — set value then filter chips
+                if (classSelect && data.class) {
+                    classSelect.value = String(data.class).trim();
+                    filterTmEventChipsByClass(classSelect.value);
+                }
+
+                // Section input
+                if (sectionInput && data.section) {
+                    sectionInput.value = String(data.section).trim();
+                }
+
+                // Pre-select event chips
+                // Only select eligible chips matching data.events
+                tmSelectedEvents.clear();
+                if (data.events) {
+                    const normalize = s => s.trim().toLowerCase().replace(/[\s''\u2019]+/g, '_').replace(/[^a-z0-9_]/g, '');
+                    const savedTokens = data.events.split(',').map(normalize).filter(Boolean);
+
+                    document.querySelectorAll('#tm-event-tag-grid .event-tag-chip').forEach(chip => {
+                        if (chip.disabled || chip.classList.contains('disabled')) {
+                            chip.classList.remove('selected');
+                            return;
+                        }
+                        const byAttr  = normalize(chip.dataset.event || '');
+                        const byLabel = normalize(chip.textContent || '');
+                        const match   = savedTokens.some(t => t === byAttr || t === byLabel);
+                        chip.classList.toggle('selected', match);
+                        if (match) tmSelectedEvents.add(chip.textContent.trim());
+                    });
+                }
+
+                // Console feedback
+                appendConsole('tm-console-2', '> DATA_LOADED: FORM PRE-FILLED FROM REGISTRY.', 'text-[#00f3ff]');
+                if (data.name)    appendConsole('tm-console-2', `  SQUAD   : ${data.name}`);
+                if (data.class)   appendConsole('tm-console-2', `  CLASS   : ${data.class}–${data.section || '?'}`);
+                if (data.events)  appendConsole('tm-console-2', `  EVENTS  : ${data.events}`);
+            } else {
+                // No-cors fallback — data couldn't be read, let user fill manually
+                sessionToken = 'no-cors-session';
+                appendConsole('tm-console-2', '> CORS_FALLBACK: fill in your details manually.', 'text-yellow-400');
+            }
+
+            appendConsole('tm-console-2', '> ACCESS_GRANTED: IDENTITY CONFIRMED.', 'text-[#00f3ff]');
+            setStepActive(3);
+        } catch (err) {
+            appendConsole('tm-console-2', '> CRITICAL_ERROR: UNABLE TO REACH MATRIX.', 'text-red-400');
+            verifyBtn.disabled = false;
+            verifyBtn.textContent = 'AUTHENTICATE & ACCESS';
+        }
+    }
+
+    // ── STEP 3: Save changes ──────────────────────────────────
+    async function handleSave() {
+        let valid = true;
+
+        // Validate members
+        const raw = membersArea ? membersArea.value.trim() : '';
+        if (!raw) {
+            if (errMembers) errMembers.classList.add('visible');
+            if (membersArea) membersArea.classList.add('error');
+            valid = false;
+        } else {
+            if (errMembers) errMembers.classList.remove('visible');
+            if (membersArea) membersArea.classList.remove('error');
+        }
+
+        // Validate class
+        const selClass = classSelect ? classSelect.value : '';
+        if (!selClass) {
+            if (errClass) errClass.classList.add('visible');
+            if (classSelect) classSelect.classList.add('error');
+            valid = false;
+        } else {
+            if (errClass) errClass.classList.remove('visible');
+            if (classSelect) classSelect.classList.remove('error');
+        }
+
+        // Validate section
+        const selSection = sectionInput ? sectionInput.value.trim() : '';
+        if (!selSection) {
+            if (errSection) errSection.classList.add('visible');
+            if (sectionInput) sectionInput.classList.add('error');
+            valid = false;
+        } else {
+            if (errSection) errSection.classList.remove('visible');
+            if (sectionInput) sectionInput.classList.remove('error');
+        }
+
+        // Validate events
+        if (tmSelectedEvents.size === 0) {
+            if (errEvents) errEvents.classList.add('visible');
+            valid = false;
+        } else {
+            if (errEvents) errEvents.classList.remove('visible');
+        }
+
+        if (!valid) return;
+
+        // Normalise members: split by newline or comma, join as comma-separated
+        const normalised = raw.split(/[\n,]+/).map(s => s.trim()).filter(Boolean).join(', ');
+        const eventsStr  = [...tmSelectedEvents].join(', ');
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'SYNCHRONIZING...';
+        clearConsole('tm-console-3');
+        appendConsole('tm-console-3', '> ENCRYPTING UPDATE PACKET...');
+        appendConsole('tm-console-3', '> TRANSMITTING TO CENTRAL MATRIX...');
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                    action: 'updateTeam',
+                    email: verifiedEmail,
+                    sessionToken,
+                    name:    normalised,
+                    class:   selClass,
+                    section: selSection,
+                    events:  eventsStr,
+                }),
+            });
+
+            appendConsole('tm-console-3', '> SUCCESS: REGISTRATION SYNCHRONIZED.', 'text-[#00f3ff]');
+
+            // Show success card
+            emailPanel.classList.add('hidden');
+            otpPanel.classList.add('hidden');
+            editPanel.classList.add('hidden');
+            successPanel.classList.remove('hidden');
+
+            ['step-dot-1','step-dot-2','step-dot-3'].forEach(id => {
+                const d = document.getElementById(id);
+                if (d) { d.classList.remove('active'); d.classList.add('done'); }
+            });
+            ['connector-1-2','connector-2-3'].forEach(id => {
+                const c = document.getElementById(id);
+                if (c) c.classList.add('done');
+            });
+
+            if (summaryEmail)   summaryEmail.textContent   = verifiedEmail;
+            if (summaryMembers) summaryMembers.textContent = normalised;
+            if (summaryClass)   summaryClass.textContent   = 'Class ' + selClass + ' — ' + selSection;
+            if (summaryEvents)  summaryEvents.textContent  = eventsStr;
+
+        } catch (err) {
+            appendConsole('tm-console-3', '> ERROR: TRANSMISSION FAILED. RETRY.', 'text-red-400');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'SAVE CHANGES';
+        }
+    }
+
+    // ── Event chip helpers (mirrors registration form) ────────
+    function filterTmEventChipsByClass(classNum) {
+        if (!tmEventGrid) return;
+        const classVal = parseInt(classNum, 10);
+        tmEventGrid.querySelectorAll('.event-tag-chip').forEach(chip => {
+            const min = parseInt(chip.dataset.min, 10) || 0;
+            const max = parseInt(chip.dataset.max, 10) || 99;
+            const eligible = !isNaN(classVal) && classVal >= min && classVal <= max;
+            chip.classList.toggle('disabled', !eligible);
+            chip.disabled = !eligible;
+            if (!eligible) {
+                chip.classList.remove('selected');
+                tmSelectedEvents.delete(chip.textContent.trim());
+            }
+        });
+        if (errEvents && tmSelectedEvents.size > 0) errEvents.classList.remove('visible');
+    }
+
+    // Class dropdown → re-filter chips
+    if (classSelect) {
+        classSelect.addEventListener('change', () => {
+            filterTmEventChipsByClass(classSelect.value);
+        });
+    }
+
+    // Event chip click toggle
+    if (tmEventGrid) {
+        tmEventGrid.addEventListener('click', e => {
+            const chip = e.target.closest('.event-tag-chip');
+            if (!chip || chip.disabled || chip.classList.contains('disabled')) return;
+            const label = chip.textContent.trim();
+            if (tmSelectedEvents.has(label)) {
+                tmSelectedEvents.delete(label);
+                chip.classList.remove('selected');
+            } else {
+                tmSelectedEvents.add(label);
+                chip.classList.add('selected');
+            }
+            if (errEvents) errEvents.classList.toggle('visible', tmSelectedEvents.size === 0);
+        });
+    }
+
+    // ── Wire up events ────────────────────────────────────────
+    if (sendOtpBtn) sendOtpBtn.addEventListener('click', handleSendOtp);
+    if (verifyBtn)  verifyBtn.addEventListener('click', handleVerifyOtp);
+    if (saveBtn)    saveBtn.addEventListener('click', handleSave);
+
+    if (resendBtn) {
+        resendBtn.addEventListener('click', () => {
+            if (resendTimer) clearTimeout(resendTimer);
+            clearConsole('tm-console-2');
+            sendOtpBtn && (sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE');
+            setStepActive(1);
+            handleSendOtp();
+        });
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            setStepActive(1);
+            if (otpInput) otpInput.value = '';
+            clearConsole('tm-console-2');
+            sendOtpBtn.disabled = false;
+            sendOtpBtn.textContent = 'TRANSMIT VERIFICATION CODE';
+        });
+    }
+
+    // Live validation
+    if (emailInput) {
+        emailInput.addEventListener('input', () => {
+            // Reset error text back to default (may have been changed to "not found" message)
+            if (errEmail) errEmail.textContent = '⚠ Enter a valid registered email address.';
+            if (errEmail) errEmail.classList.toggle('visible', !isValidEmail(emailInput.value));
+            emailInput.classList.toggle('error', !isValidEmail(emailInput.value));
+        });
+        emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleSendOtp(); });
+    }
+    if (otpInput) {
+        otpInput.addEventListener('input', () => {
+            // Only allow digits
+            otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
+        });
+        otpInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleVerifyOtp(); });
+    }
+
+    // Init: show step 1
+    setStepActive(1);
+
+    // ── Delete / Withdrawal flow ──────────────────────────────
+    const deleteBtn        = document.getElementById('tm-delete-btn');
+    const deleteConfirm    = document.getElementById('tm-delete-confirm');
+    const deleteCheck      = document.getElementById('tm-delete-confirm-check');
+    const deleteConfirmBtn = document.getElementById('tm-delete-confirm-btn');
+    const deleteCancelBtn  = document.getElementById('tm-delete-cancel-btn');
+    const withdrawnScreen  = document.getElementById('tm-withdrawn-screen');
+    const withdrawnEmail   = document.getElementById('tm-withdrawn-email');
+
+    // Show inline confirm panel
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+            deleteConfirm.classList.remove('hidden');
+            deleteBtn.classList.add('hidden');
+            deleteConfirm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    }
+
+    // Checkbox enables the confirm button
+    if (deleteCheck) {
+        deleteCheck.addEventListener('change', () => {
+            if (deleteConfirmBtn) deleteConfirmBtn.disabled = !deleteCheck.checked;
+        });
+    }
+
+    // Cancel collapses the panel
+    if (deleteCancelBtn) {
+        deleteCancelBtn.addEventListener('click', () => {
+            deleteConfirm.classList.add('hidden');
+            if (deleteBtn) deleteBtn.classList.remove('hidden');
+            if (deleteCheck) deleteCheck.checked = false;
+            if (deleteConfirmBtn) deleteConfirmBtn.disabled = true;
+            clearConsole('tm-console-delete');
+        });
+    }
+
+    // Confirm → call backend
+    if (deleteConfirmBtn) {
+        deleteConfirmBtn.addEventListener('click', handleDelete);
+    }
+
+    async function handleDelete() {
+        deleteConfirmBtn.disabled = true;
+        deleteConfirmBtn.textContent = 'PROCESSING...';
+        clearConsole('tm-console-delete');
+        appendConsole('tm-console-delete', '> INITIATING WITHDRAWAL SEQUENCE...');
+        appendConsole('tm-console-delete', '> PURGING REGISTRY ENTRY...');
+
+        try {
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({
+                    action: 'deleteRegistration',
+                    email: verifiedEmail,
+                    sessionToken,
+                }),
+            });
+
+            appendConsole('tm-console-delete', '> ENTRY PURGED. WITHDRAWAL COMPLETE.', 'text-[#ff0055]');
+
+            // Show withdrawn screen
+            emailPanel.classList.add('hidden');
+            otpPanel.classList.add('hidden');
+            editPanel.classList.add('hidden');
+            successPanel.classList.add('hidden');
+            if (withdrawnScreen) {
+                withdrawnScreen.classList.remove('hidden');
+                if (withdrawnEmail) withdrawnEmail.textContent = verifiedEmail;
+            }
+
+            // Mark all dots done
+            ['step-dot-1','step-dot-2','step-dot-3'].forEach(id => {
+                const d = document.getElementById(id);
+                if (d) { d.classList.remove('active'); d.classList.add('done'); }
+            });
+            ['connector-1-2','connector-2-3'].forEach(id => {
+                const c = document.getElementById(id);
+                if (c) c.classList.add('done');
+            });
+
+        } catch (err) {
+            appendConsole('tm-console-delete', '> ERROR: WITHDRAWAL FAILED. RETRY.', 'text-red-400');
+            deleteConfirmBtn.disabled = false;
+            deleteConfirmBtn.textContent = 'CONFIRM WITHDRAWAL';
+        }
+    }
+}
+
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bootApp);
